@@ -1,0 +1,25 @@
+# Backend
+API/bin/
+API/obj/
+Application/bin/
+Application/obj/
+Domain/bin/
+Domain/obj/
+Persistence/bin/
+Persistence/obj/
+Infrastructure/bin/
+Infrastructure/obj/
+Persistence/bin/
+Persistence/obj/
+
+# TaskManagementApp Folder
+.vs/
+bin/
+obj/
+
+# General
+*.user
+*.suo
+*.cache
+*.log
+.DS_Store
