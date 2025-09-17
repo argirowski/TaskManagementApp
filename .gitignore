@@ -13,6 +13,7 @@ Persistence/bin/
 Persistence/obj/
 
 # TaskManagementApp Folder
+TaskManagementApp.txt
 .vs/
 bin/
 obj/
