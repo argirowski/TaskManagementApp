@@ -5,9 +5,9 @@
         public Guid Id { get; set; }
         public required string ProjectName { get; set; }
         public string? ProjectDescription { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         // Relationships
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();
+        public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
         public ICollection<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
     }
 }
