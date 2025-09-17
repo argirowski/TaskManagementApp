@@ -17,14 +17,14 @@ namespace Persistence
 
             // Users
             modelBuilder.Entity<User>().HasData(
-                new User { Id = user1Id, UserName = "alice", UserEmail = "alice@test.com" },
-                new User { Id = user2Id, UserName = "bob", UserEmail = "bob@test.com" }
+                new User { Id = user1Id, UserName = "Maya Ellington", UserEmail = "maya.ellington@example.com" },
+                new User { Id = user2Id, UserName = "Luca Moretti", UserEmail = "luca.moretti@example.net" }
             );
 
             // Projects
             modelBuilder.Entity<Project>().HasData(
-                new Project { Id = project1Id, ProjectName = "Website Redesign", ProjectDescription = "Redesign the corporate website" },
-                new Project { Id = project2Id, ProjectName = "API Migration", ProjectDescription = "Migrate the legacy API to a new framework" }
+                new Project { Id = project1Id, ProjectName = "Onboarding UX Refresh", ProjectDescription = "Venison cow kielbasa porchetta tri-tip drumstick alcatra capicola. Cow tail alcatra swine frankfurter beef, meatball pork loin short ribs chislic chuck doner shank pig ham." },
+                new Project { Id = project2Id, ProjectName = "Process Sync Initiative", ProjectDescription = "Kielbasa drumstick frankfurter corned beef andouille prosciutto hamburger pork chop. Meatball brisket turducken t-bone pancetta." }
             );
 
             // ProjectUsers (junction table)
@@ -34,10 +34,10 @@ namespace Persistence
                 new ProjectUser { ProjectId = project2Id, UserId = user2Id, Role = ProjectRole.Owner }
             );
 
-            // Tasks
+            // ProjectTasks
             modelBuilder.Entity<ProjectTask>().HasData(
-                new ProjectTask { Id = task1Id, ProjectTaskTitle = "Design homepage", ProjectTaskStatus = TaskProgressStatus.ToDo, ProjectId = project1Id, AssignedUserId = user2Id },
-                new ProjectTask { Id = task2Id, ProjectTaskTitle = "Migrate database", ProjectTaskStatus = TaskProgressStatus.InProgress, ProjectId = project2Id, AssignedUserId = user1Id }
+                new ProjectTask { Id = task1Id, ProjectTaskTitle = "- Audit Data Access Permissions\r\n", ProjectTaskDescription = "Ham hock sirloin turducken venison. Picanha pork landjaeger, capicola meatloaf chuck pastrami ham hock. Alcatra ribeye frankfurter drumstick pork. ", ProjectTaskStatus = TaskProgressStatus.ToDo, ProjectId = project1Id, AssignedUserId = user2Id },
+                new ProjectTask { Id = task2Id, ProjectTaskTitle = "Conduct Vendor Risk Assessment", ProjectTaskDescription = "Kielbasa beef tenderloin pastrami drumstick fatback pork chop. Short ribs ground round brisket, jerky pork chop porchetta biltong pancetta ham hock.", ProjectTaskStatus = TaskProgressStatus.InProgress, ProjectId = project2Id, AssignedUserId = user1Id }
             );
 
         }

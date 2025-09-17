@@ -13,7 +13,7 @@ namespace Domain.Entities
         public Guid ProjectId { get; set; }
         public Project Project { get; set; } = null!;
 
-        public Guid? AssignedUserId { get; set; } // nullable (unassigned possible)
+        public Guid? AssignedUserId { get; set; }
         public User? AssignedUser { get; set; }
     }
 }
