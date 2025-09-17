@@ -1,6 +1,12 @@
-﻿namespace Persistence
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Persistence
 {
-    public class SeedData
+    public static class SeedData
     {
+        public static void Seed(this ModelBuilder modelBuilder)
+        {
+
+        }
     }
 }
