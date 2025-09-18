@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Features.Commands.Auth.Login;
 using Application.Features.Commands.Auth.Register;
 using AutoMapper;
 using Domain.Entities;
@@ -17,6 +18,7 @@ namespace Application.Mapping
                 .ForMember(dest => dest.AssignedProjectTasks, opt => opt.Ignore());
 
             CreateMap<UserDTO, RegisterUserCommand>();
+            CreateMap<LoginDTO, LoginUserCommand>();
         }
     }
 }
