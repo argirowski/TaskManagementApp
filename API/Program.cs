@@ -1,6 +1,10 @@
+using Application.Features.Commands.Auth.Register;
+using Application.Mapping;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +37,14 @@ builder.Services.AddSwaggerGen(a =>
 });
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnectionString")));
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
+builder.Services.AddMediatR(options =>
+{
+    options.RegisterServicesFromAssemblies(typeof(RegisterUserCommandHandler).Assembly);
+});
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
