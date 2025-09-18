@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Entities;
 
 namespace Application.Mapping
 {
@@ -6,7 +8,12 @@ namespace Application.Mapping
     {
         public MappingProfiles()
         {
-
+            CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.ProjectUsers, opt => opt.Ignore())
+                .ForMember(dest => dest.AssignedProjectTasks, opt => opt.Ignore());
         }
     }
 }

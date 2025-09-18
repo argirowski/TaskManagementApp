@@ -1,6 +1,10 @@
-﻿namespace Domain.Interfaces
+﻿using Domain.Entities;
+
+namespace Domain.Interfaces
 {
     public interface IUserRepository
     {
+        Task AddUserAsync(User user);
+        Task<User?> GetByEmailAsync(string email);
     }
 }
