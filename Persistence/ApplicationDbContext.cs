@@ -24,18 +24,20 @@ namespace Persistence
             modelBuilder.Entity<ProjectUser>()
                 .HasOne(pu => pu.Project)
                 .WithMany(p => p.ProjectUsers)
-                .HasForeignKey(pu => pu.ProjectId);
+                .HasForeignKey(pu => pu.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProjectUser>()
                 .HasOne(pu => pu.User)
                 .WithMany(u => u.ProjectUsers)
                 .HasForeignKey(pu => pu.UserId);
 
-            // Project - Task (one-to-many)
+            // Project - Task (one-to-many, cascade delete)
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(t => t.Project)
                 .WithMany(p => p.ProjectTasks)
-                .HasForeignKey(t => t.ProjectId);
+                .HasForeignKey(t => t.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // User - Task (one-to-many, assigned tasks)
             modelBuilder.Entity<ProjectTask>()

@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Features.Commands.Projects.DeleteProject;
 using Application.Features.Queries.Projects.GetAllProjects;
 using Application.Features.Queries.Projects.GetSingleProject;
 using AutoMapper;
@@ -36,6 +37,15 @@ namespace API.Controllers
                 return NotFound();
             var detailsDTO = _mapper.Map<ProjectDetailsDTO>(project);
             return Ok(detailsDTO);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteProjectCommand(id));
+            if (!result)
+                return NotFound();
+            return NoContent();
         }
     }
 }

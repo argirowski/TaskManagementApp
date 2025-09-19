@@ -26,5 +26,15 @@
                 .Include(p => p.ProjectTasks)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null)
+                return false;
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
