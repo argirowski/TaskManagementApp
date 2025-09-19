@@ -1,4 +1,6 @@
-﻿using Application.DTOs;
+﻿using System.Security.Claims;
+using Application.DTOs;
+using Application.Features.Commands.Projects.CreateProject;
 using Application.Features.Commands.Projects.DeleteProject;
 using Application.Features.Queries.Projects.GetAllProjects;
 using Application.Features.Queries.Projects.GetSingleProject;
@@ -46,6 +48,20 @@ namespace API.Controllers
             if (!result)
                 return NotFound();
             return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] ProjectDTO projectDTO)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
+
+            var command = new CreateProjectCommand(projectDTO, userId);
+            var result = await _mediator.Send(command);
+            if (!result)
+                return BadRequest("Project creation failed.");
+            return Ok("Project created successfully.");
         }
     }
 }

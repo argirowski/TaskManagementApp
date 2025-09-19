@@ -20,7 +20,7 @@ namespace Application.Mapping
             CreateMap<UserDTO, RegisterUserCommand>();
             CreateMap<LoginDTO, LoginUserCommand>();
 
-            CreateMap<Project, ProjectDTO>();
+            CreateMap<Project, ProjectDTO>().ReverseMap();
             CreateMap<ProjectTask, TaskDTO>();
 
             CreateMap<Project, ProjectDetailsDTO>()

@@ -36,5 +36,23 @@
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Project?> CreateAsync(Project project, Guid userId)
+        {
+            _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
+
+            // Add creator to ProjectUser
+            var projectUser = new ProjectUser
+            {
+                ProjectId = project.Id,
+                UserId = userId,
+                Role = Domain.Enums.ProjectRole.Owner
+            };
+            _context.ProjectUsers.Add(projectUser);
+            await _context.SaveChangesAsync();
+
+            return project;
+        }
     }
 }
