@@ -19,6 +19,13 @@ namespace Application.Mapping
 
             CreateMap<UserDTO, RegisterUserCommand>();
             CreateMap<LoginDTO, LoginUserCommand>();
+
+            CreateMap<Project, ProjectDTO>();
+            CreateMap<ProjectTask, TaskDTO>();
+
+            CreateMap<Project, ProjectDetailsDTO>()
+                .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src.ProjectUsers.Select(pu => pu.User)))
+                .ForMember(dest => dest.Tasks, opt => opt.MapFrom(src => src.ProjectTasks));
         }
     }
 }

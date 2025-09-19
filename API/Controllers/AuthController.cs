@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Features.Commands.Auth.Login;
 using Application.Features.Commands.Auth.Register;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly AutoMapper.IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public AuthController(IMediator mediator, AutoMapper.IMapper mapper)
+        public AuthController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;

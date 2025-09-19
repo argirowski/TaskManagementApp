@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Commands.Auth.Register
 {
@@ -20,16 +21,16 @@ namespace Application.Features.Commands.Auth.Register
             if (existingUser != null)
                 return false;
 
-            // Hash password (simple example, use a secure method in production)
-            var passwordHash = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(command.Password));
 
             var user = new User
             {
                 Id = Guid.NewGuid(),
                 UserName = command.UserName,
-                UserEmail = command.UserEmail,
-                PasswordHash = passwordHash
+                UserEmail = command.UserEmail
             };
+
+            var passwordHasher = new PasswordHasher<User>();
+            user.PasswordHash = passwordHasher.HashPassword(user, command.Password);
 
             await _userRepository.AddUserAsync(user);
             return true;
