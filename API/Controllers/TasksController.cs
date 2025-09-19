@@ -6,6 +6,7 @@ using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
 using AutoMapper;
 using Domain.Enums;
+using Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,9 @@ namespace API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly Domain.Interfaces.IProjectRepository _projectRepository;
+        private readonly IProjectRepository _projectRepository;
 
-        public TasksController(IMediator mediator, IMapper mapper, Domain.Interfaces.IProjectRepository projectRepository)
+        public TasksController(IMediator mediator, IMapper mapper, IProjectRepository projectRepository)
         {
             _mediator = mediator;
             _mapper = mapper;
