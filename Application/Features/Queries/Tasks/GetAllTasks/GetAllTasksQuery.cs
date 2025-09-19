@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Features.Queries.Tasks.GetAllTasks
+﻿namespace Application.Features.Queries.Tasks.GetAllTasks
 {
-    internal class GetAllTasksQuery
+    using Application.DTOs;
+    using MediatR;
+    public class GetAllTasksQuery : IRequest<List<TaskDTO>>
     {
+        public Guid ProjectId { get; }
+        public GetAllTasksQuery(Guid projectId)
+        {
+            ProjectId = projectId;
+        }
     }
 }
