@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Features.Commands.Tasks.CreateTask;
 using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
 using AutoMapper;
@@ -36,6 +37,19 @@ namespace API.Controllers
                 return NotFound();
             var taskDTO = _mapper.Map<TaskDTO>(task);
             return Ok(taskDTO);
+        }
+        [HttpPost("project/{projectId}")]
+        public async Task<IActionResult> CreateTask(Guid projectId, [FromBody] TaskDTO taskDTO)
+        {
+            var command = new CreateTaskCommand(
+                projectId,
+                taskDTO.ProjectTaskTitle ?? string.Empty,
+                taskDTO.ProjectTaskDescription ?? string.Empty
+            );
+            var result = await _mediator.Send(command);
+            if (!result)
+                return BadRequest("Task creation failed.");
+            return Ok("Task created successfully.");
         }
     }
 }

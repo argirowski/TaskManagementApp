@@ -24,5 +24,11 @@
             return await _context.ProjectTasks
                 .FirstOrDefaultAsync(t => t.ProjectId == projectId && t.Id == taskId);
         }
+        public async Task<bool> CreateTaskAsync(ProjectTask task)
+        {
+            _context.ProjectTasks.Add(task);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
