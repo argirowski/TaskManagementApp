@@ -1,10 +1,10 @@
-﻿namespace Application.Features.Commands.Projects.CreateProject
-{
-    using AutoMapper;
-    using Domain.Entities;
-    using Domain.Interfaces;
-    using MediatR;
+﻿using AutoMapper;
+using Domain.Entities;
+using Domain.Interfaces;
+using MediatR;
 
+namespace Application.Features.Commands.Projects.CreateProject
+{
     public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, bool>
     {
         private readonly IProjectRepository _projectRepository;

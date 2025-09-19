@@ -1,9 +1,9 @@
-﻿namespace Application.Features.Commands.Projects.UpdateProject
-{
-    using AutoMapper;
-    using Domain.Interfaces;
-    using MediatR;
+﻿using AutoMapper;
+using Domain.Interfaces;
+using MediatR;
 
+namespace Application.Features.Commands.Projects.UpdateProject
+{
     public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, bool>
     {
         private readonly IProjectRepository _projectRepository;

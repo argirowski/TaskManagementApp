@@ -1,11 +1,10 @@
-﻿namespace Application.Features.Queries.Projects.GetAllProjects
-{
-    using Application.DTOs;
-    using AutoMapper;
-    using Domain.Entities;
-    using Domain.Interfaces;
-    using MediatR;
+﻿using Application.DTOs;
+using AutoMapper;
+using Domain.Interfaces;
+using MediatR;
 
+namespace Application.Features.Queries.Projects.GetAllProjects
+{
     public class GetAllProjectsQueryHandler : IRequestHandler<GetAllProjectsQuery, List<ProjectDTO>>
     {
         private readonly IProjectRepository _projectRepository;

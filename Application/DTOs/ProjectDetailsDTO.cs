@@ -2,9 +2,9 @@
 {
     public class ProjectDetailsDTO
     {
-        public string ProjectName { get; set; } = null!;
+        public required string ProjectName { get; set; }
         public string? ProjectDescription { get; set; }
-        public List<UserDTO> Users { get; set; } = new();
-        public List<TaskDTO> Tasks { get; set; } = new();
+        public List<UserDTO> Users { get; set; } = new List<UserDTO>();
+        public List<TaskDTO> Tasks { get; set; } = new List<TaskDTO>();
     }
 }

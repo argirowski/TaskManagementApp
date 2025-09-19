@@ -1,8 +1,8 @@
-﻿namespace Application.Features.Commands.Projects.DeleteProject
-{
-    using Domain.Interfaces;
-    using MediatR;
+﻿using Domain.Interfaces;
+using MediatR;
 
+namespace Application.Features.Commands.Projects.DeleteProject
+{
     public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, bool>
     {
         private readonly IProjectRepository _projectRepository;

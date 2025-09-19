@@ -1,8 +1,9 @@
-﻿namespace Application.Features.Queries.Tasks.GetSingleTask
+﻿using MediatR;
+using Domain.Entities;
+using Domain.Interfaces;
+
+namespace Application.Features.Queries.Tasks.GetSingleTask
 {
-    using MediatR;
-    using Domain.Entities;
-    using Domain.Interfaces;
     public class GetSingleTaskQueryHandler : IRequestHandler<GetSingleTaskQuery, ProjectTask>
     {
         private readonly ITaskRepository _taskRepository;

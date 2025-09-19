@@ -1,8 +1,10 @@
-﻿namespace Application.Features.Commands.Tasks.CreateTask
+﻿using MediatR;
+using Domain.Entities;
+using Domain.Interfaces;
+
+namespace Application.Features.Commands.Tasks.CreateTask
 {
-    using MediatR;
-    using Domain.Entities;
-    using Domain.Interfaces;
+
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, bool>
     {
         private readonly ITaskRepository _taskRepository;

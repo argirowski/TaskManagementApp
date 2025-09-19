@@ -21,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<string>> Register([FromBody] UserDTO userDTO)
+        public async Task<ActionResult<string>> RegisterUser([FromBody] UserDTO userDTO)
         {
             var command = _mapper.Map<RegisterUserCommand>(userDTO);
             var result = await _mediator.Send(command);
@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDTO loginDTO)
+        public async Task<ActionResult<string>> LoginUser([FromBody] LoginDTO loginDTO)
         {
             var command = _mapper.Map<LoginUserCommand>(loginDTO);
             var result = await _mediator.Send(command);

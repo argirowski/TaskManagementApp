@@ -1,11 +1,11 @@
-﻿namespace Application.Features.Commands.Auth.Login
-{
-    using Domain.Interfaces;
-    using MediatR;
-    using Application.Interfaces;
-    using Domain.Entities;
-    using Microsoft.AspNetCore.Identity;
+﻿using Domain.Interfaces;
+using MediatR;
+using Application.Interfaces;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
+namespace Application.Features.Commands.Auth.Login
+{
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
     {
         private readonly IUserRepository _userRepository;

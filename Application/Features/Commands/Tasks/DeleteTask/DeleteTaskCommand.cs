@@ -1,6 +1,7 @@
-﻿namespace Application.Features.Commands.Tasks.DeleteTask
+﻿using MediatR;
+
+namespace Application.Features.Commands.Tasks.DeleteTask
 {
-    using MediatR;
     public class DeleteTaskCommand : IRequest<bool>
     {
         public Guid ProjectId { get; }

@@ -28,7 +28,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProjectDTO>>> GetAll()
+        public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());
             var projectDTOs = _mapper.Map<List<ProjectDTO>>(projects);
@@ -36,7 +36,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectDetailsDTO>> GetSingle(Guid id)
+        public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
         {
             var project = await _mediator.Send(new GetSingleProjectQuery(id));
             if (project == null)
@@ -46,7 +46,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteProject(Guid id)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
@@ -63,7 +63,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProjectDTO projectDTO)
+        public async Task<IActionResult> CreateProject([FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
@@ -77,7 +77,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] ProjectDTO projectDTO)
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))

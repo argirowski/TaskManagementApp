@@ -1,6 +1,7 @@
-﻿namespace Application.Features.Commands.Tasks.CreateTask
+﻿using MediatR;
+
+namespace Application.Features.Commands.Tasks.CreateTask
 {
-    using MediatR;
     public class CreateTaskCommand : IRequest<bool>
     {
         public Guid ProjectId { get; }

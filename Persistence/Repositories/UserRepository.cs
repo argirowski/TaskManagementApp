@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 namespace Persistence.Repositories
 {
     public class UserRepository : IUserRepository

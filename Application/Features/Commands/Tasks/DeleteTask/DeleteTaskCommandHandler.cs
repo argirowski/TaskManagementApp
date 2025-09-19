@@ -1,7 +1,8 @@
-﻿namespace Application.Features.Commands.Tasks.DeleteTask
+﻿using MediatR;
+using Domain.Interfaces;
+
+namespace Application.Features.Commands.Tasks.DeleteTask
 {
-    using MediatR;
-    using Domain.Interfaces;
     public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
     {
         private readonly ITaskRepository _taskRepository;

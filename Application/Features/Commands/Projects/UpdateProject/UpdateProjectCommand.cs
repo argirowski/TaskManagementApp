@@ -6,7 +6,7 @@ namespace Application.Features.Commands.Projects.UpdateProject
     : MediatR.IRequest<bool>
     {
         public Guid Id { get; set; }
-        public ProjectDTO Project { get; set; } = null!;
+        public required ProjectDTO Project { get; set; }
 
         public UpdateProjectCommand(Guid id, ProjectDTO project)
         {

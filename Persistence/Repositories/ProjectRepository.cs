@@ -1,10 +1,10 @@
-﻿namespace Persistence.Repositories
-{
-    using Domain.Entities;
-    using Domain.Enums;
-    using Domain.Interfaces;
-    using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
+namespace Persistence.Repositories
+{
     public class ProjectRepository : IProjectRepository
     {
         private readonly ApplicationDbContext _context;

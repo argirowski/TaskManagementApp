@@ -1,10 +1,10 @@
-﻿namespace Application.Features.Queries.Tasks.GetAllTasks
-{
-    using MediatR;
-    using Domain.Interfaces;
-    using Application.DTOs;
-    using AutoMapper;
+﻿using MediatR;
+using Domain.Interfaces;
+using Application.DTOs;
+using AutoMapper;
 
+namespace Application.Features.Queries.Tasks.GetAllTasks
+{
     public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, List<TaskDTO>>
     {
         private readonly ITaskRepository _taskRepository;

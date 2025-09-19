@@ -1,9 +1,9 @@
-﻿namespace Application.Features.Queries.Projects.GetSingleProject
-{
-    using Domain.Entities;
-    using Domain.Interfaces;
-    using MediatR;
+﻿using Domain.Entities;
+using Domain.Interfaces;
+using MediatR;
 
+namespace Application.Features.Queries.Projects.GetSingleProject
+{
     public class GetSingleProjectQueryHandler : IRequestHandler<GetSingleProjectQuery, Project?>
     {
         private readonly IProjectRepository _projectRepository;
