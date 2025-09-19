@@ -30,5 +30,14 @@
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> DeleteTaskAsync(Guid projectId, Guid taskId)
+        {
+            var task = await _context.ProjectTasks.FirstOrDefaultAsync(t => t.ProjectId == projectId && t.Id == taskId);
+            if (task == null)
+                return false;
+            _context.ProjectTasks.Remove(task);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

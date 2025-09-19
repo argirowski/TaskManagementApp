@@ -1,8 +1,11 @@
-﻿using Application.DTOs;
+﻿using System.Security.Claims;
+using Application.DTOs;
 using Application.Features.Commands.Tasks.CreateTask;
+using Application.Features.Commands.Tasks.DeleteTask;
 using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
 using AutoMapper;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +17,13 @@ namespace API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly Domain.Interfaces.IProjectRepository _projectRepository;
 
-        public TasksController(IMediator mediator, IMapper mapper)
+        public TasksController(IMediator mediator, IMapper mapper, Domain.Interfaces.IProjectRepository projectRepository)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _projectRepository = projectRepository;
         }
 
         [HttpGet("project/{projectId}")]
@@ -50,6 +55,24 @@ namespace API.Controllers
             if (!result)
                 return BadRequest("Task creation failed.");
             return Ok("Task created successfully.");
+        }
+
+        [HttpDelete("project/{projectId}/task/{taskId}")]
+        public async Task<IActionResult> DeleteTask(Guid projectId, Guid taskId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
+
+            var role = await _projectRepository.GetUserRoleAsync(projectId, userId);
+            if (role != ProjectRole.Owner)
+                return Forbid();
+
+            var command = new DeleteTaskCommand(projectId, taskId);
+            var result = await _mediator.Send(command);
+            if (!result)
+                return NotFound();
+            return NoContent();
         }
     }
 }
