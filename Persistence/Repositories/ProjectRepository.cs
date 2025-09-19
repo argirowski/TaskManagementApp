@@ -1,6 +1,7 @@
 ﻿namespace Persistence.Repositories
 {
     using Domain.Entities;
+    using Domain.Enums;
     using Domain.Interfaces;
     using Microsoft.EntityFrameworkCore;
 
@@ -47,12 +48,26 @@
             {
                 ProjectId = project.Id,
                 UserId = userId,
-                Role = Domain.Enums.ProjectRole.Owner
+                Role = ProjectRole.Owner
             };
             _context.ProjectUsers.Add(projectUser);
             await _context.SaveChangesAsync();
 
             return project;
+        }
+
+        public async Task<bool> UpdateAsync(Project project)
+        {
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<ProjectRole?> GetUserRoleAsync(Guid projectId, Guid userId)
+        {
+            var projectUser = await _context.ProjectUsers
+                .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.UserId == userId);
+            return projectUser?.Role;
         }
     }
 }
