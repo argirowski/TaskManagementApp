@@ -8,6 +8,7 @@ using Application.Features.Queries.Projects.GetSingleProject;
 using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -28,6 +29,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());
@@ -36,6 +38,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
         {
             var project = await _mediator.Send(new GetSingleProjectQuery(id));
@@ -46,6 +49,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -63,6 +67,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateProject([FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -77,6 +82,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
