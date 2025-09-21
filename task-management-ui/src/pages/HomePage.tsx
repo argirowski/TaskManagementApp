@@ -6,7 +6,7 @@ const HomePage: React.FC = () => {
   return (
     <Container className="text-center mt-5">
       <div className="App">
-        <h1>Task Management App</h1>
+        <h1>Landing Page</h1>
       </div>
     </Container>
   );
