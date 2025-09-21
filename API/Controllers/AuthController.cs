@@ -35,8 +35,7 @@ namespace API.Controllers
         {
             var command = _mapper.Map<LoginUserCommand>(loginDTO);
             var result = await _mediator.Send(command);
-            if (string.IsNullOrEmpty(result))
-                return Unauthorized("Invalid email or password.");
+
             return Ok(result);
         }
     }

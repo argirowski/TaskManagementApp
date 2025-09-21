@@ -2,6 +2,7 @@
 using Application.DTOs;
 using Application.Features.Commands.Tasks.CreateTask;
 using Application.Features.Commands.Tasks.DeleteTask;
+using Application.Features.Commands.Tasks.UpdateTask;
 using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
 using AutoMapper;
@@ -74,6 +75,29 @@ namespace API.Controllers
             if (!result)
                 return NotFound();
             return NoContent();
+        }
+
+        [HttpPut("project/{projectId}/task/{taskId}")]
+        public async Task<IActionResult> UpdateTask(Guid projectId, Guid taskId, [FromBody] TaskDTO taskDTO)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
+
+            var role = await _projectRepository.GetUserRoleAsync(projectId, userId);
+            if (role != ProjectRole.Owner)
+                return Forbid();
+
+            var command = new UpdateTaskCommand(
+                projectId,
+                taskId,
+                taskDTO.ProjectTaskTitle ?? string.Empty,
+                taskDTO.ProjectTaskDescription ?? string.Empty
+            );
+            var result = await _mediator.Send(command);
+            if (!result)
+                return NotFound();
+            return Ok("Task updated successfully.");
         }
     }
 }

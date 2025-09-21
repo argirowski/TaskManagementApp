@@ -39,5 +39,11 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> UpdateTaskAsync(ProjectTask task)
+        {
+            _context.ProjectTasks.Update(task);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
