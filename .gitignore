@@ -12,6 +12,11 @@ Infrastructure/obj/
 Persistence/bin/
 Persistence/obj/
 
+# Frontend
+task-management-ui/node_modules/
+task-management-ui/build/
+task-management-ui/.env
+
 # TaskManagementApp Folder
 TaskManagementApp.txt
 .vs/

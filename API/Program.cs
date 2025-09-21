@@ -42,6 +42,17 @@ builder.Services.AddSwaggerGen(a =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnectionString")));
 
+//Add CORS
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins("http://localhost:3000");
+    });
+});
+
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddMediatR(options =>
 {
