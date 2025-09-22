@@ -29,7 +29,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
         {
             var project = await _mediator.Send(new GetSingleProjectQuery(id));
@@ -67,7 +67,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CreateProject([FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -82,7 +82,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

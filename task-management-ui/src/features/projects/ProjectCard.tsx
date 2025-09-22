@@ -12,24 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
-interface UserDTO {
-  userName: string;
-  userEmail: string;
-  password?: string;
-}
-
-interface TaskDTO {
-  projectTaskTitle: string;
-  projectTaskDescription: string;
-}
-
-interface ProjectDetailsDTO {
-  projectName: string;
-  projectDescription?: string;
-  users: UserDTO[];
-  tasks: TaskDTO[];
-}
+import { ProjectDetailsDTO } from "../../types/types";
 
 const ProjectCard: React.FC = () => {
   const navigate = useNavigate();

@@ -12,14 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-interface Project {
-  id: number;
-  projectName: string;
-  projectDescription: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { Project } from "../../types/types";
 
 const ProjectList: React.FC = () => {
   const navigate = useNavigate();

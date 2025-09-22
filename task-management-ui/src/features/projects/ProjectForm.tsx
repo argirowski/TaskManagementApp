@@ -20,7 +20,7 @@ interface ProjectFormData {
 }
 
 interface Project extends ProjectFormData {
-  id: number;
+  id: string;
 }
 
 // Validation schema using Yup
