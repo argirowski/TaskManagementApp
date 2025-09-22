@@ -15,8 +15,8 @@ import * as Yup from "yup";
 import axios from "axios";
 
 interface ProjectFormData {
-  name: string;
-  description: string;
+  projectName: string;
+  projectDescription: string;
 }
 
 interface Project extends ProjectFormData {
@@ -25,11 +25,11 @@ interface Project extends ProjectFormData {
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-  name: Yup.string()
+  projectName: Yup.string()
     .min(3, "Project name must be at least 3 characters")
     .max(100, "Project name must be less than 100 characters")
     .required("Project name is required"),
-  description: Yup.string().max(
+  projectDescription: Yup.string().max(
     500,
     "Description must be less than 500 characters"
   ),
@@ -48,8 +48,8 @@ const ProjectForm: React.FC = () => {
   const [initialLoading, setInitialLoading] = useState(isEditing);
 
   const initialValues: ProjectFormData = {
-    name: "",
-    description: "",
+    projectName: "",
+    projectDescription: "",
   };
 
   const [formValues, setFormValues] = useState<ProjectFormData>(initialValues);
@@ -68,8 +68,8 @@ const ProjectForm: React.FC = () => {
       );
       const project: Project = response.data;
       setFormValues({
-        name: project.name,
-        description: project.description || "",
+        projectName: project.projectName,
+        projectDescription: project.projectDescription || "",
       });
     } catch (error: any) {
       console.error("Error fetching project:", error);
@@ -204,15 +204,15 @@ const ProjectForm: React.FC = () => {
                       <Form.Label>Project Name *</Form.Label>
                       <Form.Control
                         type="text"
-                        name="name"
+                        name="projectName"
                         placeholder="Enter project name"
-                        value={values.name}
+                        value={values.projectName}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.name && !!errors.name}
+                        isInvalid={touched.projectName && !!errors.projectName}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.name}
+                        {errors.projectName}
                       </Form.Control.Feedback>
                     </Form.Group>
 
@@ -224,15 +224,18 @@ const ProjectForm: React.FC = () => {
                       <Form.Control
                         as="textarea"
                         rows={4}
-                        name="description"
+                        name="projectDescription"
                         placeholder="Enter project description (optional)"
-                        value={values.description}
+                        value={values.projectDescription}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.description && !!errors.description}
+                        isInvalid={
+                          touched.projectDescription &&
+                          !!errors.projectDescription
+                        }
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.description}
+                        {errors.projectDescription}
                       </Form.Control.Feedback>
                       <Form.Text className="text-muted">
                         Optional. Maximum 500 characters.

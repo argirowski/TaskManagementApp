@@ -11,5 +11,6 @@ namespace Domain.Interfaces
         Task<Project?> CreateAsync(Project project, Guid userId);
         Task<bool> UpdateAsync(Project project);
         Task<ProjectRole?> GetUserRoleAsync(Guid projectId, Guid userId);
+        Task<bool> ExistsByNameAsync(string projectName);
     }
 }

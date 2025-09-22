@@ -21,6 +21,8 @@ namespace Application.Mapping
             CreateMap<LoginDTO, LoginUserCommand>();
 
             CreateMap<Project, ProjectDTO>().ReverseMap();
+            CreateMap<Project, CreateProjectDTO>().ReverseMap();
+
             CreateMap<ProjectTask, TaskDTO>();
 
             CreateMap<Project, ProjectDetailsDTO>()

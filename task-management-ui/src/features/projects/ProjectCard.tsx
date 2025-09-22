@@ -137,37 +137,25 @@ const ProjectCard: React.FC = () => {
         {/* Project Users */}
         <Col md={6} className="mb-4">
           <Card>
-            <Card.Header className="d-flex justify-content-between align-items-center">
+            <Card.Header>
               <h5 className="mb-0">
                 Team Members{" "}
                 <Badge bg="secondary">{project.users.length}</Badge>
               </h5>
-              <Button variant="outline-primary" size="sm">
-                Add Member
-              </Button>
             </Card.Header>
             <Card.Body>
               {project.users.length === 0 ? (
                 <div className="text-center text-muted py-3">
                   <p>No team members assigned to this project.</p>
-                  <Button variant="primary" size="sm">
-                    Invite Team Members
-                  </Button>
                 </div>
               ) : (
                 <ListGroup variant="flush">
                   {project.users.map((user, index) => (
-                    <ListGroup.Item
-                      key={index}
-                      className="d-flex justify-content-between align-items-center"
-                    >
+                    <ListGroup.Item key={index}>
                       <div>
                         <div className="fw-bold">{user.userName}</div>
                         <small className="text-muted">{user.userEmail}</small>
                       </div>
-                      <Button variant="outline-danger" size="sm">
-                        Remove
-                      </Button>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -179,21 +167,15 @@ const ProjectCard: React.FC = () => {
         {/* Project Tasks */}
         <Col md={6} className="mb-4">
           <Card>
-            <Card.Header className="d-flex justify-content-between align-items-center">
+            <Card.Header>
               <h5 className="mb-0">
                 Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
               </h5>
-              <Button variant="outline-primary" size="sm">
-                Add Task
-              </Button>
             </Card.Header>
             <Card.Body>
               {project.tasks.length === 0 ? (
                 <div className="text-center text-muted py-3">
                   <p>No tasks created for this project yet.</p>
-                  <Button variant="primary" size="sm">
-                    Create First Task
-                  </Button>
                 </div>
               ) : (
                 <ListGroup variant="flush">
@@ -205,18 +187,6 @@ const ProjectCard: React.FC = () => {
                       <small className="text-muted">
                         {task.projectTaskDescription || "No description"}
                       </small>
-                      <div className="mt-2">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          className="me-2"
-                        >
-                          Edit
-                        </Button>
-                        <Button variant="outline-danger" size="sm">
-                          Delete
-                        </Button>
-                      </div>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>

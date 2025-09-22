@@ -69,5 +69,10 @@ namespace Persistence.Repositories
                 .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.UserId == userId);
             return projectUser?.Role;
         }
+
+        public async Task<bool> ExistsByNameAsync(string projectName)
+        {
+            return await _context.Projects.AnyAsync(p => p.ProjectName == projectName);
+        }
     }
 }

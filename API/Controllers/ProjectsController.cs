@@ -68,13 +68,14 @@ namespace API.Controllers
 
         [HttpPost]
         //[Authorize]
-        public async Task<IActionResult> CreateProject([FromBody] ProjectDTO projectDTO)
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            //    return Unauthorized();
+            var userId = Guid.Parse("F6B6C8D7-6A7F-9B8C-2D6E-6F7A8B9C1D2E"); // Temporary hardcoded user ID for testing
 
-            var command = new CreateProjectCommand(projectDTO, userId);
+            var command = new CreateProjectCommand(createProjectDTO, userId);
             var result = await _mediator.Send(command);
             if (!result)
                 return BadRequest("Project creation failed.");
