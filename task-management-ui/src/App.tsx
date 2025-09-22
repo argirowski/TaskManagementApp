@@ -1,15 +1,17 @@
 import React from "react";
-import "./App.css";
-import { Container } from "react-bootstrap";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
 
-const HomePage: React.FC = () => {
+const App: React.FC = () => {
   return (
-    <Container className="text-center mt-5">
+    <BrowserRouter>
       <div className="App">
-        <h1>Task Management App</h1>
+        <AppRoutes />
       </div>
-    </Container>
+    </BrowserRouter>
   );
 };
 
-export default HomePage;
+export default App;

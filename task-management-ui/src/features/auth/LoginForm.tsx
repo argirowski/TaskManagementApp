@@ -1,13 +1,224 @@
-import React from "react";
-import "./App.css";
-import { Container } from "react-bootstrap";
+import React, { useState } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+// Validation schema using Yup
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
+    "success"
+  );
+
+  const initialValues: LoginFormData = {
+    email: "",
+    password: "",
+  };
+
+  const handleSubmit = async (
+    values: LoginFormData,
+    { setSubmitting, setFieldError }: any
+  ) => {
+    try {
+      // API endpoint for login
+      const response = await axios.post(
+        "https://localhost:7272/api/Auth/login",
+        values
+      );
+
+      console.log("Login successful:", response.data);
+
+      // Store auth token if your API returns one
+      if (response.data.token) {
+        localStorage.setItem("authToken", response.data.token);
+      }
+
+      setAlertMessage("Login successful! Redirecting...");
+      setAlertVariant("success");
+      setShowAlert(true);
+
+      // Redirect to dashboard or home after 1 second
+      setTimeout(() => {
+        navigate("/dashboard"); // Change this to your desired route after login
+      }, 1000);
+    } catch (error: any) {
+      console.error("Login error:", error);
+
+      if (error.response?.data?.message) {
+        setAlertMessage(error.response.data.message);
+      } else if (error.response?.data?.errors) {
+        // Handle validation errors from backend
+        Object.keys(error.response.data.errors).forEach((field) => {
+          setFieldError(field, error.response.data.errors[field][0]);
+        });
+        setAlertMessage("Please fix the errors below");
+      } else if (error.response?.status === 401) {
+        setAlertMessage("Invalid email or password");
+      } else {
+        setAlertMessage("Login failed. Please try again.");
+      }
+
+      setAlertVariant("danger");
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleBackToHome = () => {
+    navigate("/");
+  };
+
   return (
-    <Container className="text-center mt-5">
-      <div className="App">
-        <h1>Login Form</h1>
-      </div>
+    <Container
+      className="d-flex align-items-center justify-content-center"
+      style={{ minHeight: "100vh" }}
+    >
+      <Row className="w-100">
+        <Col xs={12} sm={10} md={8} lg={6} xl={4} className="mx-auto">
+          <Card className="shadow-lg border-0">
+            <Card.Header className="text-center bg-primary text-white">
+              <h4 className="mb-0">Sign In to Your Account</h4>
+            </Card.Header>
+            <Card.Body className="p-4">
+              {showAlert && (
+                <Alert
+                  variant={alertVariant}
+                  dismissible
+                  onClose={() => setShowAlert(false)}
+                >
+                  {alertMessage}
+                </Alert>
+              )}
+
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                }) => (
+                  <Form noValidate onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formEmail">
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        placeholder="Enter email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.email && !!errors.email}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.email}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formPassword">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.password && !!errors.password}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formRememberMe">
+                      <Form.Check type="checkbox" label="Remember me" />
+                    </Form.Group>
+
+                    <div className="d-grid gap-2">
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        size="lg"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              className="me-2"
+                            />
+                            Signing In...
+                          </>
+                        ) : (
+                          "Sign In"
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={handleBackToHome}
+                        disabled={isSubmitting}
+                      >
+                        Back to Home
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </Card.Body>
+            <Card.Footer className="text-center text-muted">
+              <small>
+                Don't have an account?{" "}
+                <Button
+                  variant="link"
+                  onClick={() => navigate("/register")}
+                  className="p-0"
+                >
+                  Create account here
+                </Button>
+              </small>
+            </Card.Footer>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
