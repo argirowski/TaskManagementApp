@@ -7,7 +7,7 @@ import "./index.css";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <div className="App">
+      <div className="task-management-app">
         <AppRoutes />
       </div>
     </BrowserRouter>

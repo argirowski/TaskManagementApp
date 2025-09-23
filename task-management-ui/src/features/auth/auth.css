@@ -1,0 +1,142 @@
+/* Auth Form Custom Styles */
+
+/* Custom Card Header */
+.custom-card-header {
+  background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Custom Header Title */
+.header-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Form Label */
+.form-label {
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+/* Custom Card Shadow */
+.custom-card {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(102, 126, 234, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+  box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
+    0 15px 15px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(102, 126, 234, 0.1);
+}
+
+/* Custom Auth Buttons */
+.btn-create-account,
+.btn-sign-in {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-create-account:hover,
+.btn-sign-in:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+.btn-create-account:disabled,
+.btn-sign-in:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-back-home {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-back-home:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  color: white;
+}
+
+.btn-back-home:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  border: none;
+  color: #f3f4f6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Custom Card Footer */
+.custom-card-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Unified Footer Styling */
+.footer-unified {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.footer-unified .signin-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-left: 0.25rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.footer-unified .signin-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.footer-unified .signin-link:focus {
+  color: #5a67d8;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  border-radius: 0.25rem;
+  background: none !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.footer-unified .signin-link:active {
+  background: none !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #5a67d8;
+}

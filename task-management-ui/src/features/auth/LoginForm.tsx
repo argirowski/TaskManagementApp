@@ -104,9 +104,9 @@ const LoginForm: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} sm={10} md={8} lg={6} xl={4} className="mx-auto">
-          <Card className="shadow-lg border-0">
-            <Card.Header className="text-center bg-primary text-white">
-              <h4 className="mb-0">Sign In to Your Account</h4>
+          <Card className="custom-card border-0">
+            <Card.Header className="text-center custom-card-header py-4">
+              <h4 className="header-title mb-0">Sign In to Your Account</h4>
             </Card.Header>
             <Card.Body className="p-4">
               {showAlert && (
@@ -135,7 +135,9 @@ const LoginForm: React.FC = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formEmail">
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label className="form-label">
+                        Email address
+                      </Form.Label>
                       <Form.Control
                         type="email"
                         name="email"
@@ -151,7 +153,7 @@ const LoginForm: React.FC = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formPassword">
-                      <Form.Label>Password</Form.Label>
+                      <Form.Label className="form-label">Password</Form.Label>
                       <Form.Control
                         type="password"
                         name="password"
@@ -166,13 +168,16 @@ const LoginForm: React.FC = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formRememberMe">
+                    <Form.Group
+                      className="form-label mb-3"
+                      controlId="formRememberMe"
+                    >
                       <Form.Check type="checkbox" label="Remember me" />
                     </Form.Group>
 
                     <div className="d-grid gap-2">
                       <Button
-                        variant="primary"
+                        className="btn-sign-in"
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
@@ -193,7 +198,8 @@ const LoginForm: React.FC = () => {
                         )}
                       </Button>
                       <Button
-                        variant="outline-secondary"
+                        className="btn-back-home"
+                        size="lg"
                         onClick={handleBackToHome}
                         disabled={isSubmitting}
                       >
@@ -204,17 +210,16 @@ const LoginForm: React.FC = () => {
                 )}
               </Formik>
             </Card.Body>
-            <Card.Footer className="text-center text-muted">
-              <small>
-                Don't have an account?{" "}
+            <Card.Footer className="text-center custom-card-footer">
+              <p className="footer-unified">
+                Don't have an account?
                 <Button
-                  variant="link"
                   onClick={() => navigate("/register")}
-                  className="p-0"
+                  className="signin-link"
                 >
                   Create account here
                 </Button>
-              </small>
+              </p>
             </Card.Footer>
           </Card>
         </Col>

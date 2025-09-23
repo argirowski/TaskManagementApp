@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import "./auth.css";
 
 interface RegisterFormData {
   username: string;
@@ -114,9 +115,9 @@ const RegisterForm: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} sm={10} md={8} lg={6} xl={5} className="mx-auto">
-          <Card className="shadow-lg border-0">
-            <Card.Header className="text-center bg-primary text-white">
-              <h4 className="mb-0">Create Your Account</h4>
+          <Card className="custom-card border-0">
+            <Card.Header className="text-center custom-card-header py-4">
+              <h4 className="header-title mb-0">Create Your Account</h4>
             </Card.Header>
             <Card.Body className="p-4">
               {showAlert && (
@@ -145,7 +146,7 @@ const RegisterForm: React.FC = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formUsername">
-                      <Form.Label>Username</Form.Label>
+                      <Form.Label className="form-label">Username</Form.Label>
                       <Form.Control
                         type="text"
                         name="username"
@@ -161,7 +162,9 @@ const RegisterForm: React.FC = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formEmail">
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label className="form-label">
+                        Email address
+                      </Form.Label>
                       <Form.Control
                         type="email"
                         name="email"
@@ -177,7 +180,7 @@ const RegisterForm: React.FC = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formPassword">
-                      <Form.Label>Password</Form.Label>
+                      <Form.Label className="form-label">Password</Form.Label>
                       <Form.Control
                         type="password"
                         name="password"
@@ -196,7 +199,9 @@ const RegisterForm: React.FC = () => {
                       className="mb-3"
                       controlId="formConfirmPassword"
                     >
-                      <Form.Label>Confirm Password</Form.Label>
+                      <Form.Label className="form-label">
+                        Confirm Password
+                      </Form.Label>
                       <Form.Control
                         type="password"
                         name="confirmPassword"
@@ -215,10 +220,10 @@ const RegisterForm: React.FC = () => {
 
                     <div className="d-grid gap-2">
                       <Button
-                        variant="primary"
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
+                        className="btn-create-account"
                       >
                         {isSubmitting ? (
                           <>
@@ -236,9 +241,10 @@ const RegisterForm: React.FC = () => {
                         )}
                       </Button>
                       <Button
-                        variant="outline-secondary"
                         onClick={handleBackToHome}
                         disabled={isSubmitting}
+                        size="lg"
+                        className="btn-back-home"
                       >
                         Back to Home
                       </Button>
@@ -247,17 +253,16 @@ const RegisterForm: React.FC = () => {
                 )}
               </Formik>
             </Card.Body>
-            <Card.Footer className="text-center text-muted">
-              <small>
-                Already have an account?{" "}
+            <Card.Footer className="text-center custom-card-footer py-3">
+              <p className="footer-unified">
+                Already have an account?
                 <Button
-                  variant="link"
                   onClick={() => navigate("/login")}
-                  className="p-0"
+                  className="signin-link"
                 >
                   Sign in here
                 </Button>
-              </small>
+              </p>
             </Card.Footer>
           </Card>
         </Col>
