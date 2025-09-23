@@ -168,7 +168,16 @@ const ProjectList: React.FC = () => {
                               View
                             </Button>
                             <Button
-                              size="lg"
+                              size="sm"
+                              className="btn-edit-project"
+                              onClick={() =>
+                                navigate(`/projects/${project.id}/edit`)
+                              }
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              size="sm"
                               className="btn-project-delete"
                               onClick={() => handleDeleteClick(project)}
                             >
