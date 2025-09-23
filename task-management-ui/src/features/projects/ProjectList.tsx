@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Project } from "../../types/types";
+import "./project.css";
 
 const ProjectList: React.FC = () => {
   const navigate = useNavigate();
@@ -100,16 +101,15 @@ const ProjectList: React.FC = () => {
   }
 
   return (
-    <Container className="mt-4">
+    <Container>
       <Row>
         <Col>
           <Card>
-            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-              <h4 className="mb-0">Projects</h4>
+            <Card.Header className="project-card-header d-flex justify-content-between align-items-center">
+              <h4 className="project-header-title mb-0">Projects</h4>
               <Button
-                variant="light"
-                size="sm"
                 onClick={() => navigate("/projects/new")}
+                className="btn-add-project"
               >
                 Add New Project
               </Button>
@@ -139,7 +139,7 @@ const ProjectList: React.FC = () => {
                   </Button>
                 </div>
               ) : (
-                <Table responsive striped hover>
+                <Table responsive className="projects-table">
                   <thead>
                     <tr>
                       <th>Project Name</th>
