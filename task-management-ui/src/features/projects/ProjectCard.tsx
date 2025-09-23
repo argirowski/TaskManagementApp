@@ -87,7 +87,7 @@ const ProjectCard: React.FC = () => {
   }
 
   return (
-    <Container className="mt-4">
+    <Container>
       {showAlert && (
         <Alert
           variant={alertVariant}
@@ -102,13 +102,15 @@ const ProjectCard: React.FC = () => {
         <Col>
           {/* Project Header */}
           <Card className="mb-4">
-            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+            <Card.Header className="project-card-header d-flex justify-content-between align-items-center">
               <div>
-                <h4 className="mb-0">{project.projectName}</h4>
+                <h4 className="project-header-title mb-0">
+                  {project.projectName}
+                </h4>
                 {project.projectDescription && (
-                  <small className="text-light">
+                  <p className="project-header-content mt-1">
                     {project.projectDescription}
-                  </small>
+                  </p>
                 )}
               </div>
               <div>
