@@ -142,32 +142,34 @@ const ProjectList: React.FC = () => {
                 <Table responsive className="projects-table">
                   <thead>
                     <tr>
-                      <th>Project Name</th>
-                      <th>Description</th>
-                      <th style={{ width: "200px" }}>Actions</th>
+                      <th className="table-header">Project Name</th>
+                      <th className="table-header">Description</th>
+                      <th className="table-header" style={{ width: "200px" }}>
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {projects.map((project) => (
                       <tr key={project.id}>
-                        <td>
-                          <strong>{project.projectName}</strong>
+                        <td className="project-name-text">
+                          {project.projectName}
                         </td>
-                        <td>
+                        <td className="project-description-text">
                           {project.projectDescription || "No description"}
                         </td>
                         <td>
                           <div className="d-grid gap-2 d-md-flex">
                             <Button
-                              variant="outline-primary"
                               size="sm"
+                              className="btn-project-view"
                               onClick={() => handleView(project)}
                             >
                               View
                             </Button>
                             <Button
-                              variant="outline-danger"
-                              size="sm"
+                              size="lg"
+                              className="btn-project-delete"
                               onClick={() => handleDeleteClick(project)}
                             >
                               Delete
