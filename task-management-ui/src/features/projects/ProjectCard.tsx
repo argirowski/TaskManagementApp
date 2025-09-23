@@ -115,19 +115,18 @@ const ProjectCard: React.FC = () => {
               </div>
               <div>
                 <Button
-                  variant="light"
                   size="sm"
-                  className="me-2"
+                  className="btn-edit-project me-2"
                   onClick={handleEditProject}
                 >
                   Edit Project
                 </Button>
                 <Button
-                  variant="outline-light"
                   size="sm"
+                  className="btn-back-projects"
                   onClick={handleBackToProjects}
                 >
-                  Back to Projects
+                  Back
                 </Button>
               </div>
             </Card.Header>
@@ -139,8 +138,8 @@ const ProjectCard: React.FC = () => {
         {/* Project Users */}
         <Col md={6} className="mb-4">
           <Card>
-            <Card.Header>
-              <h5 className="mb-0">
+            <Card.Header className="project-section-card-header">
+              <h5 className="project-section-header">
                 Team Members{" "}
                 <Badge bg="secondary">{project.users.length}</Badge>
               </h5>
@@ -155,8 +154,10 @@ const ProjectCard: React.FC = () => {
                   {project.users.map((user, index) => (
                     <ListGroup.Item key={index}>
                       <div>
-                        <div className="fw-bold">{user.userName}</div>
-                        <small className="text-muted">{user.userEmail}</small>
+                        <div className="project-member-name">
+                          {user.userName}
+                        </div>
+                        <p className="project-member-email">{user.userEmail}</p>
                       </div>
                     </ListGroup.Item>
                   ))}
@@ -169,8 +170,8 @@ const ProjectCard: React.FC = () => {
         {/* Project Tasks */}
         <Col md={6} className="mb-4">
           <Card>
-            <Card.Header>
-              <h5 className="mb-0">
+            <Card.Header className="project-section-card-header">
+              <h5 className="project-section-header">
                 Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
               </h5>
             </Card.Header>
@@ -183,10 +184,10 @@ const ProjectCard: React.FC = () => {
                 <ListGroup variant="flush">
                   {project.tasks.map((task, index) => (
                     <ListGroup.Item key={index}>
-                      <div className="fw-bold mb-1">
+                      <div className="project-task-name mb-1">
                         {task.projectTaskTitle}
                       </div>
-                      <small className="text-muted">
+                      <small className="project-task-description">
                         {task.projectTaskDescription || "No description"}
                       </small>
                     </ListGroup.Item>
@@ -202,27 +203,35 @@ const ProjectCard: React.FC = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header>
-              <h5 className="mb-0">Project Overview</h5>
+            <Card.Header className="project-section-card-header">
+              <h5 className="project-section-header">Project Overview</h5>
             </Card.Header>
             <Card.Body>
               <Row className="text-center">
                 <Col md={4}>
                   <div className="border-end">
-                    <h3 className="text-primary">{project.tasks.length}</h3>
-                    <p className="text-muted mb-0">Total Tasks</p>
+                    <h3 className="project-stat-number">
+                      {project.tasks.length}
+                    </h3>
+                    <p className="project-stat-number-text mb-0">Total Tasks</p>
                   </div>
                 </Col>
                 <Col md={4}>
                   <div className="border-end">
-                    <h3 className="text-success">{project.users.length}</h3>
-                    <p className="text-muted mb-0">Team Members</p>
+                    <h3 className="project-stat-number">
+                      {project.users.length}
+                    </h3>
+                    <p className="project-stat-number-text mb-0">
+                      Team Members
+                    </p>
                   </div>
                 </Col>
                 <Col md={4}>
                   <div>
-                    <h3 className="text-info">Active</h3>
-                    <p className="text-muted mb-0">Project Status</p>
+                    <h3 className="project-stat-number">Active</h3>
+                    <p className="project-stat-number-text mb-0">
+                      Project Status
+                    </p>
                   </div>
                 </Col>
               </Row>
