@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import "./auth.css";
 
 interface LoginFormData {
   email: string;

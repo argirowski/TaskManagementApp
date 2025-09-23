@@ -13,6 +13,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { ProjectDetailsDTO } from "../../types/types";
+import "./project.css";
 
 const ProjectCard: React.FC = () => {
   const navigate = useNavigate();

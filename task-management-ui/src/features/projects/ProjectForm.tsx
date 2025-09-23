@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import "./project.css";
 
 interface ProjectFormData {
   projectName: string;
@@ -167,9 +168,9 @@ const ProjectForm: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} sm={10} md={8} lg={6} className="mx-auto">
-          <Card className="shadow-lg border-0">
-            <Card.Header className="text-center bg-primary text-white">
-              <h4 className="mb-0">
+          <Card className="custom-project-card border-0">
+            <Card.Header className="text-center custom-project-card-header py-4">
+              <h4 className="project-card-header-title mb-0">
                 {isEditing ? "Edit Project" : "Create New Project"}
               </h4>
             </Card.Header>
@@ -201,7 +202,9 @@ const ProjectForm: React.FC = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formProjectName">
-                      <Form.Label>Project Name *</Form.Label>
+                      <Form.Label className="project-form-labe">
+                        Project Name *
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         name="projectName"
@@ -220,7 +223,9 @@ const ProjectForm: React.FC = () => {
                       className="mb-3"
                       controlId="formProjectDescription"
                     >
-                      <Form.Label>Project Description</Form.Label>
+                      <Form.Label className="project-form-label">
+                        Project Description
+                      </Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={4}
@@ -237,14 +242,14 @@ const ProjectForm: React.FC = () => {
                       <Form.Control.Feedback type="invalid">
                         {errors.projectDescription}
                       </Form.Control.Feedback>
-                      <Form.Text className="text-muted">
+                      <Form.Text className="project-form-footer">
                         Optional. Maximum 500 characters.
                       </Form.Text>
                     </Form.Group>
 
                     <div className="d-grid gap-2">
                       <Button
-                        variant="primary"
+                        className="btn-create-project"
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
@@ -267,7 +272,8 @@ const ProjectForm: React.FC = () => {
                         )}
                       </Button>
                       <Button
-                        variant="outline-secondary"
+                        className="btn-cancel"
+                        size="lg"
                         onClick={handleCancel}
                         disabled={isSubmitting}
                       >
