@@ -4,7 +4,7 @@
     {
         public required string ProjectName { get; set; }
         public string? ProjectDescription { get; set; }
-        public List<UserDTO> Users { get; set; } = new List<UserDTO>();
-        public List<TaskDTO> Tasks { get; set; } = new List<TaskDTO>();
+        public List<UserDetailsDTO> Users { get; set; } = new List<UserDetailsDTO>();
+        public List<TaskDetailsDTO> Tasks { get; set; } = new List<TaskDetailsDTO>();
     }
 }

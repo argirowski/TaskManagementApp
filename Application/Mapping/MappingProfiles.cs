@@ -11,6 +11,7 @@ namespace Application.Mapping
         public MappingProfiles()
         {
             CreateMap<User, UserDTO>();
+            CreateMap<User, UserDetailsDTO>();
             CreateMap<UserDTO, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
@@ -21,9 +22,11 @@ namespace Application.Mapping
             CreateMap<LoginDTO, LoginUserCommand>();
 
             CreateMap<Project, ProjectDTO>().ReverseMap();
+            CreateMap<Project, ProjectDetailsDTO>();
             CreateMap<Project, CreateProjectDTO>().ReverseMap();
 
             CreateMap<ProjectTask, TaskDTO>();
+            CreateMap<ProjectTask, TaskDetailsDTO>();
 
             CreateMap<Project, ProjectDetailsDTO>()
                 .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src.ProjectUsers.Select(pu => pu.User)))

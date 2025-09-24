@@ -168,41 +168,8 @@ const ProjectCard: React.FC = () => {
           </Card>
         </Col>
 
-        {/* Project Tasks */}
+        {/* Project Statistics */}
         <Col md={6} className="mb-4">
-          <Card>
-            <Card.Header className="project-section-card-header">
-              <h5 className="project-section-header">
-                Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              {project.tasks.length === 0 ? (
-                <div className="text-center text-muted py-3">
-                  <p>No tasks created for this project yet.</p>
-                </div>
-              ) : (
-                <ListGroup variant="flush">
-                  {project.tasks.map((task, index) => (
-                    <ListGroup.Item key={index}>
-                      <div className="project-task-name mb-1">
-                        {task.projectTaskTitle}
-                      </div>
-                      <small className="project-task-description">
-                        {task.projectTaskDescription || "No description"}
-                      </small>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Project Statistics */}
-      <Row>
-        <Col>
           <Card>
             <Card.Header className="project-section-card-header">
               <h5 className="project-section-header">Project Overview</h5>
@@ -236,6 +203,39 @@ const ProjectCard: React.FC = () => {
                   </div>
                 </Col>
               </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Project Tasks */}
+      <Row>
+        <Col md={12} className="mb-4">
+          <Card>
+            <Card.Header className="project-section-card-header">
+              <h5 className="project-section-header">
+                Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              {project.tasks.length === 0 ? (
+                <div className="text-center text-muted py-3">
+                  <p>No tasks created for this project yet.</p>
+                </div>
+              ) : (
+                <ListGroup variant="flush">
+                  {project.tasks.map((task, index) => (
+                    <ListGroup.Item key={index}>
+                      <div className="project-task-name mb-1">
+                        {task.projectTaskTitle}
+                      </div>
+                      <small className="project-task-description">
+                        {task.projectTaskDescription || "No description"}
+                      </small>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
             </Card.Body>
           </Card>
         </Col>

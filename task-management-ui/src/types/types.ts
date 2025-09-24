@@ -15,9 +15,22 @@ export interface TaskDTO {
   projectTaskDescription: string;
 }
 
+export interface UserDetailsDTO {
+  id: string;
+  userName: string;
+  userEmail: string;
+  password?: string;
+}
+
+export interface TaskDetailsDTO {
+  id: string;
+  projectTaskTitle: string;
+  projectTaskDescription: string;
+}
+
 export interface ProjectDetailsDTO {
   projectName: string;
   projectDescription?: string;
-  users: UserDTO[];
-  tasks: TaskDTO[];
+  users: UserDetailsDTO[];
+  tasks: TaskDetailsDTO[];
 }
