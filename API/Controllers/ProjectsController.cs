@@ -84,7 +84,7 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         //[Authorize]
-        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] CreateProjectDTO editProjectDTO)
         {
             //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
@@ -94,7 +94,7 @@ namespace API.Controllers
             //if (role != Domain.Enums.ProjectRole.Owner)
             //    return Forbid();
 
-            var command = new UpdateProjectCommand(id, projectDTO);
+            var command = new UpdateProjectCommand(id, editProjectDTO);
             var result = await _mediator.Send(command);
             if (!result)
                 return NotFound();
