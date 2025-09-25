@@ -5,8 +5,6 @@ import {
   Col,
   Card,
   Button,
-  Alert,
-  Spinner,
   Badge,
   ListGroup,
 } from "react-bootstrap";
@@ -14,6 +12,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { ProjectDetailsDTO, TaskDetailsDTO } from "../../types/types";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
+import Loader from "../../components/common/Loader";
+import Alert from "../../components/common/Alert";
+import EmptyState from "../../components/common/EmptyState";
 import "./project.css";
 
 const ProjectCard: React.FC = () => {
@@ -48,7 +49,6 @@ const ProjectCard: React.FC = () => {
       setAlertMessage("Failed to load project details. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,6 @@ const ProjectCard: React.FC = () => {
       setAlertMessage("Task deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
 
       // Refresh the project data
       fetchProject(id);
@@ -87,7 +86,6 @@ const ProjectCard: React.FC = () => {
       setAlertMessage("Failed to delete task. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setShowDeleteModal(false);
       setTaskToDelete(null);
@@ -100,44 +98,30 @@ const ProjectCard: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3">Loading project details...</p>
-        </div>
-      </Container>
-    );
+    return <Loader message="Loading project details..." />;
   }
 
   if (!project) {
     return (
       <Container className="mt-4">
-        <Alert variant="danger">
-          <Alert.Heading>Project Not Found</Alert.Heading>
-          <p>The project you're looking for could not be found.</p>
-          <Button variant="primary" onClick={handleBackToProjects}>
-            Back to Projects
-          </Button>
-        </Alert>
+        <EmptyState
+          title="Project Not Found"
+          message="The project you're looking for could not be found."
+          actionText="Back to Projects"
+          onAction={handleBackToProjects}
+        />
       </Container>
     );
   }
 
   return (
     <Container>
-      {showAlert && (
-        <Alert
-          variant={alertVariant}
-          dismissible
-          onClose={() => setShowAlert(false)}
-        >
-          {alertMessage}
-        </Alert>
-      )}
+      <Alert
+        show={showAlert}
+        variant={alertVariant}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)}
+      />
 
       <Row>
         <Col>

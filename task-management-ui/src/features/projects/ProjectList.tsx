@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Button,
-  Alert,
-  Spinner,
-  Card,
-} from "react-bootstrap";
+import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Project } from "../../types/types";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
+import Loader from "../../components/common/Loader";
+import Alert from "../../components/common/Alert";
+import EmptyState from "../../components/common/EmptyState";
 import "./project.css";
 
 const ProjectList: React.FC = () => {
@@ -41,14 +35,12 @@ const ProjectList: React.FC = () => {
       setAlertMessage("Failed to load projects. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setLoading(false);
     }
   };
 
   const handleView = (project: Project) => {
-    // Navigate to project details page
     navigate(`/projects/${project.id}`);
   };
 
@@ -68,13 +60,11 @@ const ProjectList: React.FC = () => {
       setAlertMessage("Project deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
     } catch (error: any) {
       console.error("Error deleting project:", error);
       setAlertMessage("Failed to delete project. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setShowDeleteModal(false);
       setProjectToDelete(null);
@@ -87,17 +77,7 @@ const ProjectList: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3">Loading projects...</p>
-        </div>
-      </Container>
-    );
+    return <Loader message="Loading projects..." />;
   }
 
   return (
@@ -115,29 +95,20 @@ const ProjectList: React.FC = () => {
               </Button>
             </Card.Header>
             <Card.Body>
-              {showAlert && (
-                <Alert
-                  variant={alertVariant}
-                  dismissible
-                  onClose={() => setShowAlert(false)}
-                >
-                  {alertMessage}
-                </Alert>
-              )}
+              <Alert
+                show={showAlert}
+                variant={alertVariant}
+                message={alertMessage}
+                onClose={() => setShowAlert(false)}
+              />
 
               {projects.length === 0 ? (
-                <div className="text-center py-5">
-                  <h5>No projects found</h5>
-                  <p className="text-muted">
-                    Create your first project to get started!
-                  </p>
-                  <Button
-                    variant="primary"
-                    onClick={() => navigate("/projects/new")}
-                  >
-                    Create Project
-                  </Button>
-                </div>
+                <EmptyState
+                  title="No projects found"
+                  message="Create your first project to get started!"
+                  actionText="Create Project"
+                  onAction={() => navigate("/projects/new")}
+                />
               ) : (
                 <Table responsive className="projects-table">
                   <thead>
