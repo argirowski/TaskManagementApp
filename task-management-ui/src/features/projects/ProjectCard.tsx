@@ -68,22 +68,20 @@ const ProjectCard: React.FC = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!taskToDelete) return;
+    if (!taskToDelete || !id) return;
 
     try {
-      // TODO: Implement actual task deletion API call
-      // await axios.delete(`https://localhost:7272/api/Tasks/${taskToDelete.id}`);
+      await axios.delete(
+        `https://localhost:7272/api/Tasks/project/${id}/task/${taskToDelete.id}`
+      );
 
-      // For now, just show success message
       setAlertMessage("Task deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
 
       // Refresh the project data
-      if (id) {
-        fetchProject(id);
-      }
+      fetchProject(id);
     } catch (error: any) {
       console.error("Error deleting task:", error);
       setAlertMessage("Failed to delete task. Please try again.");
