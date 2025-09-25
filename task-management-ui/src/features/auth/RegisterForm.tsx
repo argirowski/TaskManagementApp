@@ -12,15 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import Alert from "../../components/common/Alert";
+import Alert from "../../components/common/AlertComponent";
 import "./auth.css";
-
-interface RegisterFormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { RegisterFormData } from "../../types/types";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({

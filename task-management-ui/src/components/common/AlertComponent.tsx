@@ -1,23 +1,8 @@
 import React from "react";
 import { Alert as BootstrapAlert } from "react-bootstrap";
+import { AlertComponentProps } from "../../types/types";
 
-interface AlertProps {
-  show: boolean;
-  variant:
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-    | "primary"
-    | "secondary"
-    | "light"
-    | "dark";
-  message: string;
-  dismissible?: boolean;
-  onClose?: () => void;
-}
-
-const Alert: React.FC<AlertProps> = ({
+const AlertComponent: React.FC<AlertComponentProps> = ({
   show,
   variant,
   message,
@@ -37,4 +22,4 @@ const Alert: React.FC<AlertProps> = ({
   );
 };
 
-export default Alert;
+export default AlertComponent;

@@ -1,15 +1,8 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { EmptyStateComponentProps } from "../../types/types";
 
-interface EmptyStateProps {
-  title: string;
-  message?: string;
-  actionText?: string;
-  onAction?: () => void;
-  icon?: React.ReactNode;
-}
-
-const EmptyState: React.FC<EmptyStateProps> = ({
+const EmptyStateComponent: React.FC<EmptyStateComponentProps> = ({
   title,
   message,
   actionText,
@@ -30,4 +23,4 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
-export default EmptyState;
+export default EmptyStateComponent;

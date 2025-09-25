@@ -1,21 +1,8 @@
 import React from "react";
 import { Container, Spinner } from "react-bootstrap";
+import { LoaderComponentProps } from "../../types/types";
 
-interface LoaderProps {
-  message?: string;
-  variant?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-    | "light"
-    | "dark";
-  fullScreen?: boolean;
-}
-
-const Loader: React.FC<LoaderProps> = ({
+const LoaderComponent: React.FC<LoaderComponentProps> = ({
   message = "Loading...",
   variant = "primary",
   fullScreen = true,
@@ -37,4 +24,4 @@ const Loader: React.FC<LoaderProps> = ({
   );
 };
 
-export default Loader;
+export default LoaderComponent;

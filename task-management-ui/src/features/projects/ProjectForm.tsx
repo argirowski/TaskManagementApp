@@ -12,18 +12,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import Alert from "../../components/common/Alert";
-import Loader from "../../components/common/Loader";
+import AlertComponent from "../../components/common/AlertComponent";
+import LoaderComponent from "../../components/common/LoaderComponent";
 import "./project.css";
-
-interface ProjectFormData {
-  projectName: string;
-  projectDescription: string;
-}
-
-interface Project extends ProjectFormData {
-  id: string;
-}
+import { ProjectFormData, Project } from "../../types/types";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -141,7 +133,7 @@ const ProjectForm: React.FC = () => {
   };
 
   if (initialLoading) {
-    return <Loader message="Loading project..." />;
+    return <LoaderComponent message="Loading project..." />;
   }
 
   return (
@@ -158,7 +150,7 @@ const ProjectForm: React.FC = () => {
               </h4>
             </Card.Header>
             <Card.Body className="p-4">
-              <Alert
+              <AlertComponent
                 show={showAlert}
                 variant={alertVariant}
                 message={alertMessage}

@@ -3,10 +3,10 @@ import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Project } from "../../types/types";
-import ConfirmDialog from "../../components/common/ConfirmDialog";
-import Loader from "../../components/common/Loader";
-import Alert from "../../components/common/Alert";
-import EmptyState from "../../components/common/EmptyState";
+import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
+import LoaderComponent from "../../components/common/LoaderComponent";
+import AlertComponent from "../../components/common/AlertComponent";
+import EmptyStateComponent from "../../components/common/EmptyStateComponent";
 import "./project.css";
 
 const ProjectList: React.FC = () => {
@@ -77,7 +77,7 @@ const ProjectList: React.FC = () => {
   };
 
   if (loading) {
-    return <Loader message="Loading projects..." />;
+    return <LoaderComponent message="Loading projects..." />;
   }
 
   return (
@@ -95,7 +95,7 @@ const ProjectList: React.FC = () => {
               </Button>
             </Card.Header>
             <Card.Body>
-              <Alert
+              <AlertComponent
                 show={showAlert}
                 variant={alertVariant}
                 message={alertMessage}
@@ -103,7 +103,7 @@ const ProjectList: React.FC = () => {
               />
 
               {projects.length === 0 ? (
-                <EmptyState
+                <EmptyStateComponent
                   title="No projects found"
                   message="Create your first project to get started!"
                   actionText="Create Project"

@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { Container } from "react-bootstrap";
 
-const NavBar: React.FC = () => {
+const NavBarComponent: React.FC = () => {
   return (
     <Container className="text-center mt-5">
       <div className="App">
@@ -12,4 +12,4 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default NavBar;
+export default NavBarComponent;

@@ -1,18 +1,8 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { ConfirmDialogComponentProps } from "../../types/types";
 
-interface ConfirmDialogProps {
-  show: boolean;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-  variant?: "danger" | "primary" | "warning";
-}
-
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+const ConfirmDialogComponent: React.FC<ConfirmDialogComponentProps> = ({
   show,
   title,
   message,
@@ -44,4 +34,4 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   );
 };
 
-export default ConfirmDialog;
+export default ConfirmDialogComponent;

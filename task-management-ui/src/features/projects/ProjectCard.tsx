@@ -11,10 +11,10 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { ProjectDetailsDTO, TaskDetailsDTO } from "../../types/types";
-import ConfirmDialog from "../../components/common/ConfirmDialog";
-import Loader from "../../components/common/Loader";
-import Alert from "../../components/common/Alert";
-import EmptyState from "../../components/common/EmptyState";
+import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
+import LoaderComponent from "../../components/common/LoaderComponent";
+import AlertComponent from "../../components/common/AlertComponent";
+import EmptyStateComponent from "../../components/common/EmptyStateComponent";
 import "./project.css";
 
 const ProjectCard: React.FC = () => {
@@ -98,13 +98,13 @@ const ProjectCard: React.FC = () => {
   };
 
   if (loading) {
-    return <Loader message="Loading project details..." />;
+    return <LoaderComponent message="Loading project details..." />;
   }
 
   if (!project) {
     return (
       <Container className="mt-4">
-        <EmptyState
+        <EmptyStateComponent
           title="Project Not Found"
           message="The project you're looking for could not be found."
           actionText="Back to Projects"
@@ -116,7 +116,7 @@ const ProjectCard: React.FC = () => {
 
   return (
     <Container>
-      <Alert
+      <AlertComponent
         show={showAlert}
         variant={alertVariant}
         message={alertMessage}

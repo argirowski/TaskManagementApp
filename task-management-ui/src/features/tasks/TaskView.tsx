@@ -3,8 +3,8 @@ import { Container, Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SingleTaskDTO } from "../../types/types";
-import Loader from "../../components/common/Loader";
-import EmptyState from "../../components/common/EmptyState";
+import LoaderComponent from "../../components/common/LoaderComponent";
+import EmptyStateComponent from "../../components/common/EmptyStateComponent";
 import "../projects/project.css";
 
 const TaskView: React.FC = () => {
@@ -46,13 +46,13 @@ const TaskView: React.FC = () => {
   };
 
   if (loading) {
-    return <Loader message="Loading task details..." />;
+    return <LoaderComponent message="Loading task details..." />;
   }
 
   if (!task) {
     return (
       <Container className="mt-4">
-        <EmptyState
+        <EmptyStateComponent
           title="Task Not Found"
           message="The task you're looking for could not be found."
           actionText="Back to Project"

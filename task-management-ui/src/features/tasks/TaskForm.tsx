@@ -12,15 +12,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { SingleTaskDTO } from "../../types/types";
-import Loader from "../../components/common/Loader";
-import Alert from "../../components/common/Alert";
+import { SingleTaskDTO, TaskFormData } from "../../types/types";
+import LoaderComponent from "../../components/common/LoaderComponent";
+import AlertComponent from "../../components/common/AlertComponent";
 import "../projects/project.css";
-
-interface TaskFormData {
-  projectTaskTitle: string;
-  projectTaskDescription: string;
-}
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -141,7 +136,7 @@ const TaskForm: React.FC = () => {
   };
 
   if (initialLoading) {
-    return <Loader message="Loading task..." />;
+    return <LoaderComponent message="Loading task..." />;
   }
 
   return (
@@ -158,7 +153,7 @@ const TaskForm: React.FC = () => {
               </h4>
             </Card.Header>
             <Card.Body className="p-4">
-              <Alert
+              <AlertComponent
                 show={showAlert}
                 variant={alertVariant}
                 message={alertMessage}
