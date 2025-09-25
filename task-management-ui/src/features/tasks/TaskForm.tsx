@@ -103,16 +103,10 @@ const TaskForm: React.FC = () => {
           values
         );
         console.log("Task created:", response.data);
-        setAlertMessage("Task created successfully!");
       }
 
-      setAlertVariant("success");
-      setShowAlert(true);
-
-      // Redirect back to project after 2 seconds
-      setTimeout(() => {
-        navigate(`/projects/${projectId}`);
-      }, 2000);
+      // Redirect back to project immediately
+      navigate(`/projects/${projectId}`);
     } catch (error: any) {
       console.error("Task submission error:", error);
 

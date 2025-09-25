@@ -103,16 +103,10 @@ const ProjectForm: React.FC = () => {
           values
         );
         console.log("Project created:", response.data);
-        setAlertMessage("Project created successfully!");
       }
 
-      setAlertVariant("success");
-      setShowAlert(true);
-
-      // Redirect to projects list after 2 seconds
-      setTimeout(() => {
-        navigate("/projects");
-      }, 2000);
+      // Redirect to projects list immediately
+      navigate("/projects");
     } catch (error: any) {
       console.error("Project submission error:", error);
 

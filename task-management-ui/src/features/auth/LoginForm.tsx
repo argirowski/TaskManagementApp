@@ -61,14 +61,8 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("authToken", response.data.token);
       }
 
-      setAlertMessage("Login successful! Redirecting...");
-      setAlertVariant("success");
-      setShowAlert(true);
-
-      // Redirect to dashboard or home after 1 second
-      setTimeout(() => {
-        navigate("/dashboard"); // Change this to your desired route after login
-      }, 1000);
+      // Redirect immediately on successful login
+      navigate("/dashboard"); // Change this to your desired route after login
     } catch (error: any) {
       console.error("Login error:", error);
 

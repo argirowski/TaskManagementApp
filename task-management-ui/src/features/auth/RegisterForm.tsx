@@ -73,14 +73,9 @@ const RegisterForm: React.FC = () => {
       );
 
       console.log("Registration successful:", response.data);
-      setAlertMessage("Registration successful! Redirecting to login...");
-      setAlertVariant("success");
-      setShowAlert(true);
 
-      // Redirect to login after 2 seconds
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      // Redirect to login immediately
+      navigate("/login");
     } catch (error: any) {
       console.error("Registration error:", error);
 
