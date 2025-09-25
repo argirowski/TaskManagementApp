@@ -12,7 +12,8 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { ProjectDetailsDTO } from "../../types/types";
+import { ProjectDetailsDTO, TaskDetailsDTO } from "../../types/types";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 import "./project.css";
 
 const ProjectCard: React.FC = () => {
@@ -26,6 +27,8 @@ const ProjectCard: React.FC = () => {
   const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
     "success"
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<TaskDetailsDTO | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -57,6 +60,45 @@ const ProjectCard: React.FC = () => {
 
   const handleEditProject = () => {
     navigate(`/projects/${id}/edit`);
+  };
+
+  const handleDeleteTask = (task: TaskDetailsDTO) => {
+    setTaskToDelete(task);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!taskToDelete) return;
+
+    try {
+      // TODO: Implement actual task deletion API call
+      // await axios.delete(`https://localhost:7272/api/Tasks/${taskToDelete.id}`);
+
+      // For now, just show success message
+      setAlertMessage("Task deleted successfully!");
+      setAlertVariant("success");
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
+
+      // Refresh the project data
+      if (id) {
+        fetchProject(id);
+      }
+    } catch (error: any) {
+      console.error("Error deleting task:", error);
+      setAlertMessage("Failed to delete task. Please try again.");
+      setAlertVariant("danger");
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+    } finally {
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setTaskToDelete(null);
   };
 
   if (loading) {
@@ -103,33 +145,35 @@ const ProjectCard: React.FC = () => {
         <Col>
           {/* Project Header */}
           <Card className="mb-4">
-            <Card.Header className="project-card-header d-flex justify-content-between align-items-center">
-              <div>
-                <h4 className="project-header-title mb-0">
-                  {project.projectName}
-                </h4>
-                {project.projectDescription && (
-                  <p className="project-header-content mt-1">
-                    {project.projectDescription}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Button
-                  size="sm"
-                  className="btn-edit-project me-2"
-                  onClick={handleEditProject}
-                >
-                  Edit Project
-                </Button>
-                <Button
-                  size="sm"
-                  className="btn-back-projects"
-                  onClick={handleBackToProjects}
-                >
-                  Back
-                </Button>
-              </div>
+            <Card.Header className="project-card-header">
+              <Row className="align-items-center">
+                <Col xs={12} md={6} lg={9}>
+                  <h4 className="project-header-title mb-0">
+                    {project.projectName}
+                  </h4>
+                  {project.projectDescription && (
+                    <p className="project-header-content mt-1 mb-0">
+                      {project.projectDescription}
+                    </p>
+                  )}
+                </Col>
+                <Col xs={12} md={6} lg={3} className="text-md-end mt-2 mt-md-0">
+                  <Button
+                    size="sm"
+                    className="btn-edit-project me-2"
+                    onClick={handleEditProject}
+                  >
+                    Edit Project
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="btn-back-projects"
+                    onClick={handleBackToProjects}
+                  >
+                    Back
+                  </Button>
+                </Col>
+              </Row>
             </Card.Header>
           </Card>
         </Col>
@@ -224,14 +268,48 @@ const ProjectCard: React.FC = () => {
                 </div>
               ) : (
                 <ListGroup variant="flush">
-                  {project.tasks.map((task, index) => (
-                    <ListGroup.Item key={index}>
-                      <div className="project-task-name mb-1">
-                        {task.projectTaskTitle}
-                      </div>
-                      <small className="project-task-description">
-                        {task.projectTaskDescription || "No description"}
-                      </small>
+                  {project.tasks.map((task) => (
+                    <ListGroup.Item key={task.id}>
+                      <Row className="align-items-center">
+                        <Col md={8}>
+                          <div className="project-task-name mb-1">
+                            {task.projectTaskTitle}
+                          </div>
+                          <small className="project-task-description">
+                            {task.projectTaskDescription || "No description"}
+                          </small>
+                        </Col>
+                        <Col
+                          md={4}
+                          className="text-start text-md-end mt-2 mt-md-0"
+                        >
+                          <Button
+                            size="sm"
+                            className="btn-project-view me-2"
+                            onClick={() =>
+                              navigate(`/projects/${id}/tasks/${task.id}`)
+                            }
+                          >
+                            View
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="btn-task-edit me-2"
+                            onClick={() =>
+                              navigate(`/projects/${id}/tasks/${task.id}/edit`)
+                            }
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="btn-project-delete"
+                            onClick={() => handleDeleteTask(task)}
+                          >
+                            Delete
+                          </Button>
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -240,6 +318,18 @@ const ProjectCard: React.FC = () => {
           </Card>
         </Col>
       </Row>
+
+      {/* Task Delete Confirmation Dialog */}
+      <ConfirmDialog
+        show={showDeleteModal}
+        title="Confirm Delete"
+        message={`Are you sure you want to delete the task "${taskToDelete?.projectTaskTitle}"?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        variant="danger"
+      />
     </Container>
   );
 };

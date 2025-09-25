@@ -8,11 +8,11 @@ import {
   Alert,
   Spinner,
   Card,
-  Modal,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Project } from "../../types/types";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 import "./project.css";
 
 const ProjectList: React.FC = () => {
@@ -195,26 +195,17 @@ const ProjectList: React.FC = () => {
         </Col>
       </Row>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete the project "
-          {projectToDelete?.projectName}"?
-          <br />
-          <small className="text-muted">This action cannot be undone.</small>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleDeleteCancel}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleDeleteConfirm}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        show={showDeleteModal}
+        title="Confirm Delete"
+        message={`Are you sure you want to delete the project "${projectToDelete?.projectName}"?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        variant="danger"
+      />
     </Container>
   );
 };

@@ -1,14 +1,46 @@
 import React from "react";
-import "./App.css";
-import { Container } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
-const ConfirmDialog: React.FC = () => {
+interface ConfirmDialogProps {
+  show: boolean;
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  variant?: "danger" | "primary" | "warning";
+}
+
+const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+  show,
+  title,
+  message,
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  onConfirm,
+  onCancel,
+  variant = "danger",
+}) => {
   return (
-    <Container className="text-center mt-5">
-      <div className="App">
-        <h1>Confirm Action</h1>
-      </div>
-    </Container>
+    <Modal show={show} onHide={onCancel}>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {message}
+        <br />
+        <small className="text-muted">This action cannot be undone.</small>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onCancel}>
+          {cancelText}
+        </Button>
+        <Button variant={variant} onClick={onConfirm}>
+          {confirmText}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

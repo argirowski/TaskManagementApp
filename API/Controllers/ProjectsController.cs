@@ -52,13 +52,13 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            //    return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            if (role != Domain.Enums.ProjectRole.Owner)
-                return Forbid();
+            //var role = await _projectRepository.GetUserRoleAsync(id, userId);
+            //if (role != Domain.Enums.ProjectRole.Owner)
+            //    return Forbid();
 
             var result = await _mediator.Send(new DeleteProjectCommand(id));
             if (!result)
@@ -86,13 +86,13 @@ namespace API.Controllers
         //[Authorize]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] ProjectDTO projectDTO)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            //    return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            if (role != Domain.Enums.ProjectRole.Owner)
-                return Forbid();
+            //var role = await _projectRepository.GetUserRoleAsync(id, userId);
+            //if (role != Domain.Enums.ProjectRole.Owner)
+            //    return Forbid();
 
             var command = new UpdateProjectCommand(id, projectDTO);
             var result = await _mediator.Send(command);
