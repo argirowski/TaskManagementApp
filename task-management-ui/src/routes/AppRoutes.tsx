@@ -19,6 +19,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/projects/new" element={<ProjectForm />} />
       <Route path="/projects/:id/edit" element={<ProjectForm />} />
       <Route path="/projects/:projectId/tasks/:taskId" element={<TaskView />} />
+      <Route path="/projects/:projectId/tasks/new" element={<TaskForm />} />
       <Route
         path="/projects/:projectId/tasks/:taskId/edit"
         element={<TaskForm />}

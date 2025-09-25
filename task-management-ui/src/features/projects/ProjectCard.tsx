@@ -257,9 +257,22 @@ const ProjectCard: React.FC = () => {
         <Col md={12} className="mb-4">
           <Card>
             <Card.Header className="project-section-card-header">
-              <h5 className="project-section-header">
-                Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
-              </h5>
+              <Row className="align-items-center">
+                <Col>
+                  <h5 className="project-section-header mb-0">
+                    Tasks <Badge bg="secondary">{project.tasks.length}</Badge>
+                  </h5>
+                </Col>
+                <Col xs="auto">
+                  <Button
+                    size="sm"
+                    className="btn-edit-project"
+                    onClick={() => navigate(`/projects/${id}/tasks/new`)}
+                  >
+                    Add Task
+                  </Button>
+                </Col>
+              </Row>
             </Card.Header>
             <Card.Body>
               {project.tasks.length === 0 ? (
