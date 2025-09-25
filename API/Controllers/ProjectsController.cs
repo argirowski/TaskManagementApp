@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
             //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

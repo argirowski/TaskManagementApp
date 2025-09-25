@@ -7,6 +7,7 @@ import ProjectList from "../features/projects/ProjectList";
 import ProjectForm from "../features/projects/ProjectForm";
 import ProjectCard from "../features/projects/ProjectCard";
 import TaskView from "../features/tasks/TaskView";
+import TaskForm from "../features/tasks/TaskForm";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -18,6 +19,10 @@ const AppRoutes: React.FC = () => {
       <Route path="/projects/new" element={<ProjectForm />} />
       <Route path="/projects/:id/edit" element={<ProjectForm />} />
       <Route path="/projects/:projectId/tasks/:taskId" element={<TaskView />} />
+      <Route
+        path="/projects/:projectId/tasks/:taskId/edit"
+        element={<TaskForm />}
+      />
       <Route path="/projects/:id" element={<ProjectCard />} />
     </Routes>
   );

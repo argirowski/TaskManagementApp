@@ -28,6 +28,11 @@ export interface TaskDetailsDTO {
   projectTaskDescription: string;
 }
 
+export interface SingleTaskDTO {
+  projectTaskTitle: string;
+  projectTaskDescription: string;
+}
+
 export interface ProjectDetailsDTO {
   projectName: string;
   projectDescription?: string;

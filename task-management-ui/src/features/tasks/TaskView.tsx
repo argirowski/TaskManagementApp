@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
   Container,
-  Row,
-  Col,
-  Card,
   Button,
   Alert,
   Spinner,
-  Badge,
+  Card,
+  Col,
+  Row,
 } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Form, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { TaskDetailsDTO } from "../../types/types";
+import { SingleTaskDTO } from "../../types/types";
 import "../projects/project.css";
+import { Formik } from "formik";
 
 const TaskView: React.FC = () => {
   const navigate = useNavigate();
@@ -21,13 +21,8 @@ const TaskView: React.FC = () => {
     taskId: string;
   }>();
 
-  const [task, setTask] = useState<TaskDetailsDTO | null>(null);
+  const [task, setTask] = useState<SingleTaskDTO | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
-    "success"
-  );
 
   useEffect(() => {
     if (projectId && taskId) {
@@ -44,10 +39,6 @@ const TaskView: React.FC = () => {
       setTask(response.data);
     } catch (error: any) {
       console.error("Error fetching task:", error);
-      setAlertMessage("Failed to load task details. Please try again.");
-      setAlertVariant("danger");
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setLoading(false);
     }
@@ -63,14 +54,9 @@ const TaskView: React.FC = () => {
 
   if (loading) {
     return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3">Loading task details...</p>
-        </div>
+      <Container className="text-center mt-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">Loading task details...</p>
       </Container>
     );
   }
@@ -79,7 +65,7 @@ const TaskView: React.FC = () => {
     return (
       <Container className="mt-4">
         <Alert variant="danger">
-          <Alert.Heading>Task Not Found</Alert.Heading>
+          <h4>Task Not Found</h4>
           <p>The task you're looking for could not be found.</p>
           <Button variant="primary" onClick={handleBackToProject}>
             Back to Project
@@ -95,103 +81,35 @@ const TaskView: React.FC = () => {
       style={{ minHeight: "100vh" }}
     >
       <Row className="w-100">
-        <Col xs={12} sm={10} md={8} lg={6} className="mx-auto">
-          <Card className="custom-project-card border-0">
-            <Card.Header className="custom-project-card-header">
-              <Row className="align-items-center">
-                <Col xs={12} md={8}>
-                  <h4 className="project-card-header-title mb-0">
-                    Task Details
-                  </h4>
-                  <p className="project-header-content mt-1 mb-0">
-                    View task information
-                  </p>
-                </Col>
-                <Col
-                  xs={12}
-                  md={4}
-                  className="text-start text-md-end mt-2 mt-md-0"
-                >
-                  <Button
-                    size="sm"
-                    className="btn-edit-project me-2"
-                    onClick={handleEditTask}
-                  >
-                    Edit Task
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="btn-back-projects"
-                    onClick={handleBackToProject}
-                  >
-                    Back
-                  </Button>
-                </Col>
-              </Row>
+        <Col xs={12} sm={10} md={8} lg={6} xl={5} className="mx-auto">
+          <Card className="custom-card border-0">
+            <Card.Header className="text-center custom-card-header py-4">
+              <h4 className="header-title mb-0">Task Details</h4>
             </Card.Header>
             <Card.Body className="p-4">
-              {showAlert && (
-                <Alert
-                  variant={alertVariant}
-                  dismissible
-                  onClose={() => setShowAlert(false)}
-                >
-                  {alertMessage}
-                </Alert>
-              )}
-
-              <div className="mb-4">
-                <div className="mb-3">
-                  <label className="project-form-label mb-2">Task Title</label>
-                  <div className="p-3 bg-light rounded">
-                    <h5 className="project-task-name mb-0">
-                      {task.projectTaskTitle}
-                    </h5>
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="project-form-label mb-2">
-                    Task Description
-                  </label>
-                  <div
-                    className="p-3 bg-light rounded"
-                    style={{ minHeight: "120px" }}
-                  >
-                    {task.projectTaskDescription ? (
-                      <p className="project-task-description mb-0">
-                        {task.projectTaskDescription}
-                      </p>
-                    ) : (
-                      <p className="text-muted mb-0 fst-italic">
-                        No description provided
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="project-form-label mb-2">Task ID</label>
-                  <div className="p-2 bg-light rounded">
-                    <Badge bg="secondary" className="fs-6">
-                      {task.id}
-                    </Badge>
-                  </div>
-                </div>
+              <div className="mb-3">
+                <h5>Title:</h5>
+                <p>{task.projectTaskTitle}</p>
               </div>
-
+              <div className="mb-4">
+                <h5>Description:</h5>
+                <p>
+                  {task.projectTaskDescription || "No description provided"}
+                </p>
+              </div>
               <div className="d-grid gap-2">
                 <Button
-                  className="btn-edit-project"
+                  type="button"
                   size="lg"
                   onClick={handleEditTask}
+                  className="btn-create-account"
                 >
                   Edit Task
                 </Button>
                 <Button
-                  className="btn-cancel"
-                  size="lg"
                   onClick={handleBackToProject}
+                  size="lg"
+                  className="btn-back-home"
                 >
                   Back to Project
                 </Button>
