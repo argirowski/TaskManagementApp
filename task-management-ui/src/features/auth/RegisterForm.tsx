@@ -6,13 +6,13 @@ import {
   Card,
   Form,
   Button,
-  Alert,
   Spinner,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import Alert from "../../components/common/Alert";
 import "./auth.css";
 
 interface RegisterFormData {
@@ -98,7 +98,6 @@ const RegisterForm: React.FC = () => {
 
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setSubmitting(false);
     }
@@ -120,15 +119,12 @@ const RegisterForm: React.FC = () => {
               <h4 className="header-title mb-0">Create Your Account</h4>
             </Card.Header>
             <Card.Body className="p-4">
-              {showAlert && (
-                <Alert
-                  variant={alertVariant}
-                  dismissible
-                  onClose={() => setShowAlert(false)}
-                >
-                  {alertMessage}
-                </Alert>
-              )}
+              <Alert
+                show={showAlert}
+                variant={alertVariant}
+                message={alertMessage}
+                onClose={() => setShowAlert(false)}
+              />
 
               <Formik
                 initialValues={initialValues}

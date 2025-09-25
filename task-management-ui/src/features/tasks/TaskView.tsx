@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Button,
-  Alert,
-  Spinner,
-  Card,
-  Col,
-  Row,
-} from "react-bootstrap";
-import { Form, useNavigate, useParams } from "react-router-dom";
+import { Container, Button, Card, Col, Row } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { SingleTaskDTO } from "../../types/types";
+import Loader from "../../components/common/Loader";
+import EmptyState from "../../components/common/EmptyState";
 import "../projects/project.css";
-import { Formik } from "formik";
 
 const TaskView: React.FC = () => {
   const navigate = useNavigate();
@@ -53,24 +46,18 @@ const TaskView: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-3">Loading task details...</p>
-      </Container>
-    );
+    return <Loader message="Loading task details..." />;
   }
 
   if (!task) {
     return (
       <Container className="mt-4">
-        <Alert variant="danger">
-          <h4>Task Not Found</h4>
-          <p>The task you're looking for could not be found.</p>
-          <Button variant="primary" onClick={handleBackToProject}>
-            Back to Project
-          </Button>
-        </Alert>
+        <EmptyState
+          title="Task Not Found"
+          message="The task you're looking for could not be found."
+          actionText="Back to Project"
+          onAction={handleBackToProject}
+        />
       </Container>
     );
   }

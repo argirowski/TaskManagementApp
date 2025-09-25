@@ -6,7 +6,6 @@ import {
   Card,
   Form,
   Button,
-  Alert,
   Spinner,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,6 +13,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { SingleTaskDTO } from "../../types/types";
+import Loader from "../../components/common/Loader";
+import Alert from "../../components/common/Alert";
 import "../projects/project.css";
 
 interface TaskFormData {
@@ -77,7 +78,6 @@ const TaskForm: React.FC = () => {
       setAlertMessage("Failed to load task. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setInitialLoading(false);
     }
@@ -137,7 +137,6 @@ const TaskForm: React.FC = () => {
 
       setAlertVariant("danger");
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 5000);
     } finally {
       setSubmitting(false);
     }
@@ -148,17 +147,7 @@ const TaskForm: React.FC = () => {
   };
 
   if (initialLoading) {
-    return (
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3">Loading task...</p>
-        </div>
-      </Container>
-    );
+    return <Loader message="Loading task..." />;
   }
 
   return (
@@ -175,15 +164,12 @@ const TaskForm: React.FC = () => {
               </h4>
             </Card.Header>
             <Card.Body className="p-4">
-              {showAlert && (
-                <Alert
-                  variant={alertVariant}
-                  dismissible
-                  onClose={() => setShowAlert(false)}
-                >
-                  {alertMessage}
-                </Alert>
-              )}
+              <Alert
+                show={showAlert}
+                variant={alertVariant}
+                message={alertMessage}
+                onClose={() => setShowAlert(false)}
+              />
 
               <Formik
                 initialValues={formValues}
