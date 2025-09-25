@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import Alert from "../../components/common/AlertComponent";
+import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { RegisterFormData } from "../../types/types";
 
@@ -108,7 +108,7 @@ const RegisterForm: React.FC = () => {
               <h4 className="header-title mb-0">Create Your Account</h4>
             </Card.Header>
             <Card.Body className="p-4">
-              <Alert
+              <AlertComponent
                 show={showAlert}
                 variant={alertVariant}
                 message={alertMessage}
