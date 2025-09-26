@@ -75,9 +75,8 @@ namespace API.Controllers
             //    return Forbid();
 
             var command = new DeleteTaskCommand(projectId, taskId);
-            var result = await _mediator.Send(command);
-            if (!result)
-                return NotFound();
+            await _mediator.Send(command);
+
             return NoContent();
         }
 
