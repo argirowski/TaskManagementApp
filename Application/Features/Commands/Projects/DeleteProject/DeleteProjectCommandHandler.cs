@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Features.Commands.Projects.DeleteProject
 {
-    public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, bool>
+    public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, Unit>
     {
         private readonly IProjectRepository _projectRepository;
 
@@ -12,9 +12,10 @@ namespace Application.Features.Commands.Projects.DeleteProject
             _projectRepository = projectRepository;
         }
 
-        public async Task<bool> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
         {
-            return await _projectRepository.DeleteAsync(request.Id);
+            await _projectRepository.DeleteAsync(request.Id);
+            return Unit.Value;
         }
     }
 }

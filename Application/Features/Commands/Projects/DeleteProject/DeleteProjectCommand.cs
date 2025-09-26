@@ -3,7 +3,7 @@
 namespace Application.Features.Commands.Projects.DeleteProject
 {
     public class DeleteProjectCommand
-    : IRequest<bool>
+    : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public DeleteProjectCommand(Guid id)
