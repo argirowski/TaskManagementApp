@@ -50,17 +50,16 @@ namespace API.Controllers
         }
         [HttpPost("project/{projectId}")]
         //[Authorize]
-        public async Task<IActionResult> CreateTask(Guid projectId, [FromBody] TaskDTO taskDTO)
+        public async Task<ActionResult<TaskDTO>> CreateTask(Guid projectId, [FromBody] TaskDTO taskDTO)
         {
-            var command = new CreateTaskCommand(
-                projectId,
-                taskDTO.ProjectTaskTitle ?? string.Empty,
-                taskDTO.ProjectTaskDescription ?? string.Empty
-            );
+            var command = new CreateTaskCommand(projectId, taskDTO);
             var result = await _mediator.Send(command);
-            if (!result)
+            if (result == null)
+            {
                 return BadRequest("Task creation failed.");
-            return Ok("Task created successfully.");
+            }
+            return StatusCode(201, result);
+
         }
 
         [HttpDelete("project/{projectId}/task/{taskId}")]

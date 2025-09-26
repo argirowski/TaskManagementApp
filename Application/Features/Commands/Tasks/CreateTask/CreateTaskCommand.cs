@@ -1,18 +1,17 @@
-﻿using MediatR;
+﻿using Application.DTOs;
+using MediatR;
 
 namespace Application.Features.Commands.Tasks.CreateTask
 {
-    public class CreateTaskCommand : IRequest<bool>
+    public class CreateTaskCommand : IRequest<TaskDTO?>
     {
         public Guid ProjectId { get; }
-        public string Title { get; }
-        public string Description { get; }
+        public TaskDTO Task { get; }
 
-        public CreateTaskCommand(Guid projectId, string title, string description)
+        public CreateTaskCommand(Guid projectId, TaskDTO task)
         {
             ProjectId = projectId;
-            Title = title;
-            Description = description;
+            Task = task;
         }
     }
 }

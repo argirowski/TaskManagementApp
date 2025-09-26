@@ -77,7 +77,8 @@ namespace API.Controllers
             var result = await _mediator.Send(command);
             if (result == null)
                 return BadRequest("Project creation failed.");
-            return Ok(result);
+
+            return StatusCode(201, result);
         }
 
         [HttpPut("{id}")]
@@ -91,12 +92,10 @@ namespace API.Controllers
             //var role = await _projectRepository.GetUserRoleAsync(id, userId);
             //if (role != Domain.Enums.ProjectRole.Owner)
             //    return Forbid();
-
             var command = new UpdateProjectCommand(id, editProjectDTO);
-            var result = await _mediator.Send(command);
-            if (!result)
-                return NotFound();
-            return Ok("Project updated successfully.");
+            await _mediator.Send(command);
+            return NoContent();
+
         }
     }
 }

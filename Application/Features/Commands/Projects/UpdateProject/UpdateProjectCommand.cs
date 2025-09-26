@@ -1,9 +1,10 @@
 ﻿using Application.DTOs;
+using MediatR;
 
 namespace Application.Features.Commands.Projects.UpdateProject
 {
     public class UpdateProjectCommand
-    : MediatR.IRequest<bool>
+    : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public CreateProjectDTO Project { get; set; }
