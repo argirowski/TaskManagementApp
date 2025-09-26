@@ -95,9 +95,9 @@ export interface LoginFormData {
 }
 
 export interface RegisterFormData {
-  username: string;
-  email: string;
-  password: string;
+  UserName: string;
+  UserEmail: string;
+  Password: string;
   confirmPassword: string;
 }
 

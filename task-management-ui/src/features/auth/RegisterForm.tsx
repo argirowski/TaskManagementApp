@@ -25,9 +25,9 @@ const RegisterForm: React.FC = () => {
   );
 
   const initialValues: RegisterFormData = {
-    username: "",
-    email: "",
-    password: "",
+    UserName: "",
+    UserEmail: "",
+    Password: "",
     confirmPassword: "",
   };
 
@@ -38,6 +38,9 @@ const RegisterForm: React.FC = () => {
     try {
       // Remove confirmPassword from the data sent to API
       const { confirmPassword, ...registrationData } = values;
+
+      // Debug: Log what we're sending to the backend
+      console.log("Sending to backend:", registrationData);
 
       // API endpoint for registration
       const response = await axios.post(
@@ -51,11 +54,14 @@ const RegisterForm: React.FC = () => {
       navigate("/login");
     } catch (error: any) {
       console.error("Registration error:", error);
+      console.error("Error response data:", error.response?.data);
+      console.error("Error status:", error.response?.status);
 
       if (error.response?.data?.message) {
         setAlertMessage(error.response.data.message);
       } else if (error.response?.data?.errors) {
         // Handle validation errors from backend
+        console.error("Backend validation errors:", error.response.data.errors);
         Object.keys(error.response.data.errors).forEach((field) => {
           setFieldError(field, error.response.data.errors[field][0]);
         });
@@ -113,15 +119,15 @@ const RegisterForm: React.FC = () => {
                       <Form.Label className="form-label">Username</Form.Label>
                       <Form.Control
                         type="text"
-                        name="username"
+                        name="UserName"
                         placeholder="Enter username"
-                        value={values.username}
+                        value={values.UserName}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.username && !!errors.username}
+                        isInvalid={touched.UserName && !!errors.UserName}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.username}
+                        {errors.UserName}
                       </Form.Control.Feedback>
                     </Form.Group>
 
@@ -131,15 +137,15 @@ const RegisterForm: React.FC = () => {
                       </Form.Label>
                       <Form.Control
                         type="email"
-                        name="email"
+                        name="UserEmail"
                         placeholder="Enter email"
-                        value={values.email}
+                        value={values.UserEmail}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.email && !!errors.email}
+                        isInvalid={touched.UserEmail && !!errors.UserEmail}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.email}
+                        {errors.UserEmail}
                       </Form.Control.Feedback>
                     </Form.Group>
 
@@ -147,15 +153,15 @@ const RegisterForm: React.FC = () => {
                       <Form.Label className="form-label">Password</Form.Label>
                       <Form.Control
                         type="password"
-                        name="password"
+                        name="Password"
                         placeholder="Enter password"
-                        value={values.password}
+                        value={values.Password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.password && !!errors.password}
+                        isInvalid={touched.Password && !!errors.Password}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.password}
+                        {errors.Password}
                       </Form.Control.Feedback>
                     </Form.Group>
 

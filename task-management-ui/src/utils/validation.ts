@@ -24,14 +24,14 @@ export const tasksValidationSchema = Yup.object({
 });
 
 export const registerUserValidationSchema = Yup.object({
-  username: Yup.string()
+  UserName: Yup.string()
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username must be less than 20 characters")
     .required("Username is required"),
-  email: Yup.string()
+  UserEmail: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string()
+  Password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
@@ -39,7 +39,7 @@ export const registerUserValidationSchema = Yup.object({
     )
     .required("Password is required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
+    .oneOf([Yup.ref("Password")], "Passwords must match")
     .required("Confirm password is required"),
 });
 
