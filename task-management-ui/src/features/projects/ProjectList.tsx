@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Project } from "../../types/types";
+import { fetchProjects, deleteProject } from "../../services/projectService";
 import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
@@ -22,16 +22,15 @@ const ProjectList: React.FC = () => {
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
 
   useEffect(() => {
-    fetchProjects();
+    loadProjects();
   }, []);
 
-  const fetchProjects = async () => {
+  const loadProjects = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("https://localhost:7272/api/Projects");
-      setProjects(response.data);
+      const data = await fetchProjects();
+      setProjects(data);
     } catch (error: any) {
-      console.error("Error fetching projects:", error);
       setAlertMessage("Failed to load projects. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
@@ -53,15 +52,12 @@ const ProjectList: React.FC = () => {
     if (!projectToDelete) return;
 
     try {
-      await axios.delete(
-        `https://localhost:7272/api/Projects/${projectToDelete.id}`
-      );
+      await deleteProject(projectToDelete.id);
       setProjects(projects.filter((p) => p.id !== projectToDelete.id));
       setAlertMessage("Project deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
     } catch (error: any) {
-      console.error("Error deleting project:", error);
       setAlertMessage("Failed to delete project. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);

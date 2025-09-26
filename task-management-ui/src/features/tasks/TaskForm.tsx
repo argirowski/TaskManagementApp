@@ -10,8 +10,8 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
-import axios from "axios";
-import { SingleTaskDTO, TaskFormData } from "../../types/types";
+import { TaskFormData } from "../../types/types";
+import { fetchTask, createTask, updateTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
 import "../projects/project.css";
@@ -43,23 +43,20 @@ const TaskForm: React.FC = () => {
 
   useEffect(() => {
     if (isEditing && projectId && taskId) {
-      fetchTask(projectId, taskId);
+      loadTask(projectId, taskId);
     }
   }, [isEditing, projectId, taskId]);
 
-  const fetchTask = async (projectId: string, taskId: string) => {
+  const loadTask = async (projectId: string, taskId: string) => {
     try {
       setInitialLoading(true);
-      const response = await axios.get(
-        `https://localhost:7272/api/Tasks/project/${projectId}/task/${taskId}`
-      );
-      const task: SingleTaskDTO = response.data;
+      const task = await fetchTask(projectId, taskId);
       setFormValues({
         projectTaskTitle: task.projectTaskTitle,
         projectTaskDescription: task.projectTaskDescription || "",
       });
     } catch (error: any) {
-      console.error("Error fetching task:", error);
+      console.error("Failed to load task:", error);
       setAlertMessage("Failed to load task. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
@@ -75,19 +72,13 @@ const TaskForm: React.FC = () => {
     try {
       if (isEditing && projectId && taskId) {
         // Update existing task
-        const response = await axios.put(
-          `https://localhost:7272/api/Tasks/project/${projectId}/task/${taskId}`,
-          values
-        );
-        console.log("Task updated:", response.data);
+        const updatedTask = await updateTask(projectId, taskId, values);
+        console.log("Task updated:", updatedTask);
         setAlertMessage("Task updated successfully!");
       } else if (projectId) {
         // Create new task
-        const response = await axios.post(
-          `https://localhost:7272/api/Tasks/project/${projectId}`,
-          values
-        );
-        console.log("Task created:", response.data);
+        const newTask = await createTask(projectId, values);
+        console.log("Task created:", newTask);
       }
 
       // Redirect back to project immediately

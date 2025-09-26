@@ -9,8 +9,9 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { ProjectDetailsDTO, TaskDetailsDTO } from "../../types/types";
+import { fetchProjectDetails } from "../../services/projectService";
+import { deleteTask } from "../../services/taskService";
 import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
@@ -33,19 +34,16 @@ const ProjectCard: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchProject(id);
+      loadProject(id);
     }
   }, [id]);
 
-  const fetchProject = async (id: string) => {
+  const loadProject = async (projectId: string) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `https://localhost:7272/api/Projects/${id}`
-      );
-      setProject(response.data);
+      const projectData = await fetchProjectDetails(projectId);
+      setProject(projectData);
     } catch (error: any) {
-      console.error("Error fetching project:", error);
       setAlertMessage("Failed to load project details. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
@@ -71,18 +69,15 @@ const ProjectCard: React.FC = () => {
     if (!taskToDelete || !id) return;
 
     try {
-      await axios.delete(
-        `https://localhost:7272/api/Tasks/project/${id}/task/${taskToDelete.id}`
-      );
+      await deleteTask(id, taskToDelete.id);
 
       setAlertMessage("Task deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
 
       // Refresh the project data
-      fetchProject(id);
+      loadProject(id);
     } catch (error: any) {
-      console.error("Error deleting task:", error);
       setAlertMessage("Failed to delete task. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);

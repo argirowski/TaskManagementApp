@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { SingleTaskDTO } from "../../types/types";
+import { fetchTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import EmptyStateComponent from "../../components/common/EmptyStateComponent";
 import "../projects/project.css";
@@ -19,19 +19,18 @@ const TaskView: React.FC = () => {
 
   useEffect(() => {
     if (projectId && taskId) {
-      fetchTask(projectId, taskId);
+      loadTask(projectId, taskId);
     }
   }, [projectId, taskId]);
 
-  const fetchTask = async (projectId: string, taskId: string) => {
+  const loadTask = async (projectId: string, taskId: string) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `https://localhost:7272/api/Tasks/project/${projectId}/task/${taskId}`
-      );
-      setTask(response.data);
+      const taskData = await fetchTask(projectId, taskId);
+      setTask(taskData);
     } catch (error: any) {
-      console.error("Error fetching task:", error);
+      // Error handling - task will remain null and trigger "not found" state
+      console.error("Failed to load task:", error);
     } finally {
       setLoading(false);
     }

@@ -10,12 +10,16 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
-import axios from "axios";
+import {
+  fetchProject,
+  createProject,
+  updateProject,
+} from "../../services/projectService";
 import AlertComponent from "../../components/common/AlertComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import { projectValidationSchema } from "../../utils/validation";
 import "./project.css";
-import { ProjectFormData, Project } from "../../types/types";
+import { ProjectFormData } from "../../types/types";
 
 const ProjectForm: React.FC = () => {
   const navigate = useNavigate();
@@ -38,23 +42,19 @@ const ProjectForm: React.FC = () => {
 
   useEffect(() => {
     if (isEditing && id) {
-      fetchProject(id);
+      loadProject(id);
     }
   }, [isEditing, id]);
 
-  const fetchProject = async (projectId: string) => {
+  const loadProject = async (projectId: string) => {
     try {
       setInitialLoading(true);
-      const response = await axios.get(
-        `https://localhost:7272/api/Projects/${projectId}`
-      );
-      const project: Project = response.data;
+      const project = await fetchProject(projectId);
       setFormValues({
         projectName: project.projectName,
         projectDescription: project.projectDescription || "",
       });
     } catch (error: any) {
-      console.error("Error fetching project:", error);
       setAlertMessage("Failed to load project. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
@@ -70,26 +70,15 @@ const ProjectForm: React.FC = () => {
     try {
       if (isEditing && id) {
         // Update existing project
-        const response = await axios.put(
-          `https://localhost:7272/api/Projects/${id}`,
-          values
-        );
-        console.log("Project updated:", response.data);
-        setAlertMessage("Project updated successfully!");
+        await updateProject(id, values);
       } else {
         // Create new project
-        const response = await axios.post(
-          "https://localhost:7272/api/Projects",
-          values
-        );
-        console.log("Project created:", response.data);
+        await createProject(values);
       }
 
       // Redirect to projects list immediately
       navigate("/projects");
     } catch (error: any) {
-      console.error("Project submission error:", error);
-
       if (error.response?.data?.message) {
         setAlertMessage(error.response.data.message);
       } else if (error.response?.data?.errors) {
