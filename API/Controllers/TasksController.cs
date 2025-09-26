@@ -92,16 +92,16 @@ namespace API.Controllers
             //if (role != ProjectRole.Owner)
             //    return Forbid();
 
+
             var command = new UpdateTaskCommand(
                 projectId,
                 taskId,
                 taskDTO.ProjectTaskTitle ?? string.Empty,
                 taskDTO.ProjectTaskDescription ?? string.Empty
             );
-            var result = await _mediator.Send(command);
-            if (!result)
-                return NotFound();
-            return Ok("Task updated successfully.");
+            await _mediator.Send(command);
+            return NoContent();
+
         }
     }
 }
