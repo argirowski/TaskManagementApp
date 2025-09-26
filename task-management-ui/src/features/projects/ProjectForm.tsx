@@ -10,24 +10,12 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import AlertComponent from "../../components/common/AlertComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
+import { projectValidationSchema } from "../../utils/validation";
 import "./project.css";
 import { ProjectFormData, Project } from "../../types/types";
-
-// Validation schema using Yup
-const validationSchema = Yup.object({
-  projectName: Yup.string()
-    .min(3, "Project name must be at least 3 characters")
-    .max(100, "Project name must be less than 100 characters")
-    .required("Project name is required"),
-  projectDescription: Yup.string().max(
-    500,
-    "Description must be less than 500 characters"
-  ),
-});
 
 const ProjectForm: React.FC = () => {
   const navigate = useNavigate();
@@ -159,7 +147,7 @@ const ProjectForm: React.FC = () => {
 
               <Formik
                 initialValues={formValues}
-                validationSchema={validationSchema}
+                validationSchema={projectValidationSchema}
                 enableReinitialize={true}
                 onSubmit={handleSubmit}
               >
@@ -215,7 +203,7 @@ const ProjectForm: React.FC = () => {
                         {errors.projectDescription}
                       </Form.Control.Feedback>
                       <Form.Text className="project-form-footer">
-                        Optional. Maximum 500 characters.
+                        Optional. Maximum 200 characters.
                       </Form.Text>
                     </Form.Group>
 

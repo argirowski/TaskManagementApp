@@ -10,21 +10,11 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { LoginFormData } from "../../types/types";
-
-// Validation schema using Yup
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-});
+import { loginUserValidationSchema } from "../../utils/validation";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -108,7 +98,7 @@ const LoginForm: React.FC = () => {
 
               <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={loginUserValidationSchema}
                 onSubmit={handleSubmit}
               >
                 {({

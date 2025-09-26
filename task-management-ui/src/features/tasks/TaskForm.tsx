@@ -10,24 +10,14 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import { SingleTaskDTO, TaskFormData } from "../../types/types";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
 import "../projects/project.css";
+import { tasksValidationSchema } from "../../utils/validation";
 
 // Validation schema using Yup
-const validationSchema = Yup.object({
-  projectTaskTitle: Yup.string()
-    .min(3, "Task title must be at least 3 characters")
-    .max(200, "Task title must be less than 200 characters")
-    .required("Task title is required"),
-  projectTaskDescription: Yup.string().max(
-    1000,
-    "Description must be less than 1000 characters"
-  ),
-});
 
 const TaskForm: React.FC = () => {
   const navigate = useNavigate();
@@ -162,7 +152,7 @@ const TaskForm: React.FC = () => {
 
               <Formik
                 initialValues={formValues}
-                validationSchema={validationSchema}
+                validationSchema={tasksValidationSchema}
                 enableReinitialize={true}
                 onSubmit={handleSubmit}
               >
@@ -220,7 +210,7 @@ const TaskForm: React.FC = () => {
                         {errors.projectTaskDescription}
                       </Form.Control.Feedback>
                       <Form.Text className="project-form-footer">
-                        Optional. Maximum 1000 characters.
+                        Optional. Maximum 500 characters.
                       </Form.Text>
                     </Form.Group>
 

@@ -10,32 +10,11 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { RegisterFormData } from "../../types/types";
-
-// Validation schema using Yup
-const validationSchema = Yup.object({
-  username: Yup.string()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be less than 20 characters")
-    .required("Username is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    )
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm password is required"),
-});
+import { registerUserValidationSchema } from "../../utils/validation";
 
 const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
@@ -117,7 +96,7 @@ const RegisterForm: React.FC = () => {
 
               <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={registerUserValidationSchema}
                 onSubmit={handleSubmit}
               >
                 {({

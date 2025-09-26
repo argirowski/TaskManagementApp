@@ -17,11 +17,7 @@ const ConfirmDialogComponent: React.FC<ConfirmDialogComponentProps> = ({
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {message}
-        <br />
-        <small className="text-muted">This action cannot be undone.</small>
-      </Modal.Body>
+      <Modal.Body>{message}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onCancel}>
           {cancelText}
