@@ -4,7 +4,7 @@ using MediatR;
 namespace Application.Features.Commands.Projects.CreateProject
 {
     public class CreateProjectCommand
-    : IRequest<bool>
+    : IRequest<CreateProjectDTO?>
     {
         public CreateProjectDTO Project { get; set; } = null!;
         public Guid UserId { get; set; }

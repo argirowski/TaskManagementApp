@@ -66,7 +66,7 @@ namespace API.Controllers
 
         [HttpPost]
         //[Authorize]
-        public async Task<IActionResult> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
+        public async Task<ActionResult<CreateProjectDTO>> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
             //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
@@ -75,9 +75,9 @@ namespace API.Controllers
 
             var command = new CreateProjectCommand(createProjectDTO, userId);
             var result = await _mediator.Send(command);
-            if (!result)
+            if (result == null)
                 return BadRequest("Project creation failed.");
-            return Ok("Project created successfully.");
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
