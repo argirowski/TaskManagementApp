@@ -1,10 +1,10 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs;
 using MediatR;
 
 namespace Application.Features.Queries.Projects.GetSingleProject
 {
     public class GetSingleProjectQuery
-    : IRequest<Project?>
+    : IRequest<ProjectDetailsDTO?>
     {
         public Guid Id { get; set; }
         public GetSingleProjectQuery(Guid id)

@@ -1,21 +1,27 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs;
+using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
 
 namespace Application.Features.Queries.Projects.GetSingleProject
 {
-    public class GetSingleProjectQueryHandler : IRequestHandler<GetSingleProjectQuery, Project?>
+    public class GetSingleProjectQueryHandler : IRequestHandler<GetSingleProjectQuery, ProjectDetailsDTO?>
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IMapper _mapper;
 
-        public GetSingleProjectQueryHandler(IProjectRepository projectRepository)
+        public GetSingleProjectQueryHandler(IProjectRepository projectRepository, IMapper mapper)
         {
             _projectRepository = projectRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Project?> Handle(GetSingleProjectQuery request, CancellationToken cancellationToken)
+        public async Task<ProjectDetailsDTO?> Handle(GetSingleProjectQuery request, CancellationToken cancellationToken)
         {
-            return await _projectRepository.GetByIdAsync(request.Id);
+            var project = await _projectRepository.GetByIdAsync(request.Id);
+            if (project == null)
+                return null;
+            return _mapper.Map<ProjectDetailsDTO>(project);
         }
     }
 }

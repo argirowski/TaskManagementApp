@@ -41,11 +41,10 @@ namespace API.Controllers
         //[Authorize]
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
         {
-            var project = await _mediator.Send(new GetSingleProjectQuery(id));
-            if (project == null)
+            var projectDetailsDTO = await _mediator.Send(new GetSingleProjectQuery(id));
+            if (projectDetailsDTO == null)
                 return NotFound();
-            var detailsDTO = _mapper.Map<ProjectDetailsDTO>(project);
-            return Ok(detailsDTO);
+            return Ok(projectDetailsDTO);
         }
 
         [HttpDelete("{id}")]
@@ -60,9 +59,8 @@ namespace API.Controllers
             //if (role != Domain.Enums.ProjectRole.Owner)
             //    return Forbid();
 
-            var result = await _mediator.Send(new DeleteProjectCommand(id));
-            if (!result)
-                return NotFound();
+            await _mediator.Send(new DeleteProjectCommand(id));
+
             return NoContent();
         }
 
