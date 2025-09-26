@@ -110,3 +110,124 @@ body {
   line-height: 1.4;
   font-style: italic;
 }
+
+/* Common Styling */
+.project-card-header,
+.custom-card-header {
+  background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.project-header-title,
+.header-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-create-account,
+.btn-sign-in,
+.btn-create-project,
+.btn-create-task {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-create-account:hover,
+.btn-sign-in:hover,
+.btn-create-project:hover,
+.btn-create-task:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+.btn-create-account:disabled,
+.btn-sign-in:disabled,
+.btn-create-project:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-back-home,
+.btn-cancel {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-back-home:hover,
+.btn-cancel:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  color: white;
+}
+
+.btn-back-home:disabled,
+.btn-cancel:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  border: none;
+  color: #f3f4f6;
+  transform: none;
+  box-shadow: none;
+}
+
+.custom-card,
+.custom-project-card,
+.custom-task-card {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(102, 126, 234, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.custom-card:hover,
+.custom-project-card:hover {
+  box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
+    0 15px 15px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(102, 126, 234, 0.1);
+}
+
+/* Custom Project Card Header */
+.custom-project-card-header,
+.custom-task-card-header {
+  background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+  border: none;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.project-card-header-title,
+.project-task-header-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.project-form-label,
+.task-form-label {
+  color: #513739;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+.project-form-footer,
+.task-form-footer {
+  color: #8b646c !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  margin: 0 !important;
+}

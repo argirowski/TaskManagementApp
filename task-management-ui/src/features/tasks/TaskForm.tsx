@@ -127,9 +127,9 @@ const TaskForm: React.FC = () => {
     >
       <Row className="w-100">
         <Col xs={12} sm={10} md={8} lg={6} className="mx-auto">
-          <Card className="custom-project-card border-0">
-            <Card.Header className="text-center custom-project-card-header py-4">
-              <h4 className="project-card-header-title mb-0">
+          <Card className="custom-task-card border-0">
+            <Card.Header className="text-center custom-task-card-header py-4">
+              <h4 className="project-task-header-title mb-0">
                 {isEditing ? "Edit Task" : "Create New Task"}
               </h4>
             </Card.Header>
@@ -158,7 +158,7 @@ const TaskForm: React.FC = () => {
                 }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formTaskTitle">
-                      <Form.Label className="project-form-label">
+                      <Form.Label className="task-form-label">
                         Task Title *
                       </Form.Label>
                       <Form.Control
@@ -181,7 +181,7 @@ const TaskForm: React.FC = () => {
                       className="mb-3"
                       controlId="formTaskDescription"
                     >
-                      <Form.Label className="project-form-label">
+                      <Form.Label className="task-form-label">
                         Task Description
                       </Form.Label>
                       <Form.Control
@@ -200,14 +200,14 @@ const TaskForm: React.FC = () => {
                       <Form.Control.Feedback type="invalid">
                         {errors.projectTaskDescription}
                       </Form.Control.Feedback>
-                      <Form.Text className="project-form-footer">
+                      <Form.Text className="task-form-footer">
                         Optional. Maximum 500 characters.
                       </Form.Text>
                     </Form.Group>
 
                     <div className="d-grid gap-2">
                       <Button
-                        className="btn-create-project"
+                        className="btn-create-task"
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
