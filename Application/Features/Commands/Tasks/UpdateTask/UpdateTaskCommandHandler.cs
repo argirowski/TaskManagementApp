@@ -2,12 +2,17 @@
 {
     using MediatR;
     using Domain.Interfaces;
+    using AutoMapper;
+
     public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, Unit>
     {
         private readonly ITaskRepository _taskRepository;
-        public UpdateTaskCommandHandler(ITaskRepository taskRepository)
+        private readonly IMapper _mapper;
+
+        public UpdateTaskCommandHandler(ITaskRepository taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -19,8 +24,7 @@
                 throw new InvalidOperationException("Task not found.");
             }
 
-            task.ProjectTaskTitle = request.Title;
-            task.ProjectTaskDescription = request.Description;
+            _mapper.Map(request.Task, task);
             await _taskRepository.UpdateTaskAsync(task);
             return Unit.Value;
         }

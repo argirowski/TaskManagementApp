@@ -1,19 +1,19 @@
 ﻿namespace Application.Features.Commands.Tasks.UpdateTask
 {
+    using Application.DTOs;
     using MediatR;
+
     public class UpdateTaskCommand : IRequest<Unit>
     {
         public Guid ProjectId { get; }
         public Guid TaskId { get; }
-        public string Title { get; }
-        public string Description { get; }
+        public TaskDTO Task { get; }
 
-        public UpdateTaskCommand(Guid projectId, Guid taskId, string title, string description)
+        public UpdateTaskCommand(Guid projectId, Guid taskId, TaskDTO task)
         {
             ProjectId = projectId;
             TaskId = taskId;
-            Title = title;
-            Description = description;
+            Task = task;
         }
     }
 }

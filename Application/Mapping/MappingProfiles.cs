@@ -26,6 +26,13 @@ namespace Application.Mapping
             CreateMap<Project, CreateProjectDTO>().ReverseMap();
 
             CreateMap<ProjectTask, TaskDTO>();
+            CreateMap<TaskDTO, ProjectTask>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ProjectId, opt => opt.Ignore())
+                .ForMember(dest => dest.Project, opt => opt.Ignore())
+                .ForMember(dest => dest.ProjectTaskStatus, opt => opt.Ignore())
+                .ForMember(dest => dest.AssignedUserId, opt => opt.Ignore())
+                .ForMember(dest => dest.AssignedUser, opt => opt.Ignore());
             CreateMap<ProjectTask, TaskDetailsDTO>();
 
             CreateMap<Project, ProjectDetailsDTO>()

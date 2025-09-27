@@ -93,12 +93,7 @@ namespace API.Controllers
             //    return Forbid();
 
 
-            var command = new UpdateTaskCommand(
-                projectId,
-                taskId,
-                taskDTO.ProjectTaskTitle ?? string.Empty,
-                taskDTO.ProjectTaskDescription ?? string.Empty
-            );
+            var command = new UpdateTaskCommand(projectId, taskId, taskDTO);
             await _mediator.Send(command);
             return NoContent();
 
