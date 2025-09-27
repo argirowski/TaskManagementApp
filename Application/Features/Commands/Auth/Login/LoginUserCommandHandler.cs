@@ -29,15 +29,7 @@ namespace Application.Features.Commands.Auth.Login
             if (result != PasswordVerificationResult.Success)
                 throw new UnauthorizedAccessException("Invalid email or password.");
 
-            var accessToken = _tokenService.CreateToken(user);
-
-            var response = new TokenResponseDTO
-            {
-                AccessToken = accessToken,
-                RefreshToken = Guid.NewGuid().ToString() // TODO: Implement proper refresh token generation
-            };
-
-            return response;
+            return await _tokenService.CreateTokenResponseAsync(user);
         }
     }
 }

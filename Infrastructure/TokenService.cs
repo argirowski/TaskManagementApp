@@ -1,20 +1,25 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using Application.DTOs;
+using Application.Interfaces;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Application.Interfaces;
 
 namespace Infrastructure
 {
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepository;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, IUserRepository userRepository)
         {
             _configuration = configuration;
+            _userRepository = userRepository;
         }
 
         public string CreateToken(User user)
@@ -42,6 +47,35 @@ namespace Infrastructure
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
             return jwt;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+        {
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set expiry time as needed
+            await _userRepository.UpdateUserAsync(user);
+            return refreshToken;
+        }
+
+        public async Task<TokenResponseDTO> CreateTokenResponseAsync(User user)
+        {
+            var accessToken = CreateToken(user);
+            var refreshToken = await GenerateAndSaveRefreshTokenAsync(user);
+
+            return new TokenResponseDTO
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
         }
     }
 }

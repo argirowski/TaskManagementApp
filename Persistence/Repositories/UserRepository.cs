@@ -23,5 +23,11 @@ namespace Persistence.Repositories
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == email);
         }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

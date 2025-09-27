@@ -19,7 +19,6 @@ namespace Application.Mapping
                 .ForMember(dest => dest.AssignedProjectTasks, opt => opt.Ignore());
 
             CreateMap<UserDTO, RegisterUserCommand>();
-            CreateMap<LoginDTO, LoginUserCommand>();
 
             CreateMap<Project, ProjectDTO>().ReverseMap();
             CreateMap<Project, ProjectDetailsDTO>();
