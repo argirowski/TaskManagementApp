@@ -21,13 +21,18 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<string>> RegisterUser([FromBody] UserDTO userDTO)
+        public async Task<ActionResult<TokenResponseDTO>> RegisterUser([FromBody] UserDTO userDTO)
         {
-            var command = _mapper.Map<RegisterUserCommand>(userDTO);
-            var result = await _mediator.Send(command);
-            if (!result)
-                return BadRequest("User already exists.");
-            return Ok("User registered successfully.");
+            try
+            {
+                var command = new RegisterUserCommand { User = userDTO };
+                var result = await _mediator.Send(command);
+                return CreatedAtAction(nameof(RegisterUser), result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPost("login")]
