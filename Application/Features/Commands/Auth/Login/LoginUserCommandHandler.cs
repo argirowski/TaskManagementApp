@@ -3,10 +3,11 @@ using MediatR;
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Application.DTOs;
 
 namespace Application.Features.Commands.Auth.Login
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenResponseDTO>
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
@@ -17,18 +18,26 @@ namespace Application.Features.Commands.Auth.Login
             _tokenService = tokenService;
         }
 
-        public async Task<string> Handle(LoginUserCommand command, CancellationToken cancellationToken)
+        public async Task<TokenResponseDTO> Handle(LoginUserCommand command, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByEmailAsync(command.UserEmail);
+            var user = await _userRepository.GetByEmailAsync(command.Login.UserEmail);
             if (user == null)
-                return string.Empty;
+                throw new UnauthorizedAccessException("Invalid email or password.");
 
             var hasher = new PasswordHasher<User>();
-            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, command.Password);
+            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, command.Login.Password);
             if (result != PasswordVerificationResult.Success)
-                return string.Empty;
+                throw new UnauthorizedAccessException("Invalid email or password.");
 
-            return _tokenService.CreateToken(user);
+            var accessToken = _tokenService.CreateToken(user);
+
+            var response = new TokenResponseDTO
+            {
+                AccessToken = accessToken,
+                RefreshToken = Guid.NewGuid().ToString() // TODO: Implement proper refresh token generation
+            };
+
+            return response;
         }
     }
 }

@@ -31,12 +31,18 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> LoginUser([FromBody] LoginDTO loginDTO)
+        public async Task<ActionResult<TokenResponseDTO>> LoginUser([FromBody] LoginDTO loginDTO)
         {
-            var command = _mapper.Map<LoginUserCommand>(loginDTO);
-            var result = await _mediator.Send(command);
-
-            return Ok(result);
+            try
+            {
+                var command = new LoginUserCommand { Login = loginDTO };
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
     }
 }
