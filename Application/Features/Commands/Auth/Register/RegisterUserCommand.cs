@@ -1,12 +1,11 @@
-﻿using MediatR;
+﻿using Application.DTOs;
+using MediatR;
 
 namespace Application.Features.Commands.Auth.Register
 {
     public class RegisterUserCommand
-    : IRequest<bool>
+    : IRequest<UserDTO>
     {
-        public required string UserName { get; set; }
-        public required string UserEmail { get; set; }
-        public required string Password { get; set; }
+        public required UserDTO User { get; set; }
     }
 }
