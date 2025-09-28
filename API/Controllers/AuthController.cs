@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Features.Commands.Auth.Login;
+using Application.Features.Commands.Auth.RefreshToken1;
 using Application.Features.Commands.Auth.Register;
 using AutoMapper;
 using MediatR;
@@ -36,6 +37,21 @@ namespace API.Controllers
             try
             {
                 var command = new LoginUserCommand { Login = loginDTO };
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDTO>> RefreshToken([FromBody] RefreshTokenRequestDTO refreshTokenRequestDTO)
+        {
+            try
+            {
+                var command = new RefreshTokenCommand { RefreshToken = refreshTokenRequestDTO };
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
