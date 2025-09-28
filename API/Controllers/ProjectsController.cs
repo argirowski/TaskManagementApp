@@ -29,7 +29,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());

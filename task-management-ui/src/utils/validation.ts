@@ -44,10 +44,10 @@ export const registerUserValidationSchema = Yup.object({
 });
 
 export const loginUserValidationSchema = Yup.object({
-  email: Yup.string()
+  UserEmail: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string()
+  Password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
 });

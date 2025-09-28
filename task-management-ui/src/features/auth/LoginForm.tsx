@@ -25,8 +25,8 @@ const LoginForm: React.FC = () => {
   );
 
   const initialValues: LoginFormData = {
-    email: "",
-    password: "",
+    UserEmail: "",
+    Password: "",
   };
 
   const handleSubmit = async (
@@ -34,6 +34,9 @@ const LoginForm: React.FC = () => {
     { setSubmitting, setFieldError }: any
   ) => {
     try {
+      // Debug: Log what we're sending to the backend
+      console.log("Sending to backend:", values);
+
       // API endpoint for login
       const response = await axios.post(
         "https://localhost:7272/api/Auth/login",
@@ -117,15 +120,15 @@ const LoginForm: React.FC = () => {
                       </Form.Label>
                       <Form.Control
                         type="email"
-                        name="email"
+                        name="UserEmail"
                         placeholder="Enter email"
-                        value={values.email}
+                        value={values.UserEmail}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.email && !!errors.email}
+                        isInvalid={touched.UserEmail && !!errors.UserEmail}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.email}
+                        {errors.UserEmail}
                       </Form.Control.Feedback>
                     </Form.Group>
 
@@ -133,15 +136,15 @@ const LoginForm: React.FC = () => {
                       <Form.Label className="form-label">Password</Form.Label>
                       <Form.Control
                         type="password"
-                        name="password"
+                        name="Password"
                         placeholder="Enter password"
-                        value={values.password}
+                        value={values.Password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        isInvalid={touched.password && !!errors.password}
+                        isInvalid={touched.Password && !!errors.Password}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.password}
+                        {errors.Password}
                       </Form.Control.Feedback>
                     </Form.Group>
 

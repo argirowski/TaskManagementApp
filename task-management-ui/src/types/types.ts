@@ -90,8 +90,8 @@ export interface AlertComponentProps {
 }
 
 export interface LoginFormData {
-  email: string;
-  password: string;
+  UserEmail: string;
+  Password: string;
 }
 
 export interface RegisterFormData {
