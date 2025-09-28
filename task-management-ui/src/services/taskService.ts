@@ -1,7 +1,26 @@
 import axios from "axios";
 import { SingleTaskDTO, TaskFormData } from "../types/types";
+import store from "../store/store";
+import { logout } from "../store/actions/authActions";
 
 const BASE_URL = "https://localhost:7272/api/Tasks";
+
+// Get auth headers with current token from Redux store
+const getAuthHeaders = () => {
+  const state = store.getState();
+  const token = state.auth.token;
+
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Handle auth errors globally
+const handleAuthError = (error: any) => {
+  if (error.response?.status === 401 || error.response?.status === 403) {
+    // Token is invalid or expired, logout user
+    store.dispatch(logout());
+  }
+  throw error;
+};
 
 // Get single task by project and task ID
 export const fetchTask = async (
@@ -10,12 +29,13 @@ export const fetchTask = async (
 ): Promise<SingleTaskDTO> => {
   try {
     const response = await axios.get(
-      `${BASE_URL}/project/${projectId}/task/${taskId}`
+      `${BASE_URL}/project/${projectId}/task/${taskId}`,
+      { headers: getAuthHeaders() }
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching task:", error);
-    throw error;
+    return handleAuthError(error);
   }
 };
 
@@ -27,12 +47,13 @@ export const createTask = async (
   try {
     const response = await axios.post(
       `${BASE_URL}/project/${projectId}`,
-      taskData
+      taskData,
+      { headers: getAuthHeaders() }
     );
     return response.data;
   } catch (error) {
     console.error("Error creating task:", error);
-    throw error;
+    return handleAuthError(error);
   }
 };
 
@@ -45,12 +66,13 @@ export const updateTask = async (
   try {
     const response = await axios.put(
       `${BASE_URL}/project/${projectId}/task/${taskId}`,
-      taskData
+      taskData,
+      { headers: getAuthHeaders() }
     );
     return response.data;
   } catch (error) {
     console.error("Error updating task:", error);
-    throw error;
+    return handleAuthError(error);
   }
 };
 
@@ -60,9 +82,11 @@ export const deleteTask = async (
   taskId: string
 ): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/project/${projectId}/task/${taskId}`);
+    await axios.delete(`${BASE_URL}/project/${projectId}/task/${taskId}`, {
+      headers: getAuthHeaders(),
+    });
   } catch (error) {
     console.error("Error deleting task:", error);
-    throw error;
+    return handleAuthError(error);
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Row,
@@ -10,7 +10,8 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import axios from "axios";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { loginUser, clearAuthError } from "../../store/actions/authActions";
 import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { LoginFormData } from "../../types/types";
@@ -18,11 +19,28 @@ import { loginUserValidationSchema } from "../../utils/validation";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
-    "success"
+  const dispatch = useAppDispatch();
+
+  // Get auth state from Redux
+  const { loading, error, isAuthenticated } = useAppSelector(
+    (state) => state.auth
   );
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/projects");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Clear error when component unmounts or when user starts typing
+  useEffect(() => {
+    return () => {
+      if (error) {
+        dispatch(clearAuthError());
+      }
+    };
+  }, [error, dispatch]);
 
   const initialValues: LoginFormData = {
     UserEmail: "",
@@ -31,46 +49,21 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginFormData,
-    { setSubmitting, setFieldError }: any
+    { setSubmitting }: any
   ) => {
     try {
-      // Debug: Log what we're sending to the backend
-      console.log("Sending to backend:", values);
-
-      // API endpoint for login
-      const response = await axios.post(
-        "https://localhost:7272/api/Auth/login",
-        values
-      );
-
-      console.log("Login successful:", response.data);
-
-      // Store auth token if your API returns one
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
+      // Clear any previous errors
+      if (error) {
+        dispatch(clearAuthError());
       }
 
-      // Redirect immediately on successful login
-      navigate("/dashboard"); // Change this to your desired route after login
-    } catch (error: any) {
-      console.error("Login error:", error);
+      // Dispatch login action
+      await dispatch(loginUser(values) as any);
 
-      if (error.response?.data?.message) {
-        setAlertMessage(error.response.data.message);
-      } else if (error.response?.data?.errors) {
-        // Handle validation errors from backend
-        Object.keys(error.response.data.errors).forEach((field) => {
-          setFieldError(field, error.response.data.errors[field][0]);
-        });
-        setAlertMessage("Please fix the errors below");
-      } else if (error.response?.status === 401) {
-        setAlertMessage("Invalid email or password");
-      } else {
-        setAlertMessage("Login failed. Please try again.");
-      }
-
-      setAlertVariant("danger");
-      setShowAlert(true);
+      // Navigation will be handled by useEffect when isAuthenticated changes
+    } catch (error) {
+      // Error handling is managed by Redux action
+      console.error("Login submission error:", error);
     } finally {
       setSubmitting(false);
     }
@@ -93,10 +86,10 @@ const LoginForm: React.FC = () => {
             </Card.Header>
             <Card.Body className="p-4">
               <AlertComponent
-                show={showAlert}
-                variant={alertVariant}
-                message={alertMessage}
-                onClose={() => setShowAlert(false)}
+                show={!!error}
+                variant="danger"
+                message={error || ""}
+                onClose={() => dispatch(clearAuthError())}
               />
 
               <Formik
@@ -160,9 +153,9 @@ const LoginForm: React.FC = () => {
                         className="btn-sign-in"
                         type="submit"
                         size="lg"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || loading}
                       >
-                        {isSubmitting ? (
+                        {isSubmitting || loading ? (
                           <>
                             <Spinner
                               as="span"
@@ -181,7 +174,7 @@ const LoginForm: React.FC = () => {
                         className="btn-back-home"
                         size="lg"
                         onClick={handleBackToHome}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || loading}
                       >
                         Back to Home
                       </Button>
