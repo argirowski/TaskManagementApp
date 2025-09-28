@@ -2,7 +2,6 @@
 using Application.Features.Commands.Auth.Login;
 using Application.Features.Commands.Auth.RefreshToken1;
 using Application.Features.Commands.Auth.Register;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,22 +12,27 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public AuthController(IMediator mediator, IMapper mapper)
+
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
+
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserDTO>> RegisterUser([FromBody] UserDTO userDTO)
+        public async Task<ActionResult<UserResponseDTO>> RegisterUser([FromBody] UserDTO userDTO)
         {
-            var command = new RegisterUserCommand { User = userDTO };
-            var result = await _mediator.Send(command);
-            if (result == null)
-                return BadRequest("User already exists.");
-            return CreatedAtAction(nameof(RegisterUser), result);
+            try
+            {
+                var command = new RegisterUserCommand { User = userDTO };
+                var result = await _mediator.Send(command);
+                return CreatedAtAction(nameof(RegisterUser), result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]

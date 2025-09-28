@@ -29,5 +29,12 @@ namespace Persistence.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken
+                                     && u.RefreshTokenExpiryTime > DateTime.UtcNow);
+        }
     }
 }

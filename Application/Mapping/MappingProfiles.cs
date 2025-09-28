@@ -12,6 +12,7 @@ namespace Application.Mapping
         {
             CreateMap<User, UserDTO>();
             CreateMap<User, UserDetailsDTO>();
+            CreateMap<User, UserResponseDTO>();
             CreateMap<UserDTO, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())

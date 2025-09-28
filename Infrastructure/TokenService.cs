@@ -71,11 +71,13 @@ namespace Infrastructure
             var accessToken = CreateToken(user);
             var refreshToken = await GenerateAndSaveRefreshTokenAsync(user);
 
-            return new TokenResponseDTO
+            var response = new TokenResponseDTO
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
+
+            return response;
         }
     }
 }
