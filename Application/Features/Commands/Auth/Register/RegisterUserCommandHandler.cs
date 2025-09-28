@@ -22,6 +22,7 @@ namespace Application.Features.Commands.Auth.Register
         {
             // Check if user already exists
             var existingUser = await _userRepository.GetByEmailAsync(command.User.UserEmail);
+            var existingUser = await _userRepository.GetByEmailAsync(command.User.UserEmail);
             if (existingUser != null)
                 return null;
 
@@ -30,9 +31,12 @@ namespace Application.Features.Commands.Auth.Register
                 Id = Guid.NewGuid(),
                 UserName = command.User.UserName,
                 UserEmail = command.User.UserEmail
+                UserName = command.User.UserName,
+                UserEmail = command.User.UserEmail
             };
 
             var passwordHasher = new PasswordHasher<User>();
+            user.PasswordHash = passwordHasher.HashPassword(user, command.User.Password);
             user.PasswordHash = passwordHasher.HashPassword(user, command.User.Password);
 
             await _userRepository.AddUserAsync(user);
