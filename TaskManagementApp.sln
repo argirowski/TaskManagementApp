@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36429.23 d17.14
+VisualStudioVersion = 17.14.36429.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{C4295D30-B751-4909-880B-FD599BFA5E22}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{223D4925-2397-42EE-B4A2-D11ADF6F1110}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{D723E9FC-732B-4DF1-83DE-700C122FCEBE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppUnitTests", "TaskManagementAppUnitTests\TaskManagementAppUnitTests.csproj", "{9B02A812-C9F8-4998-A9A1-371F846FB72F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +43,16 @@ Global
 		{D723E9FC-732B-4DF1-83DE-700C122FCEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D723E9FC-732B-4DF1-83DE-700C122FCEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D723E9FC-732B-4DF1-83DE-700C122FCEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B02A812-C9F8-4998-A9A1-371F846FB72F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DE16212-89F9-4256-8739-4A7DABC74494}
