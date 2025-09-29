@@ -18,27 +18,24 @@ namespace API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
         private readonly IProjectRepository _projectRepository;
 
-        public ProjectsController(IMediator mediator, IMapper mapper, IProjectRepository projectRepository)
+        public ProjectsController(IMediator mediator, IProjectRepository projectRepository)
         {
             _mediator = mediator;
-            _mapper = mapper;
             _projectRepository = projectRepository;
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
         {
             var projects = await _mediator.Send(new GetAllProjectsQuery());
-            var projectDTOs = _mapper.Map<List<ProjectDTO>>(projects);
-            return Ok(projectDTOs);
+            return Ok(projects);
         }
 
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
         {
             var projectDetailsDTO = await _mediator.Send(new GetSingleProjectQuery(id));
@@ -48,16 +45,16 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-            //    return Unauthorized();
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
 
-            //var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            //if (role != Domain.Enums.ProjectRole.Owner)
-            //    return Forbid();
+            var role = await _projectRepository.GetUserRoleAsync(id, userId);
+            if (role != Domain.Enums.ProjectRole.Owner)
+                return Forbid();
 
             await _mediator.Send(new DeleteProjectCommand(id));
 
@@ -65,13 +62,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<CreateProjectDTO>> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
-            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-            //    return Unauthorized();
-            var userId = Guid.Parse("F6B6C8D7-6A7F-9B8C-2D6E-6F7A8B9C1D2E"); // Temporary hardcoded user ID for testing
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
 
             var command = new CreateProjectCommand(createProjectDTO, userId);
             var result = await _mediator.Send(command);
@@ -82,16 +78,16 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] CreateProjectDTO editProjectDTO)
         {
-            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-            //    return Unauthorized();
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized();
 
-            //var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            //if (role != Domain.Enums.ProjectRole.Owner)
-            //    return Forbid();
+            var role = await _projectRepository.GetUserRoleAsync(id, userId);
+            if (role != Domain.Enums.ProjectRole.Owner)
+                return Forbid();
             var command = new UpdateProjectCommand(id, editProjectDTO);
             await _mediator.Send(command);
             return NoContent();
