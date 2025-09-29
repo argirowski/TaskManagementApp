@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Commands.Projects.UpdateProject
 {
-    public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, Unit>
+    public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, bool>
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
@@ -15,16 +15,16 @@ namespace Application.Features.Commands.Projects.UpdateProject
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
             var project = await _projectRepository.GetByIdAsync(request.Id);
             if (project == null)
-                throw new InvalidOperationException("Project not found");
+                return false;
 
             // Map updated fields
             _mapper.Map(request.Project, project);
-            await _projectRepository.UpdateAsync(project);
-            return Unit.Value;
+            var updated = await _projectRepository.UpdateAsync(project);
+            return updated;
         }
     }
 }

@@ -51,17 +51,18 @@ namespace API.Controllers
         {
             var userId = GetCurrentUserId();
             if (userId == null)
-            {
                 return Unauthorized();
-            }
 
             var validationResult = await _authorizationService.ValidateProjectDeletionAsync(id, userId.Value);
             if (!validationResult.IsAuthorized)
-            {
                 return Forbid();
+
+            var result = await _mediator.Send(new DeleteProjectCommand(id));
+            if (!result)
+            {
+                return NotFound();
             }
 
-            await _mediator.Send(new DeleteProjectCommand(id));
             return NoContent();
         }
 
@@ -102,7 +103,12 @@ namespace API.Controllers
             }
 
             var command = new UpdateProjectCommand(id, editProjectDTO);
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     }

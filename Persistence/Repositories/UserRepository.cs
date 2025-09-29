@@ -37,5 +37,10 @@ namespace Persistence.Repositories
                                      && u.RefreshTokenExpiryTime > DateTime.UtcNow
                                      && u.Id == userId);
         }
+
+        public async Task<User?> GetByIdAsync(Guid userId)
+        {
+            return await _context.Users.FindAsync(userId);
+        }
     }
 }
