@@ -5,7 +5,7 @@ using Application.Features.Commands.Tasks.DeleteTask;
 using Application.Features.Commands.Tasks.UpdateTask;
 using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
-using AutoMapper;
+using Application.Interfaces;
 using Domain.Enums;
 using Domain.Interfaces;
 using MediatR;
@@ -16,19 +16,19 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class TasksController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly IProjectRepository _projectRepository;
+        private readonly IProjectAuthorizationService _authorizationService;
 
-        public TasksController(IMediator mediator, IProjectRepository projectRepository)
+        public TasksController(IMediator mediator, IProjectAuthorizationService authorizationService)
         {
             _mediator = mediator;
-            _projectRepository = projectRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("project/{projectId}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<List<TaskDTO>>> GetAllTasksForProject(Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
@@ -36,7 +36,7 @@ namespace API.Controllers
         }
 
         [HttpGet("project/{projectId}/task/{taskId}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<TaskDTO>> GetSingleTaskForProject(Guid projectId, Guid taskId)
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
@@ -62,12 +62,12 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteTask(Guid projectId, Guid taskId)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            var userId = GetCurrentUserId();
+            if (userId == null)
                 return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(projectId, userId);
-            if (role != ProjectRole.Owner)
+            var validationResult = await _authorizationService.ValidateProjectDeletionAsync(projectId, userId.Value);
+            if (!validationResult.IsAuthorized)
                 return Forbid();
 
             var command = new DeleteTaskCommand(projectId, taskId);
@@ -80,14 +80,13 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateTask(Guid projectId, Guid taskId, [FromBody] TaskDTO taskDTO)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            var userId = GetCurrentUserId();
+            if (userId == null)
                 return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(projectId, userId);
-            if (role != ProjectRole.Owner)
+            var validationResult = await _authorizationService.ValidateProjectUpdateAsync(projectId, userId.Value);
+            if (!validationResult.IsAuthorized)
                 return Forbid();
-
 
             var command = new UpdateTaskCommand(projectId, taskId, taskDTO);
             await _mediator.Send(command);
