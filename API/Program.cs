@@ -3,8 +3,10 @@ using Application.Features.Commands.Auth.Register;
 using Application.Interfaces;
 using Application.Mapping;
 using Application.Services;
+using Application.Validators;
 using Application.Validators.NewFolder;
 using Domain.Interfaces;
+using FluentValidation;
 using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Add FluentValidation and Validators
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectCommandValidator>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(a =>
