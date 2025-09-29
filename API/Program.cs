@@ -1,16 +1,18 @@
+using API.Middleware;
 using Application.Features.Commands.Auth.Register;
 using Application.Interfaces;
 using Application.Mapping;
 using Application.Services;
+using Application.Validators.NewFolder;
 using Domain.Interfaces;
 using Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Persistence.Repositories;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +85,9 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
 
+// Register ValidationBehaviour in the MediatR pipeline
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
 var app = builder.Build();
 
 // Apply migrations at startup
@@ -100,6 +105,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy"); // enable CORS => This should come before UseHttpsRedirection
+
+// Add middleware to handle exceptions and return proper JSON responses
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
