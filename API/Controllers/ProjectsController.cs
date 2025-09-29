@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Features.Commands.Projects.CreateProject;
 using Application.Features.Commands.Projects.DeleteProject;
 using Application.Features.Commands.Projects.UpdateProject;

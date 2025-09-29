@@ -1,13 +1,10 @@
-﻿using System.Security.Claims;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Features.Commands.Tasks.CreateTask;
 using Application.Features.Commands.Tasks.DeleteTask;
 using Application.Features.Commands.Tasks.UpdateTask;
 using Application.Features.Queries.Tasks.GetAllTasks;
 using Application.Features.Queries.Tasks.GetSingleTask;
 using Application.Interfaces;
-using Domain.Enums;
-using Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
