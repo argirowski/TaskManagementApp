@@ -38,7 +38,10 @@ namespace API.Controllers
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
             if (task == null)
+            {
                 return NotFound();
+            }
+
             return Ok(task);
         }
         [HttpPost("project/{projectId}")]
@@ -61,11 +64,15 @@ namespace API.Controllers
         {
             var userId = GetCurrentUserId();
             if (userId == null)
+            {
                 return Unauthorized();
+            }
 
             var validationResult = await _authorizationService.ValidateProjectDeletionAsync(projectId, userId.Value);
             if (!validationResult.IsAuthorized)
+            {
                 return Forbid();
+            }
 
             var command = new DeleteTaskCommand(projectId, taskId);
             await _mediator.Send(command);
@@ -79,16 +86,19 @@ namespace API.Controllers
         {
             var userId = GetCurrentUserId();
             if (userId == null)
+            {
                 return Unauthorized();
+            }
 
             var validationResult = await _authorizationService.ValidateProjectUpdateAsync(projectId, userId.Value);
             if (!validationResult.IsAuthorized)
+            {
                 return Forbid();
+            }
 
             var command = new UpdateTaskCommand(projectId, taskId, taskDTO);
             await _mediator.Send(command);
             return NoContent();
-
         }
     }
 }

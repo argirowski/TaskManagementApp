@@ -13,56 +13,51 @@ namespace API.Controllers
     {
         private readonly IMediator _mediator;
 
-
         public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<UserResponseDTO>> RegisterUser([FromBody] UserDTO userDTO)
         {
-            try
+            var command = new RegisterUserCommand { User = userDTO };
+            var result = await _mediator.Send(command);
+
+            if (result == null)
             {
-                var command = new RegisterUserCommand { User = userDTO };
-                var result = await _mediator.Send(command);
-                return CreatedAtAction(nameof(RegisterUser), result);
+                return BadRequest("User registration failed.");
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return CreatedAtAction(nameof(RegisterUser), result);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDTO>> LoginUser([FromBody] LoginDTO loginDTO)
         {
-            try
+            var command = new LoginUserCommand { Login = loginDTO };
+            var result = await _mediator.Send(command);
+
+            if (result == null)
             {
-                var command = new LoginUserCommand { Login = loginDTO };
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                return Unauthorized("Invalid credentials.");
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+
+            return Ok(result);
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDTO>> RefreshToken([FromBody] RefreshTokenRequestDTO refreshTokenRequestDTO)
         {
-            try
+            var command = new RefreshTokenCommand { RefreshToken = refreshTokenRequestDTO };
+            var result = await _mediator.Send(command);
+
+            if (result == null)
             {
-                var command = new RefreshTokenCommand { RefreshToken = refreshTokenRequestDTO };
-                var result = await _mediator.Send(command);
-                return Ok(result);
+                return Unauthorized("Invalid refresh token.");
             }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+
+            return Ok(result);
         }
     }
 }
