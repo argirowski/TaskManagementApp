@@ -18,9 +18,9 @@ namespace Application.Features.Commands.Auth.RefreshToken1
 
         public async Task<TokenResponseDTO> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken.RefreshToken);
+            var user = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken.RefreshToken, request.RefreshToken.UserId);
             if (user == null)
-                throw new UnauthorizedAccessException("Invalid refresh token.");
+                throw new UnauthorizedAccessException("Invalid refresh token or user ID.");
 
             return await _tokenService.CreateTokenResponseAsync(user);
         }

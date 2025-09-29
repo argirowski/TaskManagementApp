@@ -30,11 +30,12 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
+        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken, Guid userId)
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken
-                                     && u.RefreshTokenExpiryTime > DateTime.UtcNow);
+                                     && u.RefreshTokenExpiryTime > DateTime.UtcNow
+                                     && u.Id == userId);
         }
     }
 }
