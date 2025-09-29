@@ -17,8 +17,9 @@ namespace Application.Features.Commands.Tasks.DeleteTask
             // Check if task exists in the specified project
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
+            {
                 return false;
-
+            }
             // Delete the task
             var deleted = await _taskRepository.DeleteTaskAsync(request.ProjectId, request.TaskId);
             return deleted;

@@ -4,7 +4,7 @@
     using Domain.Interfaces;
     using AutoMapper;
 
-    public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, Unit>
+    public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
@@ -15,18 +15,17 @@
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
         {
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
-
             if (task == null)
             {
-                throw new InvalidOperationException("Task not found.");
+                return false;
             }
 
             _mapper.Map(request.Task, task);
-            await _taskRepository.UpdateTaskAsync(task);
-            return Unit.Value;
+            var updated = await _taskRepository.UpdateTaskAsync(task);
+            return updated;
         }
     }
 }

@@ -101,7 +101,12 @@ namespace API.Controllers
             }
 
             var command = new UpdateTaskCommand(projectId, taskId, taskDTO);
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+            if (!result)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     }

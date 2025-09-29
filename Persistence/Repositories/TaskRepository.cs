@@ -45,5 +45,10 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> ExistsByNameAsync(Guid projectId, string taskTitle)
+        {
+            return await _context.ProjectTasks
+                .AnyAsync(t => t.ProjectId == projectId && t.ProjectTaskTitle == taskTitle);
+        }
     }
 }

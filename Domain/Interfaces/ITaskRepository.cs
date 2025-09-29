@@ -9,5 +9,6 @@ namespace Domain.Interfaces
         Task<bool> CreateTaskAsync(ProjectTask task);
         Task<bool> DeleteTaskAsync(Guid projectId, Guid taskId);
         Task<bool> UpdateTaskAsync(ProjectTask task);
+        Task<bool> ExistsByNameAsync(Guid projectId, string taskTitle);
     }
 }

@@ -3,7 +3,7 @@
     using Application.DTOs;
     using MediatR;
 
-    public class UpdateTaskCommand : IRequest<Unit>
+    public class UpdateTaskCommand : IRequest<bool>
     {
         public Guid ProjectId { get; }
         public Guid TaskId { get; }
