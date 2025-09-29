@@ -1,5 +1,4 @@
 ﻿using Application.DTOs;
-using Application.Features.Commands.Auth.Login;
 using Application.Features.Commands.Auth.Register;
 using AutoMapper;
 using Domain.Entities;

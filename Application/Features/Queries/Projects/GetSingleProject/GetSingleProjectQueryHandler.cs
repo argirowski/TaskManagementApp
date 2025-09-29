@@ -20,7 +20,10 @@ namespace Application.Features.Queries.Projects.GetSingleProject
         {
             var project = await _projectRepository.GetByIdAsync(request.Id);
             if (project == null)
+            {
                 return null;
+            }
+
             return _mapper.Map<ProjectDetailsDTO>(project);
         }
     }

@@ -21,7 +21,9 @@ namespace Application.Features.Queries.Tasks.GetSingleTask
         {
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
+            {
                 return null;
+            }
 
             return _mapper.Map<TaskDTO>(task);
         }
