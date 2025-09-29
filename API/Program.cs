@@ -57,12 +57,10 @@ builder.Services.AddCors(opt =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
-// Add FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandHandler>();
-
 builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssemblies(typeof(RegisterUserCommandHandler).Assembly);
+    options.AddOpenBehavior(typeof(Application.Behaviors.ValidationBehavior<,>));
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>

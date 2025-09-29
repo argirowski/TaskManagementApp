@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet("project/{projectId}")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<List<TaskDTO>>> GetAllTasksForProject(Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpGet("project/{projectId}/task/{taskId}")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<TaskDTO>> GetSingleTaskForProject(Guid projectId, Guid taskId)
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
@@ -42,7 +42,7 @@ namespace API.Controllers
             return Ok(task);
         }
         [HttpPost("project/{projectId}")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<TaskDTO>> CreateTask(Guid projectId, [FromBody] TaskDTO taskDTO)
         {
             var command = new CreateTaskCommand(projectId, taskDTO);
@@ -56,7 +56,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("project/{projectId}/task/{taskId}")]
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> DeleteTask(Guid projectId, Guid taskId)
         {
             var userId = GetCurrentUserId();
@@ -74,7 +74,7 @@ namespace API.Controllers
         }
 
         [HttpPut("project/{projectId}/task/{taskId}")]
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> UpdateTask(Guid projectId, Guid taskId, [FromBody] TaskDTO taskDTO)
         {
             var userId = GetCurrentUserId();
