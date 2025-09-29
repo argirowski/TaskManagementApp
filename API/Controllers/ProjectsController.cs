@@ -5,8 +5,7 @@ using Application.Features.Commands.Projects.DeleteProject;
 using Application.Features.Commands.Projects.UpdateProject;
 using Application.Features.Queries.Projects.GetAllProjects;
 using Application.Features.Queries.Projects.GetSingleProject;
-using AutoMapper;
-using Domain.Interfaces;
+using Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +14,15 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly IProjectRepository _projectRepository;
+        private readonly IProjectAuthorizationService _authorizationService;
 
-        public ProjectsController(IMediator mediator, IProjectRepository projectRepository)
+        public ProjectsController(IMediator mediator, IProjectAuthorizationService authorizationService)
         {
             _mediator = mediator;
-            _projectRepository = projectRepository;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -48,16 +47,15 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            var userId = GetCurrentUserId();
+            if (userId == null)
                 return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            if (role != Domain.Enums.ProjectRole.Owner)
+            var validationResult = await _authorizationService.ValidateProjectDeletionAsync(id, userId.Value);
+            if (!validationResult.IsAuthorized)
                 return Forbid();
 
             await _mediator.Send(new DeleteProjectCommand(id));
-
             return NoContent();
         }
 
@@ -65,11 +63,11 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<CreateProjectDTO>> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            var userId = GetCurrentUserId();
+            if (userId == null)
                 return Unauthorized();
 
-            var command = new CreateProjectCommand(createProjectDTO, userId);
+            var command = new CreateProjectCommand(createProjectDTO, userId.Value);
             var result = await _mediator.Send(command);
             if (result == null)
                 return BadRequest("Project creation failed.");
@@ -81,17 +79,17 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] CreateProjectDTO editProjectDTO)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+            var userId = GetCurrentUserId();
+            if (userId == null)
                 return Unauthorized();
 
-            var role = await _projectRepository.GetUserRoleAsync(id, userId);
-            if (role != Domain.Enums.ProjectRole.Owner)
+            var validationResult = await _authorizationService.ValidateProjectUpdateAsync(id, userId.Value);
+            if (!validationResult.IsAuthorized)
                 return Forbid();
+
             var command = new UpdateProjectCommand(id, editProjectDTO);
             await _mediator.Send(command);
             return NoContent();
-
         }
     }
 }

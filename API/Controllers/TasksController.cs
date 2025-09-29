@@ -19,34 +19,30 @@ namespace API.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
         private readonly IProjectRepository _projectRepository;
 
-        public TasksController(IMediator mediator, IMapper mapper, IProjectRepository projectRepository)
+        public TasksController(IMediator mediator, IProjectRepository projectRepository)
         {
             _mediator = mediator;
-            _mapper = mapper;
             _projectRepository = projectRepository;
         }
 
         [HttpGet("project/{projectId}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<List<TaskDTO>>> GetAllTasksForProject(Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
-            var taskDTOs = _mapper.Map<List<TaskDTO>>(tasks);
-            return Ok(taskDTOs);
+            return Ok(tasks);
         }
 
         [HttpGet("project/{projectId}/task/{taskId}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<TaskDTO>> GetSingleTaskForProject(Guid projectId, Guid taskId)
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
             if (task == null)
                 return NotFound();
-            var taskDTO = _mapper.Map<TaskDTO>(task);
-            return Ok(taskDTO);
+            return Ok(task);
         }
         [HttpPost("project/{projectId}")]
         [Authorize]

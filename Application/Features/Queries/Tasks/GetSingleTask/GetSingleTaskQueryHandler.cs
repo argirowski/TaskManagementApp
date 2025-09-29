@@ -1,20 +1,29 @@
 ﻿using MediatR;
 using Domain.Entities;
 using Domain.Interfaces;
+using Application.DTOs;
+using AutoMapper;
 
 namespace Application.Features.Queries.Tasks.GetSingleTask
 {
-    public class GetSingleTaskQueryHandler : IRequestHandler<GetSingleTaskQuery, ProjectTask>
+    public class GetSingleTaskQueryHandler : IRequestHandler<GetSingleTaskQuery, TaskDTO?>
     {
         private readonly ITaskRepository _taskRepository;
-        public GetSingleTaskQueryHandler(ITaskRepository taskRepository)
+        private readonly IMapper _mapper;
+
+        public GetSingleTaskQueryHandler(ITaskRepository taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _mapper = mapper;
         }
 
-        public async Task<ProjectTask> Handle(GetSingleTaskQuery request, CancellationToken cancellationToken)
+        public async Task<TaskDTO?> Handle(GetSingleTaskQuery request, CancellationToken cancellationToken)
         {
-            return await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
+            var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
+            if (task == null)
+                return null;
+
+            return _mapper.Map<TaskDTO>(task);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Application.Features.Commands.Auth.Register;
 using Application.Interfaces;
 using Application.Mapping;
+using Application.Services;
 using Domain.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -77,6 +78,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
 
 var app = builder.Build();
 
