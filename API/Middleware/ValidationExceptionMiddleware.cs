@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using Application.DTOs;
+using FluentValidation;
+using System.Net;
 using System.Text.Json;
 
 namespace API.Middleware
