@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Persistence.Repositories;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,10 @@ builder.Services.AddCors(opt =>
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+// Add FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandHandler>();
+
 builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssemblies(typeof(RegisterUserCommandHandler).Assembly);

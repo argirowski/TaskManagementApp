@@ -6,38 +6,39 @@ export const projectValidationSchema = Yup.object({
     .min(3, "Project name must be at least 3 characters")
     .max(30, "Project name must be less than 30 characters")
     .required("Project name is required"),
-  projectDescription: Yup.string().max(
-    200,
-    "Description must be less than 200 characters"
-  ),
+  projectDescription: Yup.string()
+    .max(200, "Description must be less than 200 characters")
+    .min(10, "Description must be at least 10 characters"),
 });
 
 export const tasksValidationSchema = Yup.object({
   projectTaskTitle: Yup.string()
+    .required("Task title is required")
     .min(3, "Task title must be at least 3 characters")
-    .max(200, "Task title must be less than 30 characters")
-    .required("Task title is required"),
-  projectTaskDescription: Yup.string().max(
-    1000,
-    "Description must be less than 500 characters"
-  ),
+    .max(30, "Task title must be less than 30 characters"),
+  projectTaskDescription: Yup.string()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters")
+    .max(500, "Description must be less than 500 characters"),
 });
 
 export const registerUserValidationSchema = Yup.object({
   UserName: Yup.string()
+    .required("Username is required")
     .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be less than 20 characters")
-    .required("Username is required"),
+    .max(20, "Username must be less than 20 characters"),
   UserEmail: Yup.string()
+    .required("Email is required")
     .email("Invalid email address")
-    .required("Email is required"),
+    .max(100, "Email must be less than 100 characters"),
   Password: Yup.string()
+    .required("Password is required")
     .min(6, "Password must be at least 6 characters")
+    .max(50, "Password must be less than 50 characters")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    )
-    .required("Password is required"),
+    ),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("Password")], "Passwords must match")
     .required("Confirm password is required"),
@@ -45,9 +46,11 @@ export const registerUserValidationSchema = Yup.object({
 
 export const loginUserValidationSchema = Yup.object({
   UserEmail: Yup.string()
+    .required("Email is required")
     .email("Invalid email address")
-    .required("Email is required"),
+    .max(50, "Email must be less than 50 characters"),
   Password: Yup.string()
+    .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .max(50, "Password must be less than 50 characters"),
 });
