@@ -18,7 +18,7 @@ namespace Application.Features.Queries.Projects.GetSingleProject
 
         public async Task<ProjectDetailsDTO?> Handle(GetSingleProjectQuery request, CancellationToken cancellationToken)
         {
-            var project = await _projectRepository.GetByIdAsync(request.Id);
+            var project = await _projectRepository.GetProjectByIdAsync(request.Id);
             if (project == null)
             {
                 return null;

@@ -4,6 +4,6 @@
     {
         public required string UserName { get; set; }
         public required string UserEmail { get; set; }
-        public string Password { get; set; } = string.Empty;
+        public required string Password { get; set; }
     }
 }

@@ -17,13 +17,13 @@ namespace Application.Features.Commands.Projects.UpdateProject
 
         public async Task<bool> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = await _projectRepository.GetByIdAsync(request.Id);
+            var project = await _projectRepository.GetProjectByIdAsync(request.Id);
             if (project == null)
                 return false;
 
             // Map updated fields
             _mapper.Map(request.Project, project);
-            var updated = await _projectRepository.UpdateAsync(project);
+            var updated = await _projectRepository.UpdateProjectAsync(project);
             return updated;
         }
     }

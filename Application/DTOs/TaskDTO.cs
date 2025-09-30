@@ -2,7 +2,7 @@
 {
     public class TaskDTO
     {
-        public string ProjectTaskTitle { get; set; } = null!;
+        public required string ProjectTaskTitle { get; set; }
         public string ProjectTaskDescription { get; set; } = null!;
     }
 }

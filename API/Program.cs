@@ -4,7 +4,7 @@ using Application.Interfaces;
 using Application.Mapping;
 using Application.Services;
 using Application.Validators;
-using Application.Validators.NewFolder;
+using Application.Validators.ValidationBehaviour;
 using Domain.Interfaces;
 using FluentValidation;
 using Infrastructure;

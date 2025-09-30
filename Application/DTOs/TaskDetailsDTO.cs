@@ -3,7 +3,7 @@
     public class TaskDetailsDTO
     {
         public Guid Id { get; set; }
-        public string ProjectTaskTitle { get; set; } = null!;
+        public required string ProjectTaskTitle { get; set; }
         public string ProjectTaskDescription { get; set; } = null!;
     }
 }

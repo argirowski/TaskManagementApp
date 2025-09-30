@@ -16,8 +16,8 @@ namespace Application.Validators
                 .MaximumLength(30).WithMessage("Project name must be no more than 30 characters.");
 
             RuleFor(x => x.Project.ProjectDescription)
-                .NotEmpty().WithMessage("Project description is required.")
-                .Length(10, 200).WithMessage("Project description must be between 10 and 200 characters.");
+                .Length(10, 200).WithMessage("Project description must be between 10 and 200 characters.")
+                .When(x => !string.IsNullOrWhiteSpace(x.Project.ProjectDescription));
 
             RuleFor(x => x.UserId)
                 .NotEmpty().WithMessage("User ID is required.")

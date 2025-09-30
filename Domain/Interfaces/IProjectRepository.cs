@@ -5,12 +5,12 @@ namespace Domain.Interfaces
 {
     public interface IProjectRepository
     {
-        Task<List<Project>> GetAllAsync();
-        Task<Project?> GetByIdAsync(Guid id);
-        Task<bool> DeleteAsync(Guid id);
-        Task<Project?> CreateAsync(Project project, Guid userId);
-        Task<bool> UpdateAsync(Project project);
+        Task<List<Project>> GetAllProjectsAsync();
+        Task<Project?> GetProjectByIdAsync(Guid id);
+        Task<bool> DeleteProjectAsync(Guid id);
+        Task<Project?> CreateProjectAsync(Project project, Guid userId);
+        Task<bool> UpdateProjectAsync(Project project);
         Task<ProjectRole?> GetUserRoleAsync(Guid projectId, Guid userId);
-        Task<bool> ExistsByNameAsync(string projectName);
+        Task<bool> ProjectExistsByNameAsync(string projectName);
     }
 }

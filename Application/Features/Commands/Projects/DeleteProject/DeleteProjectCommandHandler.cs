@@ -15,13 +15,13 @@ namespace Application.Features.Commands.Projects.DeleteProject
         public async Task<bool> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
         {
             // Check if project exists
-            var project = await _projectRepository.GetByIdAsync(request.Id);
+            var project = await _projectRepository.GetProjectByIdAsync(request.Id);
             if (project == null)
             {
                 return false;
             }
             // Delete the project
-            var deleted = await _projectRepository.DeleteAsync(request.Id);
+            var deleted = await _projectRepository.DeleteProjectAsync(request.Id);
             return deleted;
         }
     }

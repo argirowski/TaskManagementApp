@@ -18,7 +18,7 @@ namespace Application.Features.Queries.Projects.GetAllProjects
 
         public async Task<List<ProjectDTO>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await _projectRepository.GetAllAsync();
+            var projects = await _projectRepository.GetAllProjectsAsync();
             return _mapper.Map<List<ProjectDTO>>(projects);
         }
     }

@@ -29,7 +29,7 @@ namespace Application.Features.Commands.Projects.CreateProject
             }
 
             // Check for duplicate project name
-            var exists = await _projectRepository.ExistsByNameAsync(request.Project.ProjectName);
+            var exists = await _projectRepository.ProjectExistsByNameAsync(request.Project.ProjectName);
             if (exists)
             {
                 return null;
@@ -37,7 +37,7 @@ namespace Application.Features.Commands.Projects.CreateProject
 
             var project = _mapper.Map<Project>(request.Project);
             project.Id = Guid.NewGuid();
-            var created = await _projectRepository.CreateAsync(project, request.UserId);
+            var created = await _projectRepository.CreateProjectAsync(project, request.UserId);
             if (created == null)
             {
                 return null;

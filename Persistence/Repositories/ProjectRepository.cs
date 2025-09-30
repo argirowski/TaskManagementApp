@@ -14,12 +14,12 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<Project>> GetAllAsync()
+        public async Task<List<Project>> GetAllProjectsAsync()
         {
             return await _context.Projects.ToListAsync();
         }
 
-        public async Task<Project?> GetByIdAsync(Guid id)
+        public async Task<Project?> GetProjectByIdAsync(Guid id)
         {
             return await _context.Projects
                 .Include(p => p.ProjectUsers)
@@ -28,7 +28,7 @@ namespace Persistence.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteProjectAsync(Guid id)
         {
             var project = await _context.Projects.FindAsync(id);
             if (project == null)
@@ -38,7 +38,7 @@ namespace Persistence.Repositories
             return true;
         }
 
-        public async Task<Project?> CreateAsync(Project project, Guid userId)
+        public async Task<Project?> CreateProjectAsync(Project project, Guid userId)
         {
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
@@ -56,7 +56,7 @@ namespace Persistence.Repositories
             return project;
         }
 
-        public async Task<bool> UpdateAsync(Project project)
+        public async Task<bool> UpdateProjectAsync(Project project)
         {
             _context.Projects.Update(project);
             await _context.SaveChangesAsync();
@@ -70,7 +70,7 @@ namespace Persistence.Repositories
             return projectUser?.Role;
         }
 
-        public async Task<bool> ExistsByNameAsync(string projectName)
+        public async Task<bool> ProjectExistsByNameAsync(string projectName)
         {
             return await _context.Projects.AnyAsync(p => p.ProjectName == projectName);
         }

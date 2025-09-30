@@ -20,8 +20,8 @@ namespace Application.Validators
                 .MaximumLength(30).WithMessage("Task title must be no more than 30 characters.");
 
             RuleFor(x => x.Task.ProjectTaskDescription)
-                .NotEmpty().WithMessage("Task description is required.")
-                .Length(10, 500).WithMessage("Task description must be between 10 and 500 characters.");
+                .Length(10, 500).WithMessage("Task description must be between 10 and 500 characters.")
+                .When(x => !string.IsNullOrWhiteSpace(x.Task.ProjectTaskDescription));
         }
     }
 }
