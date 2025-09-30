@@ -10,9 +10,7 @@ namespace Application.Validators
             RuleFor(x => x.RefreshToken)
                 .NotNull().WithMessage("Refresh token data is required.");
 
-            RuleFor(x => x.RefreshToken.UserId)
-                .NotEmpty().WithMessage("User ID is required.")
-                .NotEqual(Guid.Empty).WithMessage("User ID must be a valid GUID.");
+            RuleFor(x => x.RefreshToken.UserId).ValidUserId();
 
             RuleFor(x => x.RefreshToken.RefreshToken)
                 .NotEmpty().WithMessage("Refresh token is required.")

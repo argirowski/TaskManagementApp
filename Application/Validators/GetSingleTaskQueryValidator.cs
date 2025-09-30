@@ -7,13 +7,8 @@ namespace Application.Validators
     {
         public GetSingleTaskQueryValidator()
         {
-            RuleFor(x => x.ProjectId)
-                .NotEmpty().WithMessage("Project ID is required.")
-                .NotEqual(Guid.Empty).WithMessage("Project ID must be a valid GUID.");
-
-            RuleFor(x => x.TaskId)
-                .NotEmpty().WithMessage("Task ID is required.")
-                .NotEqual(Guid.Empty).WithMessage("Task ID must be a valid GUID.");
+            RuleFor(x => x.ProjectId).ValidProjectId();
+            RuleFor(x => x.TaskId).ValidTaskId();
         }
     }
 }

@@ -7,9 +7,7 @@ namespace Application.Validators
     {
         public GetAllTasksQueryValidator()
         {
-            RuleFor(x => x.ProjectId)
-                .NotEmpty().WithMessage("Project ID is required.")
-                .NotEqual(Guid.Empty).WithMessage("Project ID must be a valid GUID.");
+            RuleFor(x => x.ProjectId).ValidProjectId();
         }
     }
 }
