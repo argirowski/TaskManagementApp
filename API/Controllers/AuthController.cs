@@ -26,7 +26,7 @@ namespace API.Controllers
 
             if (result == null)
             {
-                return BadRequest("User registration failed.");
+                return BadRequest("User with this email already exists.");
             }
 
             return CreatedAtAction(nameof(RegisterUser), result);

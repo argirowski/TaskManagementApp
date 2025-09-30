@@ -34,7 +34,7 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject(Guid id)
+        public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject([FromRoute] Guid id)
         {
             var projectDetailsDTO = await _mediator.Send(new GetSingleProjectQuery(id));
             if (projectDetailsDTO == null)
@@ -47,15 +47,19 @@ namespace API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteProject(Guid id)
+        public async Task<IActionResult> DeleteProject([FromRoute] Guid id)
         {
             var userId = GetCurrentUserId();
             if (userId == null)
+            {
                 return Unauthorized();
+            }
 
             var validationResult = await _authorizationService.ValidateProjectDeletionAsync(id, userId.Value);
             if (!validationResult.IsAuthorized)
+            {
                 return Forbid();
+            }
 
             var result = await _mediator.Send(new DeleteProjectCommand(id));
             if (!result)
@@ -88,7 +92,7 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] CreateProjectDTO editProjectDTO)
+        public async Task<IActionResult> UpdateProject([FromRoute] Guid id, [FromBody] CreateProjectDTO editProjectDTO)
         {
             var userId = GetCurrentUserId();
             if (userId == null)
