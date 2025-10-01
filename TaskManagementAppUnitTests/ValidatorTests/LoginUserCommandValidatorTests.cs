@@ -2,7 +2,6 @@ using Application.DTOs;
 using Application.Features.Commands.Auth.Login;
 using Application.Validators;
 using FluentAssertions;
-using Xunit;
 
 namespace TaskManagementAppUnitTests.ValidatorTests
 {

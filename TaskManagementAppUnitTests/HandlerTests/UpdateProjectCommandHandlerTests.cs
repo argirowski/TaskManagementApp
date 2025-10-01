@@ -1,0 +1,55 @@
+using Application.DTOs;
+using Application.Features.Commands.Projects.UpdateProject;
+using AutoMapper;
+using Domain.Entities;
+using Domain.Interfaces;
+using FluentAssertions;
+using Moq;
+
+namespace TaskManagementAppUnitTests.HandlerTests
+{
+    public class UpdateProjectCommandHandlerTests
+    {
+        private readonly Mock<IProjectRepository> _projectRepoMock = new();
+        private readonly Mock<IMapper> _mapperMock = new();
+        private readonly UpdateProjectCommandHandler _handler;
+
+        public UpdateProjectCommandHandlerTests()
+        {
+            _handler = new UpdateProjectCommandHandler(_projectRepoMock.Object, _mapperMock.Object);
+        }
+
+        [Fact]
+        public async Task Handle_ProjectDoesNotExist_ReturnsFalse()
+        {
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Project?)null);
+            var command = new UpdateProjectCommand(Guid.NewGuid(), new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var result = await _handler.Handle(command, CancellationToken.None);
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task Handle_UpdateFails_ReturnsFalse()
+        {
+            var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
+            _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
+            _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(false);
+            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var result = await _handler.Handle(command, CancellationToken.None);
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task Handle_SuccessfulUpdate_ReturnsTrue()
+        {
+            var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
+            _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
+            _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(true);
+            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var result = await _handler.Handle(command, CancellationToken.None);
+            result.Should().BeTrue();
+        }
+    }
+}

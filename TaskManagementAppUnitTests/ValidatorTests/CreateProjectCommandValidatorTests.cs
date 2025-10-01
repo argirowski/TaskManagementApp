@@ -2,8 +2,6 @@ using Application.DTOs;
 using Application.Features.Commands.Projects.CreateProject;
 using Application.Validators;
 using FluentAssertions;
-using System;
-using Xunit;
 
 namespace TaskManagementAppUnitTests.ValidatorTests
 {
