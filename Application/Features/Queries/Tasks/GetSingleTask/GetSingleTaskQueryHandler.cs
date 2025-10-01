@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Domain.Entities;
 using Domain.Interfaces;
 using Application.DTOs;
 using AutoMapper;
