@@ -17,6 +17,12 @@ task-management-ui/node_modules/
 task-management-ui/build/
 task-management-ui/.env
 
+# Test results and Coverage reports
+TaskManagementAppRepositoryTests/TestResults/
+TaskManagementAppRepositoryTests/coveragereport/
+TaskManagementAppUnitTests/TestResults/
+TaskManagementAppUnitTests/coveragereport/
+
 # TaskManagementApp Folder
 TaskManagementApp.txt
 .vs/
