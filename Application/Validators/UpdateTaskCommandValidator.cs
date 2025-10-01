@@ -11,8 +11,7 @@ namespace Application.Validators
 
             RuleFor(x => x.TaskId).ValidTaskId();
 
-            RuleFor(x => x.Task)
-                .NotNull().WithMessage("Task data is required.");
+            RuleFor(x => x.Task).ValidTaskData();
 
             RuleFor(x => x.Task.ProjectTaskTitle).ValidTaskTitle();
 

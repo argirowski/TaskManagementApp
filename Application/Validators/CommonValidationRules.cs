@@ -41,6 +41,12 @@ namespace Application.Validators
                 .MaximumLength(100).WithMessage("Task title must be no more than 100 characters.");
         }
 
+        public static IRuleBuilderOptions<T, object> ValidTaskData<T>(this IRuleBuilder<T, object> ruleBuilder)
+        {
+            return ruleBuilder
+                .NotNull().WithMessage("Task data is required.");
+        }
+
         public static IRuleBuilderOptions<T, string> OptionalDescription<T>(this IRuleBuilder<T, string> ruleBuilder, int minLength = 10, int maxLength = 500)
         {
             return ruleBuilder
