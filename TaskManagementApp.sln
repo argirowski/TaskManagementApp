@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppUnitTests", "TaskManagementAppUnitTests\TaskManagementAppUnitTests.csproj", "{9B02A812-C9F8-4998-A9A1-371F846FB72F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppRepositoryTests", "TaskManagementAppRepositoryTests\TaskManagementAppRepositoryTests.csproj", "{4104F870-88C4-4B23-A208-2E5B9084F6AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,12 +49,17 @@ Global
 		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B02A812-C9F8-4998-A9A1-371F846FB72F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9B02A812-C9F8-4998-A9A1-371F846FB72F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4104F870-88C4-4B23-A208-2E5B9084F6AA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DE16212-89F9-4256-8739-4A7DABC74494}
