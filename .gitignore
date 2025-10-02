@@ -28,6 +28,7 @@ TaskManagementApp.txt
 .vs/
 bin/
 obj/
+.env
 
 # General
 *.user
