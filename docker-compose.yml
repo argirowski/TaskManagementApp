@@ -27,8 +27,8 @@ services:
 
   api:
     build:
-      context: ./API
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: API/Dockerfile
     container_name: taskmanagement-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
