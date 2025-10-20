@@ -1,6 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Features.Commands.Auth.Login;
-using Application.Features.Commands.Auth.RefreshToken1;
+using Application.Features.Commands.Auth.RefreshToken;
 using Application.Features.Commands.Auth.Register;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

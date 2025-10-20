@@ -34,7 +34,10 @@ namespace Persistence.Repositories
         {
             var task = await _context.ProjectTasks.FirstOrDefaultAsync(t => t.ProjectId == projectId && t.Id == taskId);
             if (task == null)
+            {
                 return false;
+            }
+
             _context.ProjectTasks.Remove(task);
             await _context.SaveChangesAsync();
             return true;

@@ -3,7 +3,7 @@ using Application.Interfaces;
 using Domain.Interfaces;
 using MediatR;
 
-namespace Application.Features.Commands.Auth.RefreshToken1
+namespace Application.Features.Commands.Auth.RefreshToken
 {
     public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenResponseDTO?>
     {

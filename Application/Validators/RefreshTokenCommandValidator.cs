@@ -1,5 +1,5 @@
 using FluentValidation;
-using Application.Features.Commands.Auth.RefreshToken1;
+using Application.Features.Commands.Auth.RefreshToken;
 
 namespace Application.Validators
 {

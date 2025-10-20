@@ -22,12 +22,16 @@ namespace Application.Features.Commands.Auth.Login
         {
             var user = await _userRepository.GetByEmailAsync(command.Login.UserEmail);
             if (user == null)
+            {
                 return null;
+            }
 
             var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, command.Login.Password);
             if (result != PasswordVerificationResult.Success)
+            {
                 return null;
+            }
 
             return await _tokenService.CreateTokenResponseAsync(user);
         }

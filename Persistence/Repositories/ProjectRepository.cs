@@ -32,7 +32,10 @@ namespace Persistence.Repositories
         {
             var project = await _context.Projects.FindAsync(id);
             if (project == null)
+            {
                 return false;
+            }
+
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             return true;
@@ -41,7 +44,6 @@ namespace Persistence.Repositories
         public async Task<Project?> CreateProjectAsync(Project project, Guid userId)
         {
             _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
 
             // Add creator to ProjectUser
             var projectUser = new ProjectUser
@@ -50,6 +52,7 @@ namespace Persistence.Repositories
                 UserId = userId,
                 Role = ProjectRole.Owner
             };
+
             _context.ProjectUsers.Add(projectUser);
             await _context.SaveChangesAsync();
 
