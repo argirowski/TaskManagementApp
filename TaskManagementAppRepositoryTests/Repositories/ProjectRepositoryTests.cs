@@ -20,13 +20,16 @@ namespace TaskManagementAppRepositoryTests.Repositories
         [Fact]
         public async Task CreateProjectAsync_SavesProjectAndOwner()
         {
+            // Arrange
             using var context = CreateDbContext();
             var repo = new ProjectRepository(context);
             var userId = Guid.NewGuid();
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test", ProjectDescription = "Desc" };
 
+            // Act
             var result = await repo.CreateProjectAsync(project, userId);
 
+            // Assert
             result.Should().NotBeNull();
             context.Projects.Count().Should().Be(1);
             context.ProjectUsers.Count().Should().Be(1);
@@ -39,19 +42,24 @@ namespace TaskManagementAppRepositoryTests.Repositories
         [Fact]
         public async Task GetAllProjectsAsync_ReturnsAllProjects()
         {
+            // Arrange
             using var context = CreateDbContext();
             context.Projects.Add(new Project { Id = Guid.NewGuid(), ProjectName = "P1" });
             context.Projects.Add(new Project { Id = Guid.NewGuid(), ProjectName = "P2" });
             await context.SaveChangesAsync();
             var repo = new ProjectRepository(context);
 
+            // Act
             var result = await repo.GetAllProjectsAsync();
+
+            // Assert
             result.Should().HaveCount(2);
         }
 
         [Fact]
         public async Task GetProjectByIdAsync_ReturnsProjectWithUsersAndTasks()
         {
+            // Arrange
             using var context = CreateDbContext();
             var projectId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -62,7 +70,10 @@ namespace TaskManagementAppRepositoryTests.Repositories
             await context.SaveChangesAsync();
             var repo = new ProjectRepository(context);
 
+            // Act
             var result = await repo.GetProjectByIdAsync(projectId);
+
+            // Assert
             result.Should().NotBeNull();
             result.ProjectUsers.Should().NotBeNull();
             result.ProjectTasks.Should().NotBeNull();
@@ -73,13 +84,17 @@ namespace TaskManagementAppRepositoryTests.Repositories
         [Fact]
         public async Task DeleteProjectAsync_RemovesProject()
         {
+            // Arrange
             using var context = CreateDbContext();
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "P1" };
             context.Projects.Add(project);
             await context.SaveChangesAsync();
             var repo = new ProjectRepository(context);
 
+            // Act
             var result = await repo.DeleteProjectAsync(project.Id);
+
+            // Assert
             result.Should().BeTrue();
             context.Projects.Count().Should().Be(0);
         }
@@ -87,15 +102,21 @@ namespace TaskManagementAppRepositoryTests.Repositories
         [Fact]
         public async Task DeleteProjectAsync_ProjectNotFound_ReturnsFalse()
         {
+            // Arrange
             using var context = CreateDbContext();
             var repo = new ProjectRepository(context);
+
+            // Act
             var result = await repo.DeleteProjectAsync(Guid.NewGuid());
+
+            // Assert
             result.Should().BeFalse();
         }
 
         [Fact]
         public async Task UpdateProjectAsync_UpdatesProject()
         {
+            // Arrange
             using var context = CreateDbContext();
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "P1" };
             context.Projects.Add(project);
@@ -103,7 +124,11 @@ namespace TaskManagementAppRepositoryTests.Repositories
             var repo = new ProjectRepository(context);
 
             project.ProjectName = "Updated";
+
+            // Act
             var result = await repo.UpdateProjectAsync(project);
+
+            // Assert
             result.Should().BeTrue();
             context.Projects.First().ProjectName.Should().Be("Updated");
         }
@@ -111,6 +136,7 @@ namespace TaskManagementAppRepositoryTests.Repositories
         [Fact]
         public async Task GetUserRoleAsync_ReturnsRole()
         {
+            // Arrange
             using var context = CreateDbContext();
             var projectId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -118,28 +144,40 @@ namespace TaskManagementAppRepositoryTests.Repositories
             await context.SaveChangesAsync();
             var repo = new ProjectRepository(context);
 
+            // Act
             var result = await repo.GetUserRoleAsync(projectId, userId);
+
+            // Assert
             result.Should().Be(ProjectRole.Member);
         }
 
         [Fact]
         public async Task ProjectExistsByNameAsync_ReturnsTrueIfExists()
         {
+            // Arrange
             using var context = CreateDbContext();
             context.Projects.Add(new Project { Id = Guid.NewGuid(), ProjectName = "P1" });
             await context.SaveChangesAsync();
             var repo = new ProjectRepository(context);
 
+            // Act
             var result = await repo.ProjectExistsByNameAsync("P1");
+
+            // Assert
             result.Should().BeTrue();
         }
 
         [Fact]
         public async Task ProjectExistsByNameAsync_ReturnsFalseIfNotExists()
         {
+            // Arrange
             using var context = CreateDbContext();
             var repo = new ProjectRepository(context);
+
+            // Act
             var result = await repo.ProjectExistsByNameAsync("DoesNotExist");
+
+            // Assert
             result.Should().BeFalse();
         }
     }
