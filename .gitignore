@@ -25,6 +25,7 @@ TaskManagementAppUnitTests/coveragereport/
 
 # TaskManagementApp Folder
 TaskManagementApp.txt
+coveragereport/
 .vs/
 bin/
 obj/

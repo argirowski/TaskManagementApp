@@ -22,33 +22,48 @@ namespace TaskManagementAppUnitTests.HandlerTests
         [Fact]
         public async Task Handle_ProjectDoesNotExist_ReturnsFalse()
         {
+            // Arrange
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Project?)null);
             var command = new UpdateProjectCommand(Guid.NewGuid(), new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+
+            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
             result.Should().BeFalse();
         }
 
         [Fact]
         public async Task Handle_UpdateFails_ReturnsFalse()
         {
+            // Arrange
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(false);
             var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+
+            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
             result.Should().BeFalse();
         }
 
         [Fact]
         public async Task Handle_SuccessfulUpdate_ReturnsTrue()
         {
+            // Arrange
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(true);
             var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+
+            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
             result.Should().BeTrue();
         }
     }
