@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -10,8 +10,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { loginUser, clearAuthError } from "../../store/actions/authActions";
+import axios from "axios";
 import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { LoginFormData } from "../../types/types";
@@ -19,28 +18,16 @@ import { loginUserValidationSchema } from "../../utils/validation";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  // Get auth state from Redux
-  const { loading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth
-  );
+  // Local error state (removed Redux error handling)
+  const [error, setError] = useState<string | null>(null);
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/projects");
-    }
-  }, [isAuthenticated, navigate]);
-
-  // Clear error when component unmounts or when user starts typing
+  // Clear local error on unmount
   useEffect(() => {
     return () => {
-      if (error) {
-        dispatch(clearAuthError());
-      }
+      setError(null);
     };
-  }, [error, dispatch]);
+  }, []);
 
   const initialValues: LoginFormData = {
     UserEmail: "",
@@ -52,18 +39,21 @@ const LoginForm: React.FC = () => {
     { setSubmitting }: any
   ) => {
     try {
-      // Clear any previous errors
-      if (error) {
-        dispatch(clearAuthError());
-      }
+      setError(null);
 
-      // Dispatch login action
-      await dispatch(loginUser(values) as any);
+      // Perform login request directly (stateless). No token persistence.
+      await axios.post("https://localhost:7272/api/Auth/login", values);
 
-      // Navigation will be handled by useEffect when isAuthenticated changes
-    } catch (error) {
-      // Error handling is managed by Redux action
-      console.error("Login submission error:", error);
+      // On success, navigate to projects
+      navigate("/projects");
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data ||
+        err?.message ||
+        "Login failed";
+      setError(typeof message === "string" ? message : JSON.stringify(message));
+      console.error("Login submission error:", err);
     } finally {
       setSubmitting(false);
     }
@@ -89,7 +79,7 @@ const LoginForm: React.FC = () => {
                 show={!!error}
                 variant="danger"
                 message={error || ""}
-                onClose={() => dispatch(clearAuthError())}
+                onClose={() => setError(null)}
               />
 
               <Formik
@@ -153,9 +143,9 @@ const LoginForm: React.FC = () => {
                         className="btn-sign-in"
                         type="submit"
                         size="lg"
-                        disabled={isSubmitting || loading}
+                        disabled={isSubmitting}
                       >
-                        {isSubmitting || loading ? (
+                        {isSubmitting ? (
                           <>
                             <Spinner
                               as="span"
@@ -174,7 +164,7 @@ const LoginForm: React.FC = () => {
                         className="btn-back-home"
                         size="lg"
                         onClick={handleBackToHome}
-                        disabled={isSubmitting || loading}
+                        disabled={isSubmitting}
                       >
                         Back to Home
                       </Button>
