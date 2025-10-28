@@ -1,7 +1,7 @@
-import axios from "axios";
+import api from "../api/axios";
 import { Project, ProjectFormData, ProjectDetailsDTO } from "../types/types";
 
-const BASE_URL = "https://localhost:7272/api/Projects";
+const BASE_URL = "/Projects";
 
 // No auth persistence in services: this file performs plain data fetching.
 // If you later want auth headers, pass the token in from callers or read
@@ -14,7 +14,7 @@ const handleAuthError = (error: any) => {
 // Get all projects
 export const fetchProjects = async (): Promise<Project[]> => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await api.get(BASE_URL);
     return response.data;
   } catch (error) {
     console.error("Error fetching projects:", error);
@@ -25,7 +25,7 @@ export const fetchProjects = async (): Promise<Project[]> => {
 // Get single project by ID (basic info)
 export const fetchProject = async (projectId: string): Promise<Project> => {
   try {
-    const response = await axios.get(`${BASE_URL}/${projectId}`);
+    const response = await api.get(`${BASE_URL}/${projectId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching project:", error);
@@ -38,7 +38,7 @@ export const fetchProjectDetails = async (
   projectId: string
 ): Promise<ProjectDetailsDTO> => {
   try {
-    const response = await axios.get(`${BASE_URL}/${projectId}`);
+    const response = await api.get(`${BASE_URL}/${projectId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching project details:", error);
@@ -51,7 +51,7 @@ export const createProject = async (
   projectData: ProjectFormData
 ): Promise<Project> => {
   try {
-    const response = await axios.post(BASE_URL, projectData);
+    const response = await api.post(BASE_URL, projectData);
     return response.data;
   } catch (error) {
     console.error("Error creating project:", error);
@@ -65,7 +65,7 @@ export const updateProject = async (
   projectData: ProjectFormData
 ): Promise<Project> => {
   try {
-    const response = await axios.put(`${BASE_URL}/${projectId}`, projectData);
+    const response = await api.put(`${BASE_URL}/${projectId}`, projectData);
     return response.data;
   } catch (error) {
     console.error("Error updating project:", error);
@@ -76,7 +76,7 @@ export const updateProject = async (
 // Delete project
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/${projectId}`);
+    await api.delete(`${BASE_URL}/${projectId}`);
   } catch (error) {
     console.error("Error deleting project:", error);
     throw handleAuthError(error);

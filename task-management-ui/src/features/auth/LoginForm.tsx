@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import axios from "axios";
+import { setToken } from "../../utils/auth";
 import AlertComponent from "../../components/common/AlertComponent";
 import "./auth.css";
 import { LoginFormData } from "../../types/types";
@@ -41,9 +42,15 @@ const LoginForm: React.FC = () => {
     try {
       setError(null);
 
-      // Perform login request directly (stateless). No token persistence.
-      await axios.post("https://localhost:7272/api/Auth/login", values);
-
+      // Perform login request directly (stateless). Save token to localStorage.
+      const res = await axios.post(
+        "https://localhost:7272/api/Auth/login",
+        values
+      );
+      const token = res?.data?.accessToken;
+      if (token) {
+        setToken(token);
+      }
       // On success, navigate to projects
       navigate("/projects");
     } catch (err: any) {

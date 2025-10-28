@@ -1,7 +1,7 @@
-import axios from "axios";
+import api from "../api/axios";
 import { SingleTaskDTO, TaskFormData } from "../types/types";
 
-const BASE_URL = "https://localhost:7272/api/Tasks";
+const BASE_URL = "/Tasks";
 
 // No auth persistence in services: perform plain data fetching.
 // If auth headers are needed later, pass token from callers or implement
@@ -17,7 +17,7 @@ export const fetchTask = async (
   taskId: string
 ): Promise<SingleTaskDTO> => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${BASE_URL}/project/${projectId}/task/${taskId}`
     );
     return response.data;
@@ -33,7 +33,7 @@ export const createTask = async (
   taskData: TaskFormData
 ): Promise<SingleTaskDTO> => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${BASE_URL}/project/${projectId}`,
       taskData
     );
@@ -51,7 +51,7 @@ export const updateTask = async (
   taskData: TaskFormData
 ): Promise<SingleTaskDTO> => {
   try {
-    const response = await axios.put(
+    const response = await api.put(
       `${BASE_URL}/project/${projectId}/task/${taskId}`,
       taskData
     );
@@ -68,7 +68,7 @@ export const deleteTask = async (
   taskId: string
 ): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/project/${projectId}/task/${taskId}`);
+    await api.delete(`${BASE_URL}/project/${projectId}/task/${taskId}`);
   } catch (error) {
     console.error("Error deleting task:", error);
     throw handleAuthError(error);
