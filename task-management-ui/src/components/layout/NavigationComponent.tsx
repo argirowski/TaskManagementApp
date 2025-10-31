@@ -3,7 +3,7 @@ import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../utils/auth";
 
-const Navigation: React.FC = () => {
+const NavigationComponent: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -33,4 +33,4 @@ const Navigation: React.FC = () => {
   );
 };
 
-export default Navigation;
+export default NavigationComponent;

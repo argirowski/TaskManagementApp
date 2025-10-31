@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import Navigation from "./components/layout/Navigation";
+import NavigationComponent from "./components/layout/NavigationComponent";
+import { hasToken } from "./utils/auth";
 import AppRoutes from "./routes/AppRoutes";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -8,7 +9,7 @@ import "./index.css";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Navigation />
+      {hasToken() && <NavigationComponent />}
       <div className="task-management-app">
         <AppRoutes />
       </div>
