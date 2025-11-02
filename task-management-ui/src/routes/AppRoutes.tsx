@@ -9,7 +9,6 @@ import ProjectCard from "../features/projects/ProjectCard";
 import TaskView from "../features/tasks/TaskView";
 import TaskForm from "../features/tasks/TaskForm";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import UnauthorizedComponent from "../components/common/UnauthorizedComponent";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -19,65 +18,22 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<RegisterForm />} />
 
-      {/* Protected Routes */}
-      <Route
-        path="/projects"
-        element={
-          <ProtectedRoute>
-            <ProjectList />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/new"
-        element={
-          <ProtectedRoute>
-            <ProjectForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:id/edit"
-        element={
-          <ProtectedRoute>
-            <ProjectForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:projectId/tasks/:taskId"
-        element={
-          <ProtectedRoute>
-            <TaskView />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:projectId/tasks/new"
-        element={
-          <ProtectedRoute>
-            <TaskForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:projectId/tasks/:taskId/edit"
-        element={
-          <ProtectedRoute>
-            <TaskForm />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/projects/:id"
-        element={
-          <ProtectedRoute>
-            <ProjectCard />
-          </ProtectedRoute>
-        }
-      />
-      {/* Unauthorized route */}
-      <Route path="/unauthorized" element={<UnauthorizedComponent />} />
+      {/* Protected Routes (nested under ProtectedRoute) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/projects" element={<ProjectList />} />
+        <Route path="/projects/new" element={<ProjectForm />} />
+        <Route path="/projects/:id/edit" element={<ProjectForm />} />
+        <Route
+          path="/projects/:projectId/tasks/:taskId"
+          element={<TaskView />}
+        />
+        <Route path="/projects/:projectId/tasks/new" element={<TaskForm />} />
+        <Route
+          path="/projects/:projectId/tasks/:taskId/edit"
+          element={<TaskForm />}
+        />
+        <Route path="/projects/:id" element={<ProjectCard />} />
+      </Route>
     </Routes>
   );
 };

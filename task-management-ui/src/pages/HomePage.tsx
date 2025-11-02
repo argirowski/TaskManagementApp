@@ -1,18 +1,23 @@
 import React from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import LoaderComponent from "../components/common/LoaderComponent";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
 
-  const handleLogin = () => {
-    navigate("/login");
+  const handleNavigate = (path: string) => {
+    setLoading(true);
+    setTimeout(() => {
+      navigate(path);
+    }, 700); // 700ms for visible loader, adjust as needed
   };
 
-  const handleRegister = () => {
-    navigate("/register");
-  };
+  if (loading) {
+    return <LoaderComponent message="Loading..." />;
+  }
 
   return (
     <Container
@@ -34,8 +39,9 @@ const HomePage: React.FC = () => {
               <div className="d-grid gap-3">
                 <Button
                   size="lg"
-                  onClick={handleLogin}
+                  onClick={() => handleNavigate("/login")}
                   className="btn-login py-3"
+                  disabled={loading}
                 >
                   <i className="fas fa-sign-in-alt me-2"></i>
                   Login to Your Account
@@ -43,8 +49,9 @@ const HomePage: React.FC = () => {
 
                 <Button
                   size="lg"
-                  onClick={handleRegister}
+                  onClick={() => handleNavigate("/register")}
                   className="btn-register py-3"
+                  disabled={loading}
                 >
                   <i className="fas fa-user-plus me-2"></i>
                   Create New Account

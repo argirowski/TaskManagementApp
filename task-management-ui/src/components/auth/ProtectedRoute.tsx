@@ -1,17 +1,17 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+import React, { Fragment } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import { hasToken } from "../../utils/auth";
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedRoute: React.FC = () => {
   if (!hasToken()) {
-    // You can replace this with a custom error page/component if you want
-    return <Navigate to="/unauthorized" replace />;
+    // Redirect to login page if not authenticated
+    return <Navigate to="/login" replace />;
   }
-  return <>{children}</>;
+  return (
+    <Fragment>
+      <Outlet />
+    </Fragment>
+  );
 };
 
 export default ProtectedRoute;
