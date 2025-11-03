@@ -20,6 +20,7 @@ import LoaderComponent from "../../components/common/LoaderComponent";
 import { projectValidationSchema } from "../../utils/validation";
 import "./project.css";
 import { ProjectFormData } from "../../types/types";
+import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 
 const ProjectForm: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const ProjectForm: React.FC = () => {
   const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
     "success"
   );
+  // Modal state for cancel confirmation
+  const [showConfirm, setShowConfirm] = useState(false);
   const [initialLoading, setInitialLoading] = useState(isEditing);
 
   const initialValues: ProjectFormData = {
@@ -105,10 +108,6 @@ const ProjectForm: React.FC = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/projects");
-  };
-
   if (initialLoading) {
     return <LoaderComponent message="Loading project..." />;
   }
@@ -148,89 +147,121 @@ const ProjectForm: React.FC = () => {
                   handleBlur,
                   handleSubmit,
                   isSubmitting,
-                }) => (
-                  <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formProjectName">
-                      <Form.Label className="project-form-labe">
-                        Project Name *
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="projectName"
-                        placeholder="Enter project name"
-                        value={values.projectName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={touched.projectName && !!errors.projectName}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.projectName}
-                      </Form.Control.Feedback>
-                    </Form.Group>
+                  dirty,
+                }) => {
+                  // Handler for Back to Home, now inside Formik
+                  const handleBackToHome = () => {
+                    if (dirty) {
+                      setShowConfirm(true);
+                    } else {
+                      navigate(-1);
+                    }
+                  };
+                  return (
+                    <>
+                      {" "}
+                      <Form noValidate onSubmit={handleSubmit}>
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formProjectName"
+                        >
+                          <Form.Label className="project-form-labe">
+                            Project Name *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="projectName"
+                            placeholder="Enter project name"
+                            value={values.projectName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={
+                              touched.projectName && !!errors.projectName
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.projectName}
+                          </Form.Control.Feedback>
+                        </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="formProjectDescription"
-                    >
-                      <Form.Label className="project-form-label">
-                        Project Description
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={4}
-                        name="projectDescription"
-                        placeholder="Enter project description (optional)"
-                        value={values.projectDescription}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={
-                          touched.projectDescription &&
-                          !!errors.projectDescription
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.projectDescription}
-                      </Form.Control.Feedback>
-                      <Form.Text className="project-form-footer">
-                        Optional. Maximum 200 characters.
-                      </Form.Text>
-                    </Form.Group>
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formProjectDescription"
+                        >
+                          <Form.Label className="project-form-label">
+                            Project Description
+                          </Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={4}
+                            name="projectDescription"
+                            placeholder="Enter project description (optional)"
+                            value={values.projectDescription}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={
+                              touched.projectDescription &&
+                              !!errors.projectDescription
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.projectDescription}
+                          </Form.Control.Feedback>
+                          <Form.Text className="project-form-footer">
+                            Optional. Maximum 200 characters.
+                          </Form.Text>
+                        </Form.Group>
 
-                    <div className="d-grid gap-2">
-                      <Button
-                        className="btn-create-project"
-                        type="submit"
-                        size="lg"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Spinner
-                              as="span"
-                              animation="border"
-                              size="sm"
-                              role="status"
-                              className="me-2"
-                            />
-                            {isEditing ? "Updating..." : "Creating..."}
-                          </>
-                        ) : isEditing ? (
-                          "Update Project"
-                        ) : (
-                          "Create Project"
-                        )}
-                      </Button>
-                      <Button
-                        className="btn-cancel"
-                        size="lg"
-                        onClick={handleCancel}
-                        disabled={isSubmitting}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </Form>
-                )}
+                        <div className="d-grid gap-2">
+                          <Button
+                            className="btn-create-project"
+                            type="submit"
+                            size="lg"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <Spinner
+                                  as="span"
+                                  animation="border"
+                                  size="sm"
+                                  role="status"
+                                  className="me-2"
+                                />
+                                {isEditing ? "Updating..." : "Creating..."}
+                              </>
+                            ) : isEditing ? (
+                              "Update Project"
+                            ) : (
+                              "Create Project"
+                            )}
+                          </Button>
+                          <Button
+                            className="btn-cancel"
+                            size="lg"
+                            onClick={handleBackToHome}
+                            disabled={isSubmitting}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </Form>
+                      <ConfirmDialogComponent
+                        show={showConfirm}
+                        title="Cancel Adding a Project?"
+                        message="Are you sure you want to cancel? Your changes will be lost."
+                        confirmText="Yes"
+                        cancelText="No"
+                        onConfirm={() => {
+                          setShowConfirm(false);
+                          navigate(-1);
+                        }}
+                        onCancel={() => setShowConfirm(false)}
+                        variant="danger"
+                      />
+                    </>
+                  );
+                }}
               </Formik>
             </Card.Body>
           </Card>
