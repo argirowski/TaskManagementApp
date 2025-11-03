@@ -16,6 +16,7 @@ import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
 import "../projects/project.css";
 import { tasksValidationSchema } from "../../utils/validation";
+import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 
 // Validation schema using Yup
 
@@ -33,6 +34,8 @@ const TaskForm: React.FC = () => {
     "success"
   );
   const [initialLoading, setInitialLoading] = useState(isEditing);
+  // Modal state for cancel confirmation
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const initialValues: TaskFormData = {
     projectTaskTitle: "",
@@ -155,91 +158,119 @@ const TaskForm: React.FC = () => {
                   handleBlur,
                   handleSubmit,
                   isSubmitting,
-                }) => (
-                  <Form noValidate onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formTaskTitle">
-                      <Form.Label className="task-form-label">
-                        Task Title *
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="projectTaskTitle"
-                        placeholder="Enter task title"
-                        value={values.projectTaskTitle}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={
-                          touched.projectTaskTitle && !!errors.projectTaskTitle
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.projectTaskTitle}
-                      </Form.Control.Feedback>
-                    </Form.Group>
+                  dirty,
+                }) => {
+                  // Handler for Back to Home, now inside Formik
+                  const handleBackToHome = () => {
+                    if (dirty) {
+                      setShowConfirm(true);
+                    } else {
+                      navigate(-1);
+                    }
+                  };
+                  return (
+                    <>
+                      {" "}
+                      <Form noValidate onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="formTaskTitle">
+                          <Form.Label className="task-form-label">
+                            Task Title *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="projectTaskTitle"
+                            placeholder="Enter task title"
+                            value={values.projectTaskTitle}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={
+                              touched.projectTaskTitle &&
+                              !!errors.projectTaskTitle
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.projectTaskTitle}
+                          </Form.Control.Feedback>
+                        </Form.Group>
 
-                    <Form.Group
-                      className="mb-3"
-                      controlId="formTaskDescription"
-                    >
-                      <Form.Label className="task-form-label">
-                        Task Description
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={4}
-                        name="projectTaskDescription"
-                        placeholder="Enter task description (optional)"
-                        value={values.projectTaskDescription}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={
-                          touched.projectTaskDescription &&
-                          !!errors.projectTaskDescription
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.projectTaskDescription}
-                      </Form.Control.Feedback>
-                      <Form.Text className="task-form-footer">
-                        Optional. Maximum 500 characters.
-                      </Form.Text>
-                    </Form.Group>
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formTaskDescription"
+                        >
+                          <Form.Label className="task-form-label">
+                            Task Description
+                          </Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            rows={4}
+                            name="projectTaskDescription"
+                            placeholder="Enter task description (optional)"
+                            value={values.projectTaskDescription}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            isInvalid={
+                              touched.projectTaskDescription &&
+                              !!errors.projectTaskDescription
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.projectTaskDescription}
+                          </Form.Control.Feedback>
+                          <Form.Text className="task-form-footer">
+                            Optional. Maximum 500 characters.
+                          </Form.Text>
+                        </Form.Group>
 
-                    <div className="d-grid gap-2">
-                      <Button
-                        className="btn-create-task"
-                        type="submit"
-                        size="lg"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Spinner
-                              as="span"
-                              animation="border"
-                              size="sm"
-                              role="status"
-                              className="me-2"
-                            />
-                            {isEditing ? "Updating..." : "Creating..."}
-                          </>
-                        ) : isEditing ? (
-                          "Update Task"
-                        ) : (
-                          "Create Task"
-                        )}
-                      </Button>
-                      <Button
-                        className="btn-cancel"
-                        size="lg"
-                        onClick={handleCancel}
-                        disabled={isSubmitting}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </Form>
-                )}
+                        <div className="d-grid gap-2">
+                          <Button
+                            className="btn-create-task"
+                            type="submit"
+                            size="lg"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <Spinner
+                                  as="span"
+                                  animation="border"
+                                  size="sm"
+                                  role="status"
+                                  className="me-2"
+                                />
+                                {isEditing ? "Updating..." : "Creating..."}
+                              </>
+                            ) : isEditing ? (
+                              "Update Task"
+                            ) : (
+                              "Create Task"
+                            )}
+                          </Button>
+                          <Button
+                            className="btn-cancel"
+                            size="lg"
+                            onClick={handleBackToHome}
+                            disabled={isSubmitting}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </Form>
+                      <ConfirmDialogComponent
+                        show={showConfirm}
+                        title="Cancel Task?"
+                        message="Are you sure you want to cancel? Your changes will be lost."
+                        confirmText="Yes"
+                        cancelText="No"
+                        onConfirm={() => {
+                          setShowConfirm(false);
+                          navigate(-1);
+                        }}
+                        onCancel={() => setShowConfirm(false)}
+                        variant="danger"
+                      />
+                    </>
+                  );
+                }}
               </Formik>
             </Card.Body>
           </Card>
