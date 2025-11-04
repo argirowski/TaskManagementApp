@@ -51,8 +51,13 @@ const LoginForm: React.FC = () => {
         values
       );
       const token = res?.data?.accessToken;
+      const userName =
+        res?.data?.userName || res?.data?.name || res?.data?.username;
       if (token) {
         setToken(token);
+      }
+      if (userName) {
+        localStorage.setItem("userName", userName);
       }
       // On success, navigate to projects
       navigate("/projects");

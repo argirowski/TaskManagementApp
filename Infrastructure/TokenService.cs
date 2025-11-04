@@ -74,7 +74,8 @@ namespace Infrastructure
             var response = new TokenResponseDTO
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                UserName = user.UserName
             };
 
             return response;
