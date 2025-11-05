@@ -20,20 +20,24 @@ const NavigationComponent: React.FC = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+    <Navbar
+      bg="dark"
+      variant="dark"
+      expand="lg"
+      fixed="top"
+      className="pt-3 pb-3 align-items-center"
+    >
       <Container>
-        <Navbar.Brand href="/projects">Task Management</Navbar.Brand>
+        <Navbar.Brand href="/projects" className="fs-3 fw-bold">
+          Task Management
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/projects">Projects</Nav.Link>
-          </Nav>
-          <Nav className="ms-auto">
-            <Navbar.Text className="me-3">
+          <Nav className="ms-auto align-items-center">
+            <Navbar.Text className="me-3 text-white fs-5">
               {userName ? `Welcome, ${userName}!` : "Welcome!"}
             </Navbar.Text>
-
-            <Button variant="outline-light" size="sm" onClick={handleLogout}>
+            <Button variant="dark" size="lg" onClick={handleLogout}>
               Logout
             </Button>
           </Nav>

@@ -13,23 +13,8 @@ body {
 .task-management-app {
   min-height: 100vh;
   background-color: #f5f7fa;
-  /* Responsive padding for breathing room */
-  padding: 1.25rem;
   /* On mobile, reduce padding to save space */
   box-sizing: border-box; /* Ensures padding doesn't add to total width */
-}
-
-/* Responsive padding adjustments */
-@media (max-width: 576px) {
-  .task-management-app {
-    padding: 1rem;
-  }
-}
-
-@media (min-width: 992px) {
-  .task-management-app {
-    padding: 2rem 2.5rem;
-  }
 }
 
 /* Custom Typography */
