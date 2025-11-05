@@ -180,7 +180,8 @@ body {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-add-project {
+.btn-add-project,
+.btn-edit-project {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
   border: none !important;
   color: white !important;
@@ -269,7 +270,7 @@ body {
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
 }
-/* ============================================================================== */
+
 /* Common Styles */
 .project-card-header,
 .custom-card-header {
@@ -377,17 +378,6 @@ body {
 .custom-project-card:hover {
   box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
     0 15px 15px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(102, 126, 234, 0.1);
-}
-
-.btn-edit-project {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-  border: none !important;
-  color: white !important;
-  font-weight: 600 !important;
-  font-size: 0.875rem !important;
-  border-radius: 0.375rem !important;
-  padding: 0.5rem 1rem !important;
-  transition: all 0.2s ease !important;
 }
 
 .btn-edit-project:hover {

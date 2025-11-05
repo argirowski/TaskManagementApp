@@ -114,10 +114,6 @@ const TaskForm: React.FC = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate(`/projects/${projectId}`);
-  };
-
   if (initialLoading) {
     return <LoaderComponent message="Loading task..." />;
   }
