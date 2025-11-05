@@ -5,7 +5,6 @@ import { SingleTaskDTO } from "../../types/types";
 import { fetchTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import EmptyStateComponent from "../../components/common/EmptyStateComponent";
-import "../projects/project.css";
 
 const TaskView: React.FC = () => {
   const navigate = useNavigate();

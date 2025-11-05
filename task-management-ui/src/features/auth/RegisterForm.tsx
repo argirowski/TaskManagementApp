@@ -13,7 +13,6 @@ import { Formik } from "formik";
 import axios from "axios";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
-import "./auth.css";
 import { RegisterFormData } from "../../types/types";
 import { registerUserValidationSchema } from "../../utils/validation";
 
@@ -126,7 +125,7 @@ const RegisterForm: React.FC = () => {
                     <>
                       <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="formUsername">
-                          <Form.Label className="form-label">
+                          <Form.Label className="login-register-form-label">
                             Username
                           </Form.Label>
                           <Form.Control
@@ -144,7 +143,7 @@ const RegisterForm: React.FC = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formEmail">
-                          <Form.Label className="form-label">
+                          <Form.Label className="login-register-form-label">
                             Email address
                           </Form.Label>
                           <Form.Control
@@ -162,7 +161,7 @@ const RegisterForm: React.FC = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formPassword">
-                          <Form.Label className="form-label">
+                          <Form.Label className="login-register-form-label">
                             Password
                           </Form.Label>
                           <Form.Control
@@ -183,7 +182,7 @@ const RegisterForm: React.FC = () => {
                           className="mb-3"
                           controlId="formConfirmPassword"
                         >
-                          <Form.Label className="form-label">
+                          <Form.Label className="login-register-form-label">
                             Confirm Password
                           </Form.Label>
                           <Form.Control

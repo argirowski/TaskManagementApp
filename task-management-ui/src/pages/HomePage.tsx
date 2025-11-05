@@ -2,7 +2,6 @@ import React from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import LoaderComponent from "../components/common/LoaderComponent";
 import { useNavigate } from "react-router-dom";
-import "../index.css";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -59,7 +58,7 @@ const HomePage: React.FC = () => {
               </div>
 
               <div className="text-center mt-4">
-                <p className="footer-text">
+                <p className="home-page-footer-text">
                   Join thousands of users who trust us with their task
                   management needs
                 </p>

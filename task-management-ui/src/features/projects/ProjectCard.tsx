@@ -16,7 +16,6 @@ import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
 import EmptyStateComponent from "../../components/common/EmptyStateComponent";
-import "./project.css";
 
 const ProjectCard: React.FC = () => {
   const navigate = useNavigate();

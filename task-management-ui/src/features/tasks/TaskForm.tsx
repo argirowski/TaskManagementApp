@@ -14,7 +14,6 @@ import { TaskFormData } from "../../types/types";
 import { fetchTask, createTask, updateTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
-import "../projects/project.css";
 import { tasksValidationSchema } from "../../utils/validation";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 

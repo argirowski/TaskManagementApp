@@ -18,7 +18,6 @@ import {
 import AlertComponent from "../../components/common/AlertComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import { projectValidationSchema } from "../../utils/validation";
-import "./project.css";
 import { ProjectFormData } from "../../types/types";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 
