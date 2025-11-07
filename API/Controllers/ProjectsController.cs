@@ -4,6 +4,7 @@ using Application.Features.Commands.Projects.DeleteProject;
 using Application.Features.Commands.Projects.UpdateProject;
 using Application.Features.Queries.Projects.GetAllProjects;
 using Application.Features.Queries.Projects.GetSingleProject;
+using Application.Helpers;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,9 +27,10 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects()
+        public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects([FromQuery] PaginationParams paginationParams)
         {
-            var projects = await _mediator.Send(new GetAllProjectsQuery());
+            var query = new GetAllProjectsQuery { Page = paginationParams.PageNumber, PageSize = paginationParams.PageSize };
+            var projects = await _mediator.Send(query);
             return Ok(projects);
         }
 

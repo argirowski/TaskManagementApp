@@ -272,6 +272,12 @@ body {
 }
 
 /* Common Styles */
+
+.custom-container {
+  padding-top: 8.5rem;
+  padding-bottom: 4.25rem;
+}
+
 .project-card-header,
 .custom-card-header {
   background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);

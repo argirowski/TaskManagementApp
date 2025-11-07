@@ -25,7 +25,7 @@ const NavigationComponent: React.FC = () => {
       variant="dark"
       expand="lg"
       fixed="top"
-      className="pt-3 pb-3 align-items-center"
+      className="align-items-center"
     >
       <Container>
         <Navbar.Brand href="/projects" className="fs-3 fw-bold">

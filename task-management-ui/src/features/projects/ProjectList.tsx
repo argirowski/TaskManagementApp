@@ -76,7 +76,7 @@ const ProjectList: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container className="custom-container">
       <Row>
         <Col>
           <Card>

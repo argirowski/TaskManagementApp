@@ -109,7 +109,7 @@ const ProjectCard: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container className="custom-container">
       <AlertComponent
         show={showAlert}
         variant={alertVariant}
