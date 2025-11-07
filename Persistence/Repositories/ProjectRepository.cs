@@ -14,9 +14,19 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<Project>> GetAllProjectsAsync()
+        //public async Task<List<Project>> GetAllProjectsAsync()
+        //{
+        //    return await _context.Projects.ToListAsync();
+        //}
+        public async Task<(List<Project> Items, int TotalCount)> GetAllProjectsAsync(int page, int pageSize)
         {
-            return await _context.Projects.ToListAsync();
+            var query = _context.Projects.AsQueryable();
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (items, totalCount);
         }
 
         public async Task<Project?> GetProjectByIdAsync(Guid id)

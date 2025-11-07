@@ -20,36 +20,54 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_NoProjects_ReturnsEmptyList()
+        public async Task Handle_NoProjects_ReturnsEmptyPagedResult()
         {
             // Arrange
-            _projectRepoMock.Setup(x => x.GetAllProjectsAsync()).ReturnsAsync(new List<Project>());
-            _mapperMock.Setup(x => x.Map<List<ProjectDTO>>(It.IsAny<List<Project>>())).Returns(new List<ProjectDTO>());
+            _projectRepoMock
+                .Setup(x => x.GetAllProjectsAsync(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync((new List<Project>(), 0));
+            _mapperMock
+                .Setup(x => x.Map<List<ProjectDTO>>(It.IsAny<List<Project>>()))
+                .Returns(new List<ProjectDTO>());
+
+            var query = new GetAllProjectsQuery { Page = 1, PageSize = 10 };
 
             // Act
-            var result = await _handler.Handle(new GetAllProjectsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeEmpty();
+            result.Items.Should().BeEmpty();
+            result.TotalCount.Should().Be(0);
+            result.Page.Should().Be(1);
+            result.PageSize.Should().Be(10);
         }
 
         [Fact]
-        public async Task Handle_ProjectsExist_ReturnsMappedList()
+        public async Task Handle_ProjectsExist_ReturnsPagedResult()
         {
             // Arrange
             var projects = new List<Project> { new Project { Id = Guid.NewGuid(), ProjectName = "P1" } };
             var dtos = new List<ProjectDTO> { new ProjectDTO { Id = projects[0].Id, ProjectName = "P1", ProjectDescription = "Desc" } };
-            _projectRepoMock.Setup(x => x.GetAllProjectsAsync()).ReturnsAsync(projects);
-            _mapperMock.Setup(x => x.Map<List<ProjectDTO>>(projects)).Returns(dtos);
+            _projectRepoMock
+                .Setup(x => x.GetAllProjectsAsync(1, 10))
+                .ReturnsAsync((projects, projects.Count));
+            _mapperMock
+                .Setup(x => x.Map<List<ProjectDTO>>(projects))
+                .Returns(dtos);
+
+            var query = new GetAllProjectsQuery { Page = 1, PageSize = 10 };
 
             // Act
-            var result = await _handler.Handle(new GetAllProjectsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().HaveCount(1);
-            result[0].ProjectName.Should().Be("P1");
+            result.Items.Should().HaveCount(1);
+            result.Items[0].ProjectName.Should().Be("P1");
+            result.TotalCount.Should().Be(1);
+            result.Page.Should().Be(1);
+            result.PageSize.Should().Be(10);
         }
     }
 }

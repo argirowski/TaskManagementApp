@@ -50,10 +50,11 @@ namespace TaskManagementAppRepositoryTests.Repositories
             var repo = new ProjectRepository(context);
 
             // Act
-            var result = await repo.GetAllProjectsAsync();
+            var result = await repo.GetAllProjectsAsync(1, 10); // page 1, page size 10
 
             // Assert
-            result.Should().HaveCount(2);
+            result.Items.Should().HaveCount(2);
+            result.TotalCount.Should().Be(2);
         }
 
         [Fact]

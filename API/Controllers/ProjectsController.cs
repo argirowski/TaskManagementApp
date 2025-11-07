@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<ProjectDTO>>> GetAllProjects([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult<PagedResultDTO<ProjectDTO>>> GetAllProjects([FromQuery] PaginationParams paginationParams)
         {
             var query = new GetAllProjectsQuery { Page = paginationParams.PageNumber, PageSize = paginationParams.PageSize };
             var projects = await _mediator.Send(query);
