@@ -1,5 +1,10 @@
 import api from "../api/axios";
-import { Project, ProjectFormData, ProjectDetailsDTO } from "../types/types";
+import {
+  Project,
+  ProjectFormData,
+  ProjectDetailsDTO,
+  PaginatedProjects,
+} from "../types/types";
 
 const BASE_URL = "/Projects";
 
@@ -11,10 +16,15 @@ const handleAuthError = (error: any) => {
   throw error;
 };
 
-// Get all projects
-export const fetchProjects = async (): Promise<Project[]> => {
+// Get paginated projects
+export const fetchProjects = async (
+  pageNumber = 1,
+  pageSize = 5
+): Promise<PaginatedProjects> => {
   try {
-    const response = await api.get(BASE_URL);
+    const response = await api.get(BASE_URL, {
+      params: { pageNumber, pageSize },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching projects:", error);

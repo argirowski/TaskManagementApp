@@ -271,8 +271,24 @@ body {
   letter-spacing: 0.05em !important;
 }
 
-/* Common Styles */
+/* PaginationControls Styles */
+.custom-pagination .page-link {
+  color: #1f2937 !important;
+  background: transparent !important;
+  border: none;
+}
 
+.custom-pagination .page-item.active .page-link {
+  background-color: #134e4a !important;
+  color: #fff !important;
+  border: none;
+}
+
+.custom-pagination .page-item .page-link:focus {
+  box-shadow: none;
+}
+
+/* Common Styles */
 .custom-container {
   padding-top: 8.5rem;
   padding-bottom: 4.25rem;

@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Button,
+  Card,
+  Pagination,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Project } from "../../types/types";
+import { PaginatedProjects, Project } from "../../types/types";
 import { fetchProjects, deleteProject } from "../../services/projectService";
 import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
 import EmptyStateComponent from "../../components/common/EmptyStateComponent";
+import PaginationControls from "../../components/common/PaginationControls";
 
 const ProjectList: React.FC = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [paginatedProjects, setPaginatedProjects] =
+    useState<PaginatedProjects | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -19,16 +29,20 @@ const ProjectList: React.FC = () => {
   );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(5);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
     loadProjects();
-  }, []);
+  }, [page, pageSize]);
 
   const loadProjects = async () => {
     try {
       setLoading(true);
-      const data = await fetchProjects();
-      setProjects(data);
+      const data = await fetchProjects(page, pageSize);
+      setPaginatedProjects(data);
+      setTotalPages(data.totalPages);
     } catch (error: any) {
       setAlertMessage("Failed to load projects. Please try again.");
       setAlertVariant("danger");
@@ -52,7 +66,14 @@ const ProjectList: React.FC = () => {
 
     try {
       await deleteProject(projectToDelete.id);
-      setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+      if (paginatedProjects) {
+        setPaginatedProjects({
+          ...paginatedProjects,
+          items: paginatedProjects.items.filter(
+            (p: Project) => p.id !== projectToDelete.id
+          ),
+        });
+      }
       setAlertMessage("Project deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
@@ -97,7 +118,7 @@ const ProjectList: React.FC = () => {
                 onClose={() => setShowAlert(false)}
               />
 
-              {projects.length === 0 ? (
+              {!paginatedProjects || paginatedProjects.items.length === 0 ? (
                 <EmptyStateComponent
                   title="No projects found"
                   message="Create your first project to get started!"
@@ -105,56 +126,64 @@ const ProjectList: React.FC = () => {
                   onAction={() => navigate("/projects/new")}
                 />
               ) : (
-                <Table responsive className="projects-table">
-                  <thead>
-                    <tr>
-                      <th className="table-header">Project Name</th>
-                      <th className="table-header">Description</th>
-                      <th className="table-header" style={{ width: "200px" }}>
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {projects.map((project) => (
-                      <tr key={project.id}>
-                        <td className="project-name-text">
-                          {project.projectName}
-                        </td>
-                        <td className="project-description-text">
-                          {project.projectDescription || "No description"}
-                        </td>
-                        <td>
-                          <div className="d-grid gap-2 d-md-flex">
-                            <Button
-                              size="sm"
-                              className="btn-project-view"
-                              onClick={() => handleView(project)}
-                            >
-                              View
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="btn-edit-project"
-                              onClick={() =>
-                                navigate(`/projects/${project.id}/edit`)
-                              }
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="btn-project-delete"
-                              onClick={() => handleDeleteClick(project)}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </td>
+                <>
+                  <Table responsive className="projects-table">
+                    <thead>
+                      <tr>
+                        <th className="table-header">Project Name</th>
+                        <th className="table-header">Description</th>
+                        <th className="table-header" style={{ width: "200px" }}>
+                          Actions
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {paginatedProjects.items.map((project: Project) => (
+                        <tr key={project.id}>
+                          <td className="project-name-text">
+                            {project.projectName}
+                          </td>
+                          <td className="project-description-text">
+                            {project.projectDescription || "No description"}
+                          </td>
+                          <td>
+                            <div className="d-grid gap-2 d-md-flex">
+                              <Button
+                                size="sm"
+                                className="btn-project-view"
+                                onClick={() => handleView(project)}
+                              >
+                                View
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="btn-edit-project"
+                                onClick={() =>
+                                  navigate(`/projects/${project.id}/edit`)
+                                }
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="btn-project-delete"
+                                onClick={() => handleDeleteClick(project)}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                  {/* Pagination Controls */}
+                  <PaginationControls
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                  />
+                </>
               )}
             </Card.Body>
           </Card>

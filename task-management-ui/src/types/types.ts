@@ -1,3 +1,11 @@
+export interface PaginatedProjects {
+  items: Project[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
 export interface Project {
   id: string;
   projectName: string;
@@ -113,4 +121,10 @@ export interface Project extends ProjectFormData {
 export interface TaskFormData {
   projectTaskTitle: string;
   projectTaskDescription: string;
+}
+
+export interface PaginationControlsProps {
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
