@@ -57,7 +57,9 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectDeletionAsync(id, userId.Value);
+            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
+                id,
+                userId.Value);
             if (!validationResult.IsAuthorized)
             {
                 return Forbid();
@@ -102,7 +104,9 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectUpdateAsync(id, userId.Value);
+            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
+                id,
+                userId.Value);
             if (!validationResult.IsAuthorized)
             {
                 return Forbid();

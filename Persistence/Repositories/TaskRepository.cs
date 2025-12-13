@@ -13,7 +13,7 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<ProjectTask>> GetTasksByProjectIdAsync(Guid projectId)
+        public async Task<IEnumerable<ProjectTask>> GetTasksByProjectIdAsync(Guid projectId)
         {
             return await _context.ProjectTasks
                 .Where(t => t.ProjectId == projectId)
@@ -24,11 +24,11 @@ namespace Persistence.Repositories
             return await _context.ProjectTasks
                 .FirstOrDefaultAsync(t => t.ProjectId == projectId && t.Id == taskId);
         }
-        public async Task<bool> CreateTaskAsync(ProjectTask task)
+        public async Task<ProjectTask?> CreateTaskAsync(ProjectTask task)
         {
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();
-            return true;
+            return task;
         }
         public async Task<bool> DeleteTaskAsync(Guid projectId, Guid taskId)
         {

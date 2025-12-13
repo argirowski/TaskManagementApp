@@ -26,7 +26,7 @@ namespace API.Controllers
 
         [HttpGet("project/{projectId}")]
         [Authorize]
-        public async Task<ActionResult<List<TaskDTO>>> GetAllTasksForProject([FromRoute] Guid projectId)
+        public async Task<ActionResult<IEnumerable<TaskDTO>>> GetAllTasksForProject([FromRoute] Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
             return Ok(tasks);
@@ -60,7 +60,7 @@ namespace API.Controllers
 
         [HttpDelete("project/{projectId}/task/{taskId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteTask(Guid projectId, Guid taskId)
+        public async Task<IActionResult> DeleteTask([FromRoute] Guid projectId, [FromRoute] Guid taskId)
         {
             var userId = GetCurrentUserId();
             if (userId == null)
@@ -68,7 +68,9 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectDeletionAsync(projectId, userId.Value);
+            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
+                projectId,
+                userId.Value);
             if (!validationResult.IsAuthorized)
             {
                 return Forbid();
@@ -94,7 +96,9 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectUpdateAsync(projectId, userId.Value);
+            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
+                projectId,
+                userId.Value);
             if (!validationResult.IsAuthorized)
             {
                 return Forbid();

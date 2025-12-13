@@ -31,13 +31,13 @@ namespace Application.Features.Commands.Tasks.CreateTask
             newTask.ProjectId = request.ProjectId;
             newTask.Id = Guid.NewGuid();
 
-            var created = await _taskRepository.CreateTaskAsync(newTask);
-            if (!created)
+            var createdTask = await _taskRepository.CreateTaskAsync(newTask);
+            if (createdTask == null)
             {
                 return null;
             }
 
-            return _mapper.Map<TaskDTO>(newTask);
+            return _mapper.Map<TaskDTO>(createdTask);
         }
     }
 }

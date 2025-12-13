@@ -14,11 +14,7 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        //public async Task<List<Project>> GetAllProjectsAsync()
-        //{
-        //    return await _context.Projects.ToListAsync();
-        //}
-        public async Task<(List<Project> Items, int TotalCount)> GetAllProjectsAsync(int page, int pageSize)
+        public async Task<(IEnumerable<Project> Items, int TotalCount)> GetAllProjectsAsync(int page, int pageSize)
         {
             var query = _context.Projects.AsQueryable();
             var totalCount = await query.CountAsync();

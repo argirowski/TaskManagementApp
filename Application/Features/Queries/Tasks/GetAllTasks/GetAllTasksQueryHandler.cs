@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace Application.Features.Queries.Tasks.GetAllTasks
 {
-    public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, List<TaskDTO>>
+    public class GetAllTasksQueryHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDTO>>
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace Application.Features.Queries.Tasks.GetAllTasks
             _mapper = mapper;
         }
 
-        public async Task<List<TaskDTO>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TaskDTO>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
         {
             var tasks = await _taskRepository.GetTasksByProjectIdAsync(request.ProjectId);
             return _mapper.Map<List<TaskDTO>>(tasks);

@@ -5,8 +5,7 @@ namespace Domain.Interfaces
 {
     public interface IProjectRepository
     {
-        Task<(List<Project> Items, int TotalCount)> GetAllProjectsAsync(int page, int pageSize);
-        //Task<List<Project>> GetAllProjectsAsync();
+        Task<(IEnumerable<Project> Items, int TotalCount)> GetAllProjectsAsync(int page, int pageSize);
         Task<Project?> GetProjectByIdAsync(Guid id);
         Task<bool> DeleteProjectAsync(Guid id);
         Task<Project?> CreateProjectAsync(Project project, Guid userId);
