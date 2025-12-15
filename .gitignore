@@ -22,6 +22,8 @@ TaskManagementAppRepositoryTests/TestResults/
 TaskManagementAppRepositoryTests/coveragereport/
 TaskManagementAppUnitTests/TestResults/
 TaskManagementAppUnitTests/coveragereport/
+TaskManagementAppIntegrationTests/TestResults/
+TaskManagementAppIntegrationTests/coveragereport/
 
 # TaskManagementApp Folder
 TaskManagementApp.txt

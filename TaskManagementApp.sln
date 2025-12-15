@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppUnitTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppRepositoryTests", "TaskManagementAppRepositoryTests\TaskManagementAppRepositoryTests.csproj", "{4104F870-88C4-4B23-A208-2E5B9084F6AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementAppIntegrationTests", "TaskManagementAppIntegrationTests\TaskManagementAppIntegrationTests.csproj", "{9A7E7952-0A41-4765-B521-6A94152F3147}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4104F870-88C4-4B23-A208-2E5B9084F6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A7E7952-0A41-4765-B521-6A94152F3147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A7E7952-0A41-4765-B521-6A94152F3147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A7E7952-0A41-4765-B521-6A94152F3147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A7E7952-0A41-4765-B521-6A94152F3147}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9B02A812-C9F8-4998-A9A1-371F846FB72F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{4104F870-88C4-4B23-A208-2E5B9084F6AA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{9A7E7952-0A41-4765-B521-6A94152F3147} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DE16212-89F9-4256-8739-4A7DABC74494}
