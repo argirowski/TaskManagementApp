@@ -29,6 +29,10 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<TaskDTO>>> GetAllTasksForProject([FromRoute] Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
+            if (tasks == null)
+            {
+                return NotFound();
+            }
             return Ok(tasks);
         }
 
@@ -68,19 +72,11 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
-                projectId,
-                userId.Value);
-            if (!validationResult.IsAuthorized)
-            {
-                return Forbid();
-            }
-
-            var command = new DeleteTaskCommand(projectId, taskId);
+            var command = new DeleteTaskCommand(projectId, taskId, userId.Value);
             var result = await _mediator.Send(command);
             if (!result)
             {
-                return NotFound();
+                return Forbid();
             }
 
             return NoContent();
@@ -96,19 +92,11 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
-                projectId,
-                userId.Value);
-            if (!validationResult.IsAuthorized)
-            {
-                return Forbid();
-            }
-
-            var command = new UpdateTaskCommand(projectId, taskId, taskDTO);
+            var command = new UpdateTaskCommand(projectId, taskId, taskDTO, userId.Value);
             var result = await _mediator.Send(command);
             if (!result)
             {
-                return NotFound();
+                return Forbid();
             }
 
             return NoContent();

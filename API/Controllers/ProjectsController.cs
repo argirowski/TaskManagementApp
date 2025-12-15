@@ -5,7 +5,6 @@ using Application.Features.Commands.Projects.UpdateProject;
 using Application.Features.Queries.Projects.GetAllProjects;
 using Application.Features.Queries.Projects.GetSingleProject;
 using Application.Helpers;
-using Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +16,10 @@ namespace API.Controllers
     public class ProjectsController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly IProjectAuthorizationService _authorizationService;
 
-        public ProjectsController(IMediator mediator, IProjectAuthorizationService authorizationService)
+        public ProjectsController(IMediator mediator)
         {
             _mediator = mediator;
-            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -57,18 +54,10 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
-                id,
-                userId.Value);
-            if (!validationResult.IsAuthorized)
-            {
-                return Forbid();
-            }
-
-            var result = await _mediator.Send(new DeleteProjectCommand(id));
+            var result = await _mediator.Send(new DeleteProjectCommand(id, userId.Value));
             if (!result)
             {
-                return NotFound();
+                return Forbid();
             }
 
             return NoContent();
@@ -104,19 +93,11 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var validationResult = await _authorizationService.ValidateProjectOwnerAsync(
-                id,
-                userId.Value);
-            if (!validationResult.IsAuthorized)
-            {
-                return Forbid();
-            }
-
-            var command = new UpdateProjectCommand(id, editProjectDTO);
+            var command = new UpdateProjectCommand(id, editProjectDTO, userId.Value);
             var result = await _mediator.Send(command);
             if (!result)
             {
-                return NotFound();
+                return Forbid();
             }
 
             return NoContent();

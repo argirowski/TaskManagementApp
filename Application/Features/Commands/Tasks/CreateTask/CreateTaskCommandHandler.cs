@@ -10,16 +10,25 @@ namespace Application.Features.Commands.Tasks.CreateTask
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskDTO?>
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
 
-        public CreateTaskCommandHandler(ITaskRepository taskRepository, IMapper mapper)
+        public CreateTaskCommandHandler(ITaskRepository taskRepository, IProjectRepository projectRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _projectRepository = projectRepository;
             _mapper = mapper;
         }
 
         public async Task<TaskDTO?> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
+            // Check if project exists
+            var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
+            if (project == null)
+            {
+                return null;
+            }
+
             // Check for duplicate task name within the project
             var exists = await _taskRepository.ExistsByNameAsync(request.ProjectId, request.Task.ProjectTaskTitle);
             if (exists)

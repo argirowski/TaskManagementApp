@@ -1,4 +1,5 @@
 using API.Middleware;
+using Application.Behaviors;
 using Application.Features.Commands.Auth.Register;
 using Application.Interfaces;
 using Application.Mapping;
@@ -68,7 +69,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddMediatR(options =>
 {
     options.RegisterServicesFromAssemblies(typeof(RegisterUserCommandHandler).Assembly);
-    options.AddOpenBehavior(typeof(Application.Behaviors.ValidationBehavior<,>));
+    options.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
