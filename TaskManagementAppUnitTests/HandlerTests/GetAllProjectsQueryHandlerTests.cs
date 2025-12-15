@@ -25,9 +25,9 @@ namespace TaskManagementAppUnitTests.HandlerTests
             // Arrange
             _projectRepoMock
                 .Setup(x => x.GetAllProjectsAsync(It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync((new List<Project>(), 0));
+                .ReturnsAsync((Enumerable.Empty<Project>(), 0));
             _mapperMock
-                .Setup(x => x.Map<List<ProjectDTO>>(It.IsAny<List<Project>>()))
+                .Setup(x => x.Map<List<ProjectDTO>>(It.IsAny<IEnumerable<Project>>()))
                 .Returns(new List<ProjectDTO>());
 
             var query = new GetAllProjectsQuery { Page = 1, PageSize = 10 };
@@ -51,9 +51,9 @@ namespace TaskManagementAppUnitTests.HandlerTests
             var dtos = new List<ProjectDTO> { new ProjectDTO { Id = projects[0].Id, ProjectName = "P1", ProjectDescription = "Desc" } };
             _projectRepoMock
                 .Setup(x => x.GetAllProjectsAsync(1, 10))
-                .ReturnsAsync((projects, projects.Count));
+                .ReturnsAsync((projects.AsEnumerable(), projects.Count));
             _mapperMock
-                .Setup(x => x.Map<List<ProjectDTO>>(projects))
+                .Setup(x => x.Map<List<ProjectDTO>>(It.IsAny<IEnumerable<Project>>()))
                 .Returns(dtos);
 
             var query = new GetAllProjectsQuery { Page = 1, PageSize = 10 };
@@ -64,7 +64,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
             // Assert
             result.Should().NotBeNull();
             result.Items.Should().HaveCount(1);
-            result.Items[0].ProjectName.Should().Be("P1");
+            result.Items.First().ProjectName.Should().Be("P1");
             result.TotalCount.Should().Be(1);
             result.Page.Should().Be(1);
             result.PageSize.Should().Be(10);

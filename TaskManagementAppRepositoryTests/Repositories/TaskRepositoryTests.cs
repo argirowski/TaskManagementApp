@@ -29,9 +29,9 @@ namespace TaskManagementAppRepositoryTests.Repositories
             var result = await repo.CreateTaskAsync(task);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeNull();
             context.ProjectTasks.Count().Should().Be(1);
-            context.ProjectTasks.First().ProjectTaskTitle.Should().Be("Task1");
+            result!.ProjectTaskTitle.Should().Be("Task1");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace TaskManagementAppRepositoryTests.Repositories
 
             // Assert
             result.Should().HaveCount(1);
-            result[0].ProjectTaskTitle.Should().Be("Task1");
+            result.First().ProjectTaskTitle.Should().Be("Task1");
         }
 
         [Fact]
