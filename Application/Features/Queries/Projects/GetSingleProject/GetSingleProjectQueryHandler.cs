@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
@@ -21,7 +22,7 @@ namespace Application.Features.Queries.Projects.GetSingleProject
             var project = await _projectRepository.GetProjectByIdAsync(request.Id);
             if (project == null)
             {
-                return null;
+                throw new NotFoundException($"Project with ID {request.Id} not found.");
             }
 
             return _mapper.Map<ProjectDetailsDTO>(project);

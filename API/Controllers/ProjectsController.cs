@@ -36,11 +36,6 @@ namespace API.Controllers
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject([FromRoute] Guid id)
         {
             var projectDetailsDTO = await _mediator.Send(new GetSingleProjectQuery(id));
-            if (projectDetailsDTO == null)
-            {
-                return NotFound();
-            }
-
             return Ok(projectDetailsDTO);
         }
 
@@ -49,17 +44,7 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteProject([FromRoute] Guid id)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var result = await _mediator.Send(new DeleteProjectCommand(id, userId.Value));
-            if (!result)
-            {
-                return Forbid();
-            }
-
+            await _mediator.Send(new DeleteProjectCommand(id, userId ?? Guid.Empty));
             return NoContent();
         }
 

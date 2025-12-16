@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using FluentValidation;
 using System.Net;
 using System.Text.Json;
@@ -37,6 +38,30 @@ namespace API.Middleware
                 };
 
                 var jsonResponse = JsonSerializer.Serialize(response);
+                await context.Response.WriteAsync(jsonResponse);
+            }
+            catch (NotFoundException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "application/json";
+                var error = new { error = ex.Message };
+                var jsonResponse = JsonSerializer.Serialize(error);
+                await context.Response.WriteAsync(jsonResponse);
+            }
+            catch (UnauthorizedException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.ContentType = "application/json";
+                var error = new { error = ex.Message };
+                var jsonResponse = JsonSerializer.Serialize(error);
+                await context.Response.WriteAsync(jsonResponse);
+            }
+            catch (ForbiddenException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                context.Response.ContentType = "application/json";
+                var error = new { error = ex.Message };
+                var jsonResponse = JsonSerializer.Serialize(error);
                 await context.Response.WriteAsync(jsonResponse);
             }
         }
