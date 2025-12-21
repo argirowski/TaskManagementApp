@@ -8,11 +8,13 @@ namespace Application.Features.Commands.Tasks.DeleteTask
     public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IProjectAuthorizationService _authorizationService;
 
-        public DeleteTaskCommandHandler(ITaskRepository taskRepository, IProjectAuthorizationService authorizationService)
+        public DeleteTaskCommandHandler(ITaskRepository taskRepository, IProjectRepository projectRepository, IProjectAuthorizationService authorizationService)
         {
             _taskRepository = taskRepository;
+            _projectRepository = projectRepository;
             _authorizationService = authorizationService;
         }
 
@@ -22,6 +24,13 @@ namespace Application.Features.Commands.Tasks.DeleteTask
             if (request.UserId == Guid.Empty)
             {
                 throw new UnauthorizedException("No user ID provided. User must be authenticated.");
+            }
+
+            // Check if project exists
+            var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
+            if (project == null)
+            {
+                throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
 
             // Authorization check

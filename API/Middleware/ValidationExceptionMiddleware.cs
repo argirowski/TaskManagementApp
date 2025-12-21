@@ -64,6 +64,14 @@ namespace API.Middleware
                 var jsonResponse = JsonSerializer.Serialize(error);
                 await context.Response.WriteAsync(jsonResponse);
             }
+            catch (BadRequestException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+                var error = new { error = ex.Message };
+                var jsonResponse = JsonSerializer.Serialize(error);
+                await context.Response.WriteAsync(jsonResponse);
+            }
         }
     }
 }
