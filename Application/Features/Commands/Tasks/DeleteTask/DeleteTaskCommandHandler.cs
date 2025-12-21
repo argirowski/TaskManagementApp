@@ -32,14 +32,12 @@ namespace Application.Features.Commands.Tasks.DeleteTask
             {
                 throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
-
             // Authorization check
             var isOwner = await _authorizationService.IsUserOwnerAsync(request.ProjectId, request.UserId);
             if (!isOwner)
             {
                 throw new ForbiddenException("You do not have permission to delete this task.");
             }
-
             // Check if task exists in the specified project
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
@@ -48,6 +46,7 @@ namespace Application.Features.Commands.Tasks.DeleteTask
             }
             // Delete the task
             var deleted = await _taskRepository.DeleteTaskAsync(request.ProjectId, request.TaskId);
+
             return deleted;
         }
     }

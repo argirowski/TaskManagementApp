@@ -22,12 +22,14 @@ namespace Application.Features.Queries.Tasks.GetAllTasks
         public async Task<IEnumerable<TaskDTO>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
         {
             var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
+            // Check if project exists
             if (project == null)
             {
                 throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
 
             var tasks = await _taskRepository.GetTasksByProjectIdAsync(request.ProjectId);
+
             return _mapper.Map<List<TaskDTO>>(tasks);
         }
     }

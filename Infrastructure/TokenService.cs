@@ -61,7 +61,7 @@ namespace Infrastructure
         {
             var refreshToken = GenerateRefreshToken();
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set expiry time as needed
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateUserAsync(user);
             return refreshToken;
         }

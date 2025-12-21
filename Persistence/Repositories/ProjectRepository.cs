@@ -44,6 +44,7 @@ namespace Persistence.Repositories
 
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -69,6 +70,7 @@ namespace Persistence.Repositories
         {
             _context.Projects.Update(project);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -76,6 +78,7 @@ namespace Persistence.Repositories
         {
             var projectUser = await _context.ProjectUsers
                 .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.UserId == userId);
+
             return projectUser?.Role;
         }
 

@@ -28,6 +28,7 @@ namespace API.Controllers
         {
             var query = new GetAllProjectsQuery { Page = paginationParams.PageNumber, PageSize = paginationParams.PageSize };
             var projects = await _mediator.Send(query);
+
             return Ok(projects);
         }
 
@@ -36,6 +37,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProjectDetailsDTO>> GetSingleProject([FromRoute] Guid id)
         {
             var projectDetailsDTO = await _mediator.Send(new GetSingleProjectQuery(id));
+
             return Ok(projectDetailsDTO);
         }
 
@@ -45,6 +47,7 @@ namespace API.Controllers
         {
             var userId = GetCurrentUserId();
             await _mediator.Send(new DeleteProjectCommand(id, userId ?? Guid.Empty));
+
             return NoContent();
         }
 
@@ -55,6 +58,7 @@ namespace API.Controllers
             var userId = GetCurrentUserId();
             var command = new CreateProjectCommand(createProjectDTO, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
+
             return StatusCode(201, result);
         }
 
@@ -65,6 +69,7 @@ namespace API.Controllers
             var userId = GetCurrentUserId();
             var command = new UpdateProjectCommand(id, editProjectDTO, userId ?? Guid.Empty);
             await _mediator.Send(command);
+
             return NoContent();
         }
     }

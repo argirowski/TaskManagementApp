@@ -28,6 +28,7 @@ namespace Application.Features.Commands.Projects.UpdateProject
             }
 
             var project = await _projectRepository.GetProjectByIdAsync(request.Id);
+            // Check if project exists
             if (project == null)
             {
                 throw new NotFoundException($"Project with ID {request.Id} not found.");
@@ -43,10 +44,12 @@ namespace Application.Features.Commands.Projects.UpdateProject
             // Map updated fields
             _mapper.Map(request.Project, project);
             var updated = await _projectRepository.UpdateProjectAsync(project);
+            // Check if update was successful
             if (!updated)
             {
                 throw new BadRequestException("Failed to update the project. Please try again.");
             }
+
             return true;
         }
     }

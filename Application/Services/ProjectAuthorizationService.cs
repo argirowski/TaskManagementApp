@@ -18,6 +18,7 @@ namespace Application.Services
         public async Task<bool> IsUserOwnerAsync(Guid projectId, Guid userId)
         {
             var role = await _projectRepository.GetUserRoleAsync(projectId, userId);
+
             return role == ProjectRole.Owner;
         }
 

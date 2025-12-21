@@ -29,6 +29,7 @@ namespace Application.Features.Queries.Tasks.GetSingleTask
             }
 
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
+            // Check if task exists
             if (task == null)
             {
                 throw new NotFoundException($"Task with ID {request.TaskId} not found.");

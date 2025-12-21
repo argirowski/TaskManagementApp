@@ -28,6 +28,7 @@ namespace Persistence.Repositories
         {
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();
+
             return task;
         }
         public async Task<bool> DeleteTaskAsync(Guid projectId, Guid taskId)

@@ -29,6 +29,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<TaskDTO>>> GetAllTasksForProject([FromRoute] Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
+
             return Ok(tasks);
         }
 
@@ -37,6 +38,7 @@ namespace API.Controllers
         public async Task<ActionResult<TaskDTO>> GetSingleTaskForProject([FromRoute] Guid projectId, [FromRoute] Guid taskId)
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
+
             return Ok(task);
         }
         [HttpPost("project/{projectId}")]
@@ -45,6 +47,7 @@ namespace API.Controllers
         {
             var command = new CreateTaskCommand(projectId, taskDTO);
             var result = await _mediator.Send(command);
+
             return StatusCode(201, result);
 
         }
@@ -56,6 +59,7 @@ namespace API.Controllers
             var userId = GetCurrentUserId();
             var command = new DeleteTaskCommand(projectId, taskId, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
+
             return NoContent();
         }
 

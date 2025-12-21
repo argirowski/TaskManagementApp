@@ -26,14 +26,13 @@
             {
                 throw new UnauthorizedException("No user ID provided. User must be authenticated.");
             }
-
             // Authorization check
             var isOwner = await _authorizationService.IsUserOwnerAsync(request.ProjectId, request.UserId);
             if (!isOwner)
             {
                 throw new ForbiddenException("You do not have permission to update this task.");
             }
-
+            // Check if task exists in the specified project
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
             {
@@ -42,10 +41,12 @@
 
             _mapper.Map(request.Task, task);
             var updated = await _taskRepository.UpdateTaskAsync(task);
+            // Check if update was successful
             if (!updated)
             {
                 throw new BadRequestException("Failed to update the task. Please try again.");
             }
+
             return updated;
         }
     }

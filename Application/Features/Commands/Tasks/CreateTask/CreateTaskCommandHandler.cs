@@ -29,7 +29,6 @@ namespace Application.Features.Commands.Tasks.CreateTask
             {
                 throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
-
             // Check for duplicate task name within the project
             var exists = await _taskRepository.ExistsByNameAsync(request.ProjectId, request.Task.ProjectTaskTitle);
             if (exists)
@@ -42,6 +41,7 @@ namespace Application.Features.Commands.Tasks.CreateTask
             newTask.Id = Guid.NewGuid();
 
             var createdTask = await _taskRepository.CreateTaskAsync(newTask);
+            // Check if creation was successful
             if (createdTask == null)
             {
                 throw new BadRequestException("Failed to create the task. Please try again.");

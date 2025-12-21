@@ -40,6 +40,7 @@ namespace Application.Features.Commands.Projects.DeleteProject
 
             // Delete the project
             var deleted = await _projectRepository.DeleteProjectAsync(request.Id);
+
             return deleted;
         }
     }

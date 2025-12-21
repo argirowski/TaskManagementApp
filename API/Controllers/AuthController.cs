@@ -23,6 +23,7 @@ namespace API.Controllers
         {
             var command = new RegisterUserCommand { User = userDTO };
             var result = await _mediator.Send(command);
+
             return CreatedAtAction(nameof(RegisterUser), result);
         }
 

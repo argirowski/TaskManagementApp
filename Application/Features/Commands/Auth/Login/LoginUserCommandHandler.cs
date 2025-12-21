@@ -29,6 +29,7 @@ namespace Application.Features.Commands.Auth.Login
             }
 
             var hasher = new PasswordHasher<User>();
+            // Check if password is correct
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, command.Login.Password);
             if (result != PasswordVerificationResult.Success)
             {
