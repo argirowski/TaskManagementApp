@@ -1,4 +1,5 @@
 using Application.Features.Commands.Projects.DeleteProject;
+using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
@@ -9,7 +10,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
     public class DeleteProjectCommandHandlerTests
     {
         private readonly Mock<IProjectRepository> _projectRepoMock = new();
-        private readonly Mock<Domain.Interfaces.IProjectAuthorizationService> _authServiceMock = new();
+        private readonly Mock<IProjectAuthorizationService> _authServiceMock = new();
         private readonly DeleteProjectCommandHandler _handler;
 
         public DeleteProjectCommandHandlerTests()

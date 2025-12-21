@@ -16,7 +16,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new UpdateProjectCommand(
                 Guid.NewGuid(),
-                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = "A valid project description." }
+                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = "A valid project description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -30,7 +31,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new UpdateProjectCommand(
                 Guid.Empty,
-                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = "A valid project description." }
+                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = "A valid project description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -48,7 +50,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             {
                 var command = new UpdateProjectCommand(
                     Guid.NewGuid(),
-                    new CreateProjectDTO { ProjectName = name ?? string.Empty, ProjectDescription = "A valid project description." }
+                    new CreateProjectDTO { ProjectName = name ?? string.Empty, ProjectDescription = "A valid project description." },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -65,7 +68,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var longName = new string('A', 51);
             var command = new UpdateProjectCommand(
                 Guid.NewGuid(),
-                new CreateProjectDTO { ProjectName = longName, ProjectDescription = "A valid project description." }
+                new CreateProjectDTO { ProjectName = longName, ProjectDescription = "A valid project description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -83,7 +87,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             {
                 var command = new UpdateProjectCommand(
                     Guid.NewGuid(),
-                    new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = desc }
+                    new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = desc },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -100,7 +105,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var longDesc = new string('A', 201);
             var command = new UpdateProjectCommand(
                 Guid.NewGuid(),
-                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = longDesc }
+                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = longDesc },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -115,7 +121,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new UpdateProjectCommand(
                 Guid.NewGuid(),
-                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = null }
+                new CreateProjectDTO { ProjectName = "Valid Name", ProjectDescription = null },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);

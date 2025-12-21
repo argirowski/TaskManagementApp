@@ -1,5 +1,6 @@
 using Application.DTOs;
 using Application.Features.Commands.Projects.UpdateProject;
+using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -11,12 +12,13 @@ namespace TaskManagementAppUnitTests.HandlerTests
     public class UpdateProjectCommandHandlerTests
     {
         private readonly Mock<IProjectRepository> _projectRepoMock = new();
+        private readonly Mock<IProjectAuthorizationService> _authServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
         private readonly UpdateProjectCommandHandler _handler;
 
         public UpdateProjectCommandHandlerTests()
         {
-            _handler = new UpdateProjectCommandHandler(_projectRepoMock.Object, _mapperMock.Object);
+            _handler = new UpdateProjectCommandHandler(_projectRepoMock.Object, _authServiceMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -24,13 +26,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
         {
             // Arrange
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Project?)null);
-            var command = new UpdateProjectCommand(Guid.NewGuid(), new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var command = new UpdateProjectCommand(Guid.NewGuid(), new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeFalse();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.NotFoundException>()
+                .WithMessage("Project with ID * not found.");
         }
 
         [Fact]
@@ -41,13 +42,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(false);
-            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeFalse();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Failed to update the project. Please try again.");
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(true);
-            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" });
+            var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);

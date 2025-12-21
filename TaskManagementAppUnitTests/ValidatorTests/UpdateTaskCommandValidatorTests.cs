@@ -17,7 +17,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -32,7 +33,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.Empty,
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -48,7 +50,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -67,7 +70,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
                 var command = new UpdateTaskCommand(
                     Guid.NewGuid(),
                     Guid.NewGuid(),
-                    new TaskDTO { ProjectTaskTitle = title ?? string.Empty, ProjectTaskDescription = "A valid description." }
+                    new TaskDTO { ProjectTaskTitle = title ?? string.Empty, ProjectTaskDescription = "A valid description." },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -85,7 +89,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = longTitle, ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = longTitle, ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -104,7 +109,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
                 var command = new UpdateTaskCommand(
                     Guid.NewGuid(),
                     Guid.NewGuid(),
-                    new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = desc }
+                    new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = desc },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -122,7 +128,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = longDesc }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = longDesc },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -138,7 +145,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var command = new UpdateTaskCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = null }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = null },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);

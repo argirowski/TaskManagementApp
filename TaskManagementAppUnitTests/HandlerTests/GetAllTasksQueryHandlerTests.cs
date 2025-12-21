@@ -11,12 +11,13 @@ namespace TaskManagementAppUnitTests.HandlerTests
     public class GetAllTasksQueryHandlerTests
     {
         private readonly Mock<ITaskRepository> _taskRepoMock = new();
+        private readonly Mock<IProjectRepository> _projectRepoMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
         private readonly GetAllTasksQueryHandler _handler;
 
         public GetAllTasksQueryHandlerTests()
         {
-            _handler = new GetAllTasksQueryHandler(_taskRepoMock.Object, _mapperMock.Object);
+            _handler = new GetAllTasksQueryHandler(_taskRepoMock.Object, _projectRepoMock.Object, _mapperMock.Object);
         }
 
         [Fact]

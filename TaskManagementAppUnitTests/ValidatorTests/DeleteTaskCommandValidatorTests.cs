@@ -1,7 +1,6 @@
 using Application.Features.Commands.Tasks.DeleteTask;
 using Application.Validators;
 using FluentAssertions;
-using Xunit;
 
 namespace TaskManagementAppUnitTests.ValidatorTests
 {
@@ -13,7 +12,7 @@ namespace TaskManagementAppUnitTests.ValidatorTests
         public void ValidIds_ShouldPassValidation()
         {
             // Arrange
-            var command = new DeleteTaskCommand(Guid.NewGuid(), Guid.NewGuid());
+            var command = new DeleteTaskCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
             // Act
             var result = _validator.Validate(command);
             // Assert
@@ -24,7 +23,7 @@ namespace TaskManagementAppUnitTests.ValidatorTests
         public void EmptyProjectId_ShouldFailValidation()
         {
             // Arrange
-            var command = new DeleteTaskCommand(Guid.Empty, Guid.NewGuid());
+            var command = new DeleteTaskCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid());
             // Act
             var result = _validator.Validate(command);
             // Assert
@@ -36,7 +35,7 @@ namespace TaskManagementAppUnitTests.ValidatorTests
         public void EmptyTaskId_ShouldFailValidation()
         {
             // Arrange
-            var command = new DeleteTaskCommand(Guid.NewGuid(), Guid.Empty);
+            var command = new DeleteTaskCommand(Guid.NewGuid(), Guid.Empty, Guid.NewGuid());
             // Act
             var result = _validator.Validate(command);
             // Assert

@@ -1,7 +1,6 @@
 using Application.Features.Commands.Projects.DeleteProject;
 using Application.Validators;
 using FluentAssertions;
-using Xunit;
 
 namespace TaskManagementAppUnitTests.ValidatorTests
 {
@@ -13,7 +12,7 @@ namespace TaskManagementAppUnitTests.ValidatorTests
         public void ValidId_ShouldPassValidation()
         {
             // Arrange
-            var command = new DeleteProjectCommand(Guid.NewGuid());
+            var command = new DeleteProjectCommand(Guid.NewGuid(), Guid.NewGuid());
             // Act
             var result = _validator.Validate(command);
             // Assert
@@ -24,7 +23,7 @@ namespace TaskManagementAppUnitTests.ValidatorTests
         public void EmptyId_ShouldFailValidation()
         {
             // Arrange
-            var command = new DeleteProjectCommand(Guid.Empty);
+            var command = new DeleteProjectCommand(Guid.Empty, Guid.NewGuid());
             // Act
             var result = _validator.Validate(command);
             // Assert
