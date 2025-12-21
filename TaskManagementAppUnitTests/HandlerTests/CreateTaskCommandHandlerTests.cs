@@ -26,11 +26,10 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(true);
             var command = new CreateTaskCommand(Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("A task with this name already exists.");
         }
 
         [Fact]
@@ -42,11 +41,10 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _taskRepoMock.Setup(x => x.CreateTaskAsync(It.IsAny<ProjectTask>())).ReturnsAsync((ProjectTask?)null);
             var command = new CreateTaskCommand(Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Task creation failed.");
         }
 
         [Fact]

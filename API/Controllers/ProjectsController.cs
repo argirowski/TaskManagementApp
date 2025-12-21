@@ -53,18 +53,8 @@ namespace API.Controllers
         public async Task<ActionResult<CreateProjectDTO>> CreateProject([FromBody] CreateProjectDTO createProjectDTO)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var command = new CreateProjectCommand(createProjectDTO, userId.Value);
+            var command = new CreateProjectCommand(createProjectDTO, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
-            if (result == null)
-            {
-                return BadRequest("Project creation failed.");
-            }
-
             return StatusCode(201, result);
         }
 
@@ -73,18 +63,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateProject([FromRoute] Guid id, [FromBody] CreateProjectDTO editProjectDTO)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var command = new UpdateProjectCommand(id, editProjectDTO, userId.Value);
-            var result = await _mediator.Send(command);
-            if (!result)
-            {
-                return Forbid();
-            }
-
+            var command = new UpdateProjectCommand(id, editProjectDTO, userId ?? Guid.Empty);
+            await _mediator.Send(command);
             return NoContent();
         }
     }

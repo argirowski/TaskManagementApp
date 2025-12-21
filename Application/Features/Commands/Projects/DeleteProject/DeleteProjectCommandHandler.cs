@@ -21,7 +21,7 @@ namespace Application.Features.Commands.Projects.DeleteProject
             // Check if user is authenticated
             if (request.UserId == Guid.Empty)
             {
-                throw new UnauthorizedException("User is not authenticated.");
+                throw new UnauthorizedException("No user ID provided. User must be authenticated.");
             }
 
             // Check if project exists
