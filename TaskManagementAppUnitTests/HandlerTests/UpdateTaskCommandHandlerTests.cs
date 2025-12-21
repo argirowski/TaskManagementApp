@@ -22,29 +22,36 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_TaskDoesNotExist_ReturnsFalse()
+        public async Task Handle_TaskDoesNotExist_ThrowsNotFoundException()
         {
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync((ProjectTask?)null);
             var command = new UpdateTaskCommand(Guid.NewGuid(), Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" }, Guid.NewGuid());
-            var result = await _handler.Handle(command, CancellationToken.None);
-            result.Should().BeFalse();
+
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.NotFoundException>()
+                .WithMessage("Task with ID * not found.");
         }
 
         [Fact]
-        public async Task Handle_UpdateFails_ReturnsFalse()
+        public async Task Handle_UpdateFails_ThrowsBadRequestException()
         {
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             var task = new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task" };
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(task);
             _mapperMock.Setup(x => x.Map(It.IsAny<TaskDTO>(), task));
             _taskRepoMock.Setup(x => x.UpdateTaskAsync(task)).ReturnsAsync(false);
             var command = new UpdateTaskCommand(Guid.NewGuid(), Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" }, Guid.NewGuid());
-            var result = await _handler.Handle(command, CancellationToken.None);
-            result.Should().BeFalse();
+
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Failed to update the task. Please try again.");
         }
 
         [Fact]
         public async Task Handle_SuccessfulUpdate_ReturnsTrue()
         {
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             var task = new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task" };
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(task);
             _mapperMock.Setup(x => x.Map(It.IsAny<TaskDTO>(), task));

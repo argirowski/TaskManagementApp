@@ -23,9 +23,11 @@ namespace TaskManagementAppUnitTests.HandlerTests
         [Fact]
         public async Task Handle_NoTasks_ReturnsEmptyList()
         {
+            var projectId = Guid.NewGuid();
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
             _taskRepoMock.Setup(x => x.GetTasksByProjectIdAsync(It.IsAny<Guid>())).ReturnsAsync(Enumerable.Empty<ProjectTask>());
             _mapperMock.Setup(x => x.Map<List<TaskDTO>>(It.IsAny<IEnumerable<ProjectTask>>())).Returns(new List<TaskDTO>());
-            var result = await _handler.Handle(new GetAllTasksQuery(Guid.NewGuid()), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllTasksQuery(projectId), CancellationToken.None);
             result.Should().NotBeNull();
             result.Should().BeEmpty();
         }
@@ -36,6 +38,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
             var projectId = Guid.NewGuid();
             var tasks = new List<ProjectTask> { new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task1", ProjectId = projectId } };
             var dtos = new List<TaskDTO> { new TaskDTO { ProjectTaskTitle = "Task1", ProjectTaskDescription = "Desc" } };
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
             _taskRepoMock.Setup(x => x.GetTasksByProjectIdAsync(projectId)).ReturnsAsync(tasks.AsEnumerable());
             _mapperMock.Setup(x => x.Map<List<TaskDTO>>(It.IsAny<IEnumerable<ProjectTask>>())).Returns(dtos);
             var result = await _handler.Handle(new GetAllTasksQuery(projectId), CancellationToken.None);

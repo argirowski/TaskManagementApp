@@ -41,12 +41,14 @@ namespace Persistence.Repositories
 
             _context.ProjectTasks.Remove(task);
             await _context.SaveChangesAsync();
+
             return true;
         }
         public async Task<bool> UpdateTaskAsync(ProjectTask task)
         {
             _context.ProjectTasks.Update(task);
             await _context.SaveChangesAsync();
+
             return true;
         }
         public async Task<bool> ExistsByNameAsync(Guid projectId, string taskTitle)

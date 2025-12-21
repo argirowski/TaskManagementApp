@@ -24,28 +24,32 @@ namespace TaskManagementAppUnitTests.HandlerTests
         public async Task Handle_DuplicateTaskName_ReturnsNull()
         {
             // Arrange
+            var projectId = Guid.NewGuid();
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(true);
-            var command = new CreateTaskCommand(Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
+            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
 
             // Act & Assert
             await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
-                .WithMessage("A task with this name already exists.");
+                .WithMessage("A task with the name 'Task' already exists.");
         }
 
         [Fact]
         public async Task Handle_RepositoryReturnsNull_ReturnsNull()
         {
             // Arrange
+            var projectId = Guid.NewGuid();
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(false);
             _mapperMock.Setup(x => x.Map<ProjectTask>(It.IsAny<TaskDTO>())).Returns(new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task" });
             _taskRepoMock.Setup(x => x.CreateTaskAsync(It.IsAny<ProjectTask>())).ReturnsAsync((ProjectTask?)null);
-            var command = new CreateTaskCommand(Guid.NewGuid(), new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
+            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
 
             // Act & Assert
             await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
-                .WithMessage("Task creation failed.");
+                .WithMessage("Failed to create the task. Please try again.");
         }
 
         [Fact]
@@ -56,6 +60,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
             var task = new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task", ProjectId = projectId };
             var dto = new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" };
 
+            _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(projectId, "Task")).ReturnsAsync(false);
             _mapperMock.Setup(x => x.Map<ProjectTask>(It.IsAny<TaskDTO>())).Returns(task);
             _taskRepoMock.Setup(x => x.CreateTaskAsync(task)).ReturnsAsync(task);
