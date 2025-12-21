@@ -1,7 +1,8 @@
-﻿using MediatR;
-using Domain.Interfaces;
-using Application.DTOs;
+﻿using Application.DTOs;
+using Application.Exceptions;
 using AutoMapper;
+using Domain.Interfaces;
+using MediatR;
 
 namespace Application.Features.Queries.Tasks.GetSingleTask
 {
@@ -21,7 +22,7 @@ namespace Application.Features.Queries.Tasks.GetSingleTask
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
             {
-                return null;
+                throw new NotFoundException($"Task with ID {request.TaskId} not found.");
             }
 
             return _mapper.Map<TaskDTO>(task);

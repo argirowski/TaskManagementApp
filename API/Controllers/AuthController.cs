@@ -23,12 +23,6 @@ namespace API.Controllers
         {
             var command = new RegisterUserCommand { User = userDTO };
             var result = await _mediator.Send(command);
-
-            if (result == null)
-            {
-                return BadRequest("User with this email already exists.");
-            }
-
             return CreatedAtAction(nameof(RegisterUser), result);
         }
 
@@ -38,11 +32,6 @@ namespace API.Controllers
             var command = new LoginUserCommand { Login = loginDTO };
             var result = await _mediator.Send(command);
 
-            if (result == null)
-            {
-                return Unauthorized("Invalid credentials.");
-            }
-
             return Ok(result);
         }
 
@@ -51,11 +40,6 @@ namespace API.Controllers
         {
             var command = new RefreshTokenCommand { RefreshToken = refreshTokenRequestDTO };
             var result = await _mediator.Send(command);
-
-            if (result == null)
-            {
-                return Unauthorized("Invalid refresh token.");
-            }
 
             return Ok(result);
         }

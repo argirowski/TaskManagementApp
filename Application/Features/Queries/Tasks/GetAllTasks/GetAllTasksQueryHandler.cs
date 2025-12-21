@@ -1,7 +1,8 @@
-﻿using MediatR;
-using Domain.Interfaces;
-using Application.DTOs;
+﻿using Application.DTOs;
+using Application.Exceptions;
 using AutoMapper;
+using Domain.Interfaces;
+using MediatR;
 
 namespace Application.Features.Queries.Tasks.GetAllTasks
 {
@@ -23,7 +24,7 @@ namespace Application.Features.Queries.Tasks.GetAllTasks
             var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
             if (project == null)
             {
-                return null;
+                throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
 
             var tasks = await _taskRepository.GetTasksByProjectIdAsync(request.ProjectId);

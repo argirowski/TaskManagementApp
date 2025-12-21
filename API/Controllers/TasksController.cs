@@ -29,10 +29,6 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<TaskDTO>>> GetAllTasksForProject([FromRoute] Guid projectId)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(projectId));
-            if (tasks == null)
-            {
-                return NotFound();
-            }
             return Ok(tasks);
         }
 
@@ -41,11 +37,6 @@ namespace API.Controllers
         public async Task<ActionResult<TaskDTO>> GetSingleTaskForProject([FromRoute] Guid projectId, [FromRoute] Guid taskId)
         {
             var task = await _mediator.Send(new GetSingleTaskQuery(projectId, taskId));
-            if (task == null)
-            {
-                return NotFound();
-            }
-
             return Ok(task);
         }
         [HttpPost("project/{projectId}")]
@@ -54,10 +45,6 @@ namespace API.Controllers
         {
             var command = new CreateTaskCommand(projectId, taskDTO);
             var result = await _mediator.Send(command);
-            if (result == null)
-            {
-                return BadRequest("Task creation failed.");
-            }
             return StatusCode(201, result);
 
         }
@@ -67,18 +54,8 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteTask([FromRoute] Guid projectId, [FromRoute] Guid taskId)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var command = new DeleteTaskCommand(projectId, taskId, userId.Value);
+            var command = new DeleteTaskCommand(projectId, taskId, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
-            if (!result)
-            {
-                return Forbid();
-            }
-
             return NoContent();
         }
 
@@ -87,17 +64,8 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateTask([FromRoute] Guid projectId, [FromRoute] Guid taskId, [FromBody] TaskDTO taskDTO)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var command = new UpdateTaskCommand(projectId, taskId, taskDTO, userId.Value);
+            var command = new UpdateTaskCommand(projectId, taskId, taskDTO, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
-            if (!result)
-            {
-                return Forbid();
-            }
 
             return NoContent();
         }

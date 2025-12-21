@@ -1,9 +1,10 @@
 ﻿namespace Application.Features.Commands.Tasks.UpdateTask
 {
-    using MediatR;
-    using Domain.Interfaces;
-    using AutoMapper;
+    using Application.Exceptions;
     using Application.Interfaces;
+    using AutoMapper;
+    using Domain.Interfaces;
+    using MediatR;
 
     public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
     {
@@ -20,21 +21,31 @@
 
         public async Task<bool> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
         {
+            // Check if userId is empty
+            if (request.UserId == Guid.Empty)
+            {
+                throw new UnauthorizedException("No user ID provided. User must be authenticated.");
+            }
+
             // Authorization check
             var isOwner = await _authorizationService.IsUserOwnerAsync(request.ProjectId, request.UserId);
             if (!isOwner)
             {
-                return false;
+                throw new ForbiddenException("You do not have permission to update this task.");
             }
 
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
             {
-                return false;
+                throw new NotFoundException($"Task with ID {request.TaskId} not found.");
             }
 
             _mapper.Map(request.Task, task);
             var updated = await _taskRepository.UpdateTaskAsync(task);
+            if (!updated)
+            {
+                throw new BadRequestException("Failed to update the task. Please try again.");
+            }
             return updated;
         }
     }

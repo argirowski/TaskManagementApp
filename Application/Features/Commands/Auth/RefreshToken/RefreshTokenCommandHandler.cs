@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Interfaces;
 using MediatR;
@@ -20,7 +21,9 @@ namespace Application.Features.Commands.Auth.RefreshToken
         {
             var user = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken.RefreshToken, request.RefreshToken.UserId);
             if (user == null)
-                return null;
+            {
+                throw new BadRequestException("Invalid refresh token.");
+            }
 
             return await _tokenService.CreateTokenResponseAsync(user);
         }

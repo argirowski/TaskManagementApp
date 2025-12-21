@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -24,7 +25,7 @@ namespace Application.Features.Commands.Auth.Register
             var existingUser = await _userRepository.GetByEmailAsync(command.User.UserEmail);
             if (existingUser != null)
             {
-                return null;
+                throw new BadRequestException($"A user with the email '{command.User.UserEmail}' already exists.");
             }
 
             var user = new User

@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Application.DTOs;
+using Application.Exceptions;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using AutoMapper;
-using Application.DTOs;
+using MediatR;
 
 namespace Application.Features.Commands.Tasks.CreateTask
 {
@@ -26,14 +27,14 @@ namespace Application.Features.Commands.Tasks.CreateTask
             var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
             if (project == null)
             {
-                return null;
+                throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
             }
 
             // Check for duplicate task name within the project
             var exists = await _taskRepository.ExistsByNameAsync(request.ProjectId, request.Task.ProjectTaskTitle);
             if (exists)
             {
-                return null;
+                throw new BadRequestException($"A task with the name '{request.Task.ProjectTaskTitle}' already exists.");
             }
 
             var newTask = _mapper.Map<ProjectTask>(request.Task);
@@ -43,7 +44,7 @@ namespace Application.Features.Commands.Tasks.CreateTask
             var createdTask = await _taskRepository.CreateTaskAsync(newTask);
             if (createdTask == null)
             {
-                return null;
+                throw new BadRequestException("Failed to create the task. Please try again.");
             }
 
             return _mapper.Map<TaskDTO>(createdTask);

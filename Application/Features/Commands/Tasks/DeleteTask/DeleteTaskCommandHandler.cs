@@ -1,6 +1,7 @@
-﻿using MediatR;
-using Domain.Interfaces;
+﻿using Application.Exceptions;
 using Application.Interfaces;
+using Domain.Interfaces;
+using MediatR;
 
 namespace Application.Features.Commands.Tasks.DeleteTask
 {
@@ -17,18 +18,24 @@ namespace Application.Features.Commands.Tasks.DeleteTask
 
         public async Task<bool> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
+            // Check if user is authenticated
+            if (request.UserId == Guid.Empty)
+            {
+                throw new UnauthorizedException("No user ID provided. User must be authenticated.");
+            }
+
             // Authorization check
             var isOwner = await _authorizationService.IsUserOwnerAsync(request.ProjectId, request.UserId);
             if (!isOwner)
             {
-                return false;
+                throw new ForbiddenException("You do not have permission to delete this task.");
             }
 
             // Check if task exists in the specified project
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)
             {
-                return false;
+                throw new NotFoundException($"Task with ID {request.TaskId} not found.");
             }
             // Delete the task
             var deleted = await _taskRepository.DeleteTaskAsync(request.ProjectId, request.TaskId);
