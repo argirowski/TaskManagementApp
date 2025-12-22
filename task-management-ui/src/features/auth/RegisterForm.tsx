@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -11,13 +11,22 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import axios from "axios";
+import { hasToken } from "../../utils/auth";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 import { RegisterFormData } from "../../types/types";
 import { registerUserValidationSchema } from "../../utils/validation";
+import LoaderComponent from "../../components/common/LoaderComponent";
 
 const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
+
+  // Redirect authenticated users to projects page
+  useEffect(() => {
+    if (hasToken()) {
+      navigate("/projects", { replace: true });
+    }
+  }, [navigate]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVariant, setAlertVariant] = useState<"success" | "danger">(
@@ -80,6 +89,11 @@ const RegisterForm: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+  // Don't show register form if user is authenticated (redirect will happen)
+  if (hasToken()) {
+    return <LoaderComponent message="Loading..." />;
+  }
 
   return (
     <Container

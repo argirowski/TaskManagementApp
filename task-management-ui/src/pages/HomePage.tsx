@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import LoaderComponent from "../components/common/LoaderComponent";
 import { useNavigate } from "react-router-dom";
+import { hasToken } from "../utils/auth";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
+
+  // Redirect authenticated users to projects page
+  useEffect(() => {
+    if (hasToken()) {
+      navigate("/projects", { replace: true });
+    }
+  }, [navigate]);
 
   const handleNavigate = (path: string) => {
     setLoading(true);
@@ -13,6 +21,11 @@ const HomePage: React.FC = () => {
       navigate(path);
     }, 700); // 700ms for visible loader, adjust as needed
   };
+
+  // Don't show home page if user is authenticated (redirect will happen)
+  if (hasToken()) {
+    return <LoaderComponent message="Loading..." />;
+  }
 
   if (loading) {
     return <LoaderComponent message="Loading..." />;

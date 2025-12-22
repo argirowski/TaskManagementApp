@@ -11,11 +11,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import axios from "axios";
-import { setToken } from "../../utils/auth";
+import { setToken, hasToken } from "../../utils/auth";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 import { LoginFormData } from "../../types/types";
 import { loginUserValidationSchema } from "../../utils/validation";
+import LoaderComponent from "../../components/common/LoaderComponent";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,13 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   // Modal state for cancel confirmation
   const [showConfirm, setShowConfirm] = useState(false);
+
+  // Redirect authenticated users to projects page
+  useEffect(() => {
+    if (hasToken()) {
+      navigate("/projects", { replace: true });
+    }
+  }, [navigate]);
 
   // Clear local error on unmount
   useEffect(() => {
@@ -72,6 +80,11 @@ const LoginForm: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+  // Don't show login form if user is authenticated (redirect will happen)
+  if (hasToken()) {
+    return <LoaderComponent message="Loading..." />;
+  }
 
   return (
     <Container
