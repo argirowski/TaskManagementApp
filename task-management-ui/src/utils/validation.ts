@@ -4,7 +4,7 @@ import * as Yup from "yup";
 export const projectValidationSchema = Yup.object({
   projectName: Yup.string()
     .min(3, "Project name must be at least 3 characters")
-    .max(30, "Project name must be less than 30 characters")
+    .max(50, "Project name must be less than 50 characters")
     .required("Project name is required"),
   projectDescription: Yup.string()
     .max(200, "Description must be less than 200 characters")
@@ -15,7 +15,7 @@ export const tasksValidationSchema = Yup.object({
   projectTaskTitle: Yup.string()
     .required("Task title is required")
     .min(3, "Task title must be at least 3 characters")
-    .max(30, "Task title must be less than 30 characters"),
+    .max(100, "Task title must be less than 100 characters"),
   projectTaskDescription: Yup.string()
     .required("Description is required")
     .min(10, "Description must be at least 10 characters")
@@ -48,9 +48,13 @@ export const loginUserValidationSchema = Yup.object({
   UserEmail: Yup.string()
     .required("Email is required")
     .email("Invalid email address")
-    .max(50, "Email must be less than 50 characters"),
+    .max(100, "Email must be less than 100 characters"),
   Password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(50, "Password must be less than 50 characters"),
+    .max(50, "Password must be less than 50 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    ),
 });

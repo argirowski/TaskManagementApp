@@ -45,7 +45,8 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<TaskDTO>> CreateTask([FromRoute] Guid projectId, [FromBody] TaskDTO taskDTO)
         {
-            var command = new CreateTaskCommand(projectId, taskDTO);
+            var userId = GetCurrentUserId();
+            var command = new CreateTaskCommand(projectId, taskDTO, userId ?? Guid.Empty);
             var result = await _mediator.Send(command);
 
             return StatusCode(201, result);

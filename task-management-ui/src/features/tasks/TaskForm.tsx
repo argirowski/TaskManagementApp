@@ -88,7 +88,9 @@ const TaskForm: React.FC = () => {
     } catch (error: any) {
       console.error("Task submission error:", error);
 
-      if (error.response?.data?.message) {
+      if (error.response?.data?.error) {
+        setAlertMessage(error.response.data.error);
+      } else if (error.response?.data?.message) {
         setAlertMessage(error.response.data.message);
       } else if (error.response?.data?.errors) {
         // Handle validation errors from backend

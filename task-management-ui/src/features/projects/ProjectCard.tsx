@@ -77,7 +77,10 @@ const ProjectCard: React.FC = () => {
       // Refresh the project data
       loadProject(id);
     } catch (error: any) {
-      setAlertMessage("Failed to delete task. Please try again.");
+      const errorMessage =
+        error?.response?.data?.error ||
+        "Failed to delete task. Please try again.";
+      setAlertMessage(errorMessage);
       setAlertVariant("danger");
       setShowAlert(true);
     } finally {

@@ -7,11 +7,13 @@ namespace Application.Features.Commands.Tasks.CreateTask
     {
         public Guid ProjectId { get; }
         public TaskDTO Task { get; }
+        public Guid UserId { get; }
 
-        public CreateTaskCommand(Guid projectId, TaskDTO task)
+        public CreateTaskCommand(Guid projectId, TaskDTO task, Guid userId)
         {
             ProjectId = projectId;
             Task = task;
+            UserId = userId;
         }
     }
 }

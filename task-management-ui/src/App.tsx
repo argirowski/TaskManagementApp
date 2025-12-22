@@ -1,18 +1,34 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import NavigationComponent from "./components/layout/NavigationComponent";
 import { hasToken } from "./utils/auth";
 import AppRoutes from "./routes/AppRoutes";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(hasToken());
+  const location = useLocation();
+
+  // Check authentication status on mount and when route changes
+  useEffect(() => {
+    setIsAuthenticated(hasToken());
+  }, [location]);
+
   return (
-    <BrowserRouter>
-      {hasToken() && <NavigationComponent />}
+    <>
+      {isAuthenticated && <NavigationComponent />}
       <div className="task-management-app">
         <AppRoutes />
       </div>
+    </>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 };

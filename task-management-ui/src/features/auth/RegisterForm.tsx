@@ -59,7 +59,9 @@ const RegisterForm: React.FC = () => {
       console.error("Error response data:", error.response?.data);
       console.error("Error status:", error.response?.status);
 
-      if (error.response?.data?.message) {
+      if (error.response?.data?.error) {
+        setAlertMessage(error.response.data.error);
+      } else if (error.response?.data?.message) {
         setAlertMessage(error.response.data.message);
       } else if (error.response?.data?.errors) {
         // Handle validation errors from backend

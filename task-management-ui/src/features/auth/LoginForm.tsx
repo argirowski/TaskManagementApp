@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
       navigate("/projects");
     } catch (err: any) {
       const message =
-        err?.response?.data?.message ||
+        err?.response?.data?.error ||
         err?.response?.data ||
         err?.message ||
         "Login failed";

@@ -78,7 +78,11 @@ const ProjectList: React.FC = () => {
       setAlertVariant("success");
       setShowAlert(true);
     } catch (error: any) {
-      setAlertMessage("Failed to delete project. Please try again.");
+      if (error.response?.data?.error) {
+        setAlertMessage(error.response.data.error);
+      } else {
+        setAlertMessage("Failed to delete project. Please try again.");
+      }
       setAlertVariant("danger");
       setShowAlert(true);
     } finally {
