@@ -15,7 +15,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new CreateTaskCommand(
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -29,7 +30,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new CreateTaskCommand(
                 Guid.Empty,
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -47,7 +49,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             {
                 var command = new CreateTaskCommand(
                     Guid.NewGuid(),
-                    new TaskDTO { ProjectTaskTitle = title ?? string.Empty, ProjectTaskDescription = "A valid description." }
+                    new TaskDTO { ProjectTaskTitle = title ?? string.Empty, ProjectTaskDescription = "A valid description." },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -64,7 +67,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var longTitle = new string('A', 101);
             var command = new CreateTaskCommand(
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = longTitle, ProjectTaskDescription = "A valid description." }
+                new TaskDTO { ProjectTaskTitle = longTitle, ProjectTaskDescription = "A valid description." },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -82,7 +86,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             {
                 var command = new CreateTaskCommand(
                     Guid.NewGuid(),
-                    new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = desc }
+                    new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = desc },
+                    Guid.NewGuid()
                 );
                 // Act
                 var result = _validator.Validate(command);
@@ -99,7 +104,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             var longDesc = new string('A', 501);
             var command = new CreateTaskCommand(
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = longDesc }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = longDesc },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);
@@ -114,7 +120,8 @@ namespace TaskManagementAppUnitTests.ValidatorTests
             // Arrange
             var command = new CreateTaskCommand(
                 Guid.NewGuid(),
-                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = null }
+                new TaskDTO { ProjectTaskTitle = "Valid Title", ProjectTaskDescription = null },
+                Guid.NewGuid()
             );
             // Act
             var result = _validator.Validate(command);

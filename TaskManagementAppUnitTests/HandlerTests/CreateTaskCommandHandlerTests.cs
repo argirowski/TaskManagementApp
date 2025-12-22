@@ -1,5 +1,6 @@
 using Application.DTOs;
 using Application.Features.Commands.Tasks.CreateTask;
+using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -12,22 +13,24 @@ namespace TaskManagementAppUnitTests.HandlerTests
     {
         private readonly Mock<ITaskRepository> _taskRepoMock = new();
         private readonly Mock<IProjectRepository> _projectRepoMock = new();
+        private readonly Mock<IProjectAuthorizationService> _authServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
         private readonly CreateTaskCommandHandler _handler;
 
         public CreateTaskCommandHandlerTests()
         {
-            _handler = new CreateTaskCommandHandler(_taskRepoMock.Object, _projectRepoMock.Object, _mapperMock.Object);
+            _handler = new CreateTaskCommandHandler(_taskRepoMock.Object, _projectRepoMock.Object, _mapperMock.Object, _authServiceMock.Object);
         }
 
         [Fact]
-        public async Task Handle_DuplicateTaskName_ReturnsNull()
+        public async Task Handle_DuplicateTaskName_ThrowsBadRequestException()
         {
             // Arrange
             var projectId = Guid.NewGuid();
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(true);
-            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
+            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" }, Guid.NewGuid());
 
             // Act & Assert
             await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
@@ -41,10 +44,11 @@ namespace TaskManagementAppUnitTests.HandlerTests
             // Arrange
             var projectId = Guid.NewGuid();
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(false);
             _mapperMock.Setup(x => x.Map<ProjectTask>(It.IsAny<TaskDTO>())).Returns(new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task" });
             _taskRepoMock.Setup(x => x.CreateTaskAsync(It.IsAny<ProjectTask>())).ReturnsAsync((ProjectTask?)null);
-            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
+            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" }, Guid.NewGuid());
 
             // Act & Assert
             await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
@@ -61,11 +65,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
             var dto = new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" };
 
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _taskRepoMock.Setup(x => x.ExistsByNameAsync(projectId, "Task")).ReturnsAsync(false);
             _mapperMock.Setup(x => x.Map<ProjectTask>(It.IsAny<TaskDTO>())).Returns(task);
             _taskRepoMock.Setup(x => x.CreateTaskAsync(task)).ReturnsAsync(task);
             _mapperMock.Setup(x => x.Map<TaskDTO>(task)).Returns(dto);
-            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" });
+            var command = new CreateTaskCommand(projectId, new TaskDTO { ProjectTaskTitle = "Task", ProjectTaskDescription = "Desc" }, Guid.NewGuid());
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
