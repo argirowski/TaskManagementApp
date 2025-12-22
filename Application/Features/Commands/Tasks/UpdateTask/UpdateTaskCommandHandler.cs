@@ -9,12 +9,14 @@
     public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IProjectAuthorizationService _authorizationService;
         private readonly IMapper _mapper;
 
-        public UpdateTaskCommandHandler(ITaskRepository taskRepository, IProjectAuthorizationService authorizationService, IMapper mapper)
+        public UpdateTaskCommandHandler(ITaskRepository taskRepository, IProjectRepository projectRepository, IProjectAuthorizationService authorizationService, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _projectRepository = projectRepository;
             _authorizationService = authorizationService;
             _mapper = mapper;
         }
@@ -26,12 +28,21 @@
             {
                 throw new UnauthorizedException("No user ID provided. User must be authenticated.");
             }
+            
+            // Check if project exists
+            var project = await _projectRepository.GetProjectByIdAsync(request.ProjectId);
+            if (project == null)
+            {
+                throw new NotFoundException($"Project with ID {request.ProjectId} not found.");
+            }
+            
             // Authorization check
             var isOwner = await _authorizationService.IsUserOwnerAsync(request.ProjectId, request.UserId);
             if (!isOwner)
             {
                 throw new ForbiddenException("You do not have permission to update this task.");
             }
+            
             // Check if task exists in the specified project
             var task = await _taskRepository.GetTaskByIdAsync(request.ProjectId, request.TaskId);
             if (task == null)

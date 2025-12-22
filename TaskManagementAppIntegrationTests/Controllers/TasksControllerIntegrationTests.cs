@@ -35,12 +35,41 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         // Get all projects to find the one we just created
-        var getAllResponse = await _client.GetAsync("/api/Projects?pageNumber=1&pageSize=100");
-        var allProjects = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
-        var createdProject = allProjects!.Items.FirstOrDefault(p => p.ProjectName == projectName);
-        createdProject.Should().NotBeNull();
+        // Search through all pages since MaxPageSize=10
+        var allProjectsList = new List<ProjectDTO>();
+        int pageNumber = 1;
+        const int pageSize = 10; // Max allowed by PaginationParams
+        int totalPages = int.MaxValue;
 
-        return createdProject!.Id;
+        while (pageNumber <= totalPages)
+        {
+            var getAllResponse = await _client.GetAsync($"/api/Projects?pageNumber={pageNumber}&pageSize={pageSize}");
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var pageResponse = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
+            pageResponse.Should().NotBeNull();
+            
+            if (totalPages == int.MaxValue)
+            {
+                totalPages = pageResponse!.TotalPages;
+            }
+            
+            allProjectsList.AddRange(pageResponse!.Items);
+            
+            var createdProject = pageResponse.Items.FirstOrDefault(p => p.ProjectName == projectName);
+            if (createdProject != null)
+            {
+                return createdProject.Id;
+            }
+            
+            pageNumber++;
+        }
+
+        // If not found after searching all pages, fail with helpful message
+        var allNames = string.Join(", ", allProjectsList.Select(p => $"'{p.ProjectName}'"));
+        throw new InvalidOperationException(
+            $"Project '{projectName}' not found after creation. " +
+            $"Searched {pageNumber - 1} page(s), found {allProjectsList.Count} projects. " +
+            $"Project names: {(string.IsNullOrEmpty(allNames) ? "(none)" : allNames)}");
     }
 
     private async Task<Guid> CreateTestTaskAsync(Guid projectId, string taskTitle)
@@ -78,7 +107,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task GetAllTasks_WithValidProject_ReturnsOk()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for GetAllTasks {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"GetAllTasks {Guid.NewGuid()}");
 
         // Create some tasks
         var task1 = new TaskDTO
@@ -111,7 +140,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task GetAllTasks_WithEmptyProject_ReturnsEmptyList()
     {
         // Create a project without tasks
-        var projectId = await CreateTestProjectAsync($"Empty Project {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"Empty {Guid.NewGuid()}");
 
         // Get all tasks
         var response = await _client.GetAsync($"/api/Tasks/project/{projectId}");
@@ -141,7 +170,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task GetSingleTask_WithValidTask_ReturnsOk()
     {
         // Create a project and task
-        var projectId = await CreateTestProjectAsync($"Project for GetSingleTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"GetSingleTask {Guid.NewGuid()}");
         var uniqueTitle = $"Task for GetSingle {Guid.NewGuid()}";
         var taskId = await CreateTestTaskAsync(projectId, uniqueTitle);
 
@@ -159,7 +188,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task GetSingleTask_WithNonExistentTask_ReturnsNotFound()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for GetSingleTask NotFound {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"GetSingleNF {Guid.NewGuid()}");
         var nonExistentTaskId = Guid.NewGuid();
 
         var response = await _client.GetAsync($"/api/Tasks/project/{projectId}/task/{nonExistentTaskId}");
@@ -186,7 +215,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task CreateTask_WithValidData_ReturnsCreated()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for CreateTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"CreateTask {Guid.NewGuid()}");
 
         var payload = new TaskDTO
         {
@@ -208,7 +237,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task CreateTask_WithDuplicateName_ReturnsBadRequest()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for DuplicateTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"DuplicateTask {Guid.NewGuid()}");
         var taskTitle = $"Duplicate Task {Guid.NewGuid()}";
 
         // Create first task
@@ -235,7 +264,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task CreateTask_WithEmptyTitle_ReturnsBadRequest()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for EmptyTitleTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"EmptyTitle {Guid.NewGuid()}");
 
         var payload = new TaskDTO
         {
@@ -272,7 +301,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task UpdateTask_AsOwner_ReturnsNoContent()
     {
         // Create a project and task
-        var projectId = await CreateTestProjectAsync($"Project for UpdateTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"UpdateTask {Guid.NewGuid()}");
         var uniqueTitle = $"Task to Update {Guid.NewGuid()}";
         var taskId = await CreateTestTaskAsync(projectId, uniqueTitle);
 
@@ -298,7 +327,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task UpdateTask_WithNonExistentTask_ReturnsNotFound()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for UpdateTask NotFound {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"UpdateNF {Guid.NewGuid()}");
         var nonExistentTaskId = Guid.NewGuid();
 
         var updatePayload = new TaskDTO
@@ -337,7 +366,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task DeleteTask_AsOwner_ReturnsNoContent()
     {
         // Create a project and task
-        var projectId = await CreateTestProjectAsync($"Project for DeleteTask {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"DeleteTask {Guid.NewGuid()}");
         var uniqueTitle = $"Task to Delete {Guid.NewGuid()}";
         var taskId = await CreateTestTaskAsync(projectId, uniqueTitle);
 
@@ -355,7 +384,7 @@ public class TasksControllerIntegrationTests : IClassFixture<CustomWebApplicatio
     public async Task DeleteTask_WithNonExistentTask_ReturnsNotFound()
     {
         // Create a project
-        var projectId = await CreateTestProjectAsync($"Project for DeleteTask NotFound {Guid.NewGuid()}");
+        var projectId = await CreateTestProjectAsync($"DeleteNF {Guid.NewGuid()}");
         var nonExistentTaskId = Guid.NewGuid();
 
         var response = await _client.DeleteAsync($"/api/Tasks/project/{projectId}/task/{nonExistentTaskId}");

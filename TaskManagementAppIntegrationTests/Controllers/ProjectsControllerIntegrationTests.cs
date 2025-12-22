@@ -57,7 +57,7 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
     public async Task GetSingleProject_WithValidId_ReturnsOk()
     {
         // First, create a project
-        var uniqueName = $"Test Project for Get {Guid.NewGuid()}";
+        var uniqueName = $"TestGet {Guid.NewGuid()}";
         var createPayload = new
         {
             ProjectName = uniqueName,
@@ -68,10 +68,33 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         // Get all projects to find the one we just created
-        var getAllResponse = await _client.GetAsync("/api/Projects?pageNumber=1&pageSize=100");
-        var allProjects = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
-        var createdProject = allProjects!.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
-        createdProject.Should().NotBeNull();
+        // Search through all pages since MaxPageSize=10
+        var allProjectsList = new List<ProjectItem>();
+        int pageNumber = 1;
+        const int pageSize = 10; // Max allowed by PaginationParams
+        int totalPages = int.MaxValue;
+        ProjectItem? createdProject = null;
+
+        while (pageNumber <= totalPages && createdProject == null)
+        {
+            var getAllResponse = await _client.GetAsync($"/api/Projects?pageNumber={pageNumber}&pageSize={pageSize}");
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var pageResponse = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
+            pageResponse.Should().NotBeNull();
+            
+            if (totalPages == int.MaxValue)
+            {
+                totalPages = pageResponse!.TotalPages;
+            }
+            
+            allProjectsList.AddRange(pageResponse!.Items);
+            createdProject = pageResponse.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
+            pageNumber++;
+        }
+
+        createdProject.Should().NotBeNull(
+            $"Project '{uniqueName}' not found after creation. " +
+            $"Searched {pageNumber - 1} page(s), found {allProjectsList.Count} projects.");
 
         // Now get the project by ID
         var response = await _client.GetAsync($"/api/Projects/{createdProject!.Id}");
@@ -164,7 +187,7 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
     public async Task UpdateProject_AsOwner_ReturnsNoContent()
     {
         // First, create a project
-        var uniqueName = $"Project to Update {Guid.NewGuid()}";
+        var uniqueName = $"Update {Guid.NewGuid()}";
         var createPayload = new
         {
             ProjectName = uniqueName,
@@ -175,27 +198,56 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         // Get all projects to find the one we just created
-        var getAllResponse = await _client.GetAsync("/api/Projects?pageNumber=1&pageSize=100");
-        var allProjects = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
-        var createdProject = allProjects!.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
-        createdProject.Should().NotBeNull();
+        // Search through all pages since MaxPageSize=10
+        var allProjectsList = new List<ProjectItem>();
+        int pageNumber = 1;
+        const int pageSize = 10; // Max allowed by PaginationParams
+        int totalPages = int.MaxValue;
 
-        // Update the project
-        var updatePayload = new
+        while (pageNumber <= totalPages)
         {
-            ProjectName = "Updated Project Name",
-            ProjectDescription = "Updated description"
-        };
+            var getAllResponse = await _client.GetAsync($"/api/Projects?pageNumber={pageNumber}&pageSize={pageSize}");
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var pageResponse = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
+            pageResponse.Should().NotBeNull();
+            
+            if (totalPages == int.MaxValue)
+            {
+                totalPages = pageResponse!.TotalPages;
+            }
+            
+            allProjectsList.AddRange(pageResponse!.Items);
+            
+            var createdProject = pageResponse.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
+            if (createdProject != null)
+            {
+                // Update the project
+                var updatePayload = new
+                {
+                    ProjectName = "Updated Project Name",
+                    ProjectDescription = "Updated description"
+                };
 
-        var response = await _client.PutAsJsonAsync($"/api/Projects/{createdProject!.Id}", updatePayload);
+                var response = await _client.PutAsJsonAsync($"/api/Projects/{createdProject.Id}", updatePayload);
+                response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+                // Verify the update by getting the project
+                var getResponse = await _client.GetAsync($"/api/Projects/{createdProject.Id}");
+                var updatedProject = await getResponse.Content.ReadFromJsonAsync<ProjectDetailsResponse>();
+                updatedProject!.ProjectName.Should().Be("Updated Project Name");
+                updatedProject.ProjectDescription.Should().Be("Updated description");
+                return;
+            }
+            
+            pageNumber++;
+        }
 
-        // Verify the update by getting the project
-        var getResponse = await _client.GetAsync($"/api/Projects/{createdProject.Id}");
-        var updatedProject = await getResponse.Content.ReadFromJsonAsync<ProjectDetailsResponse>();
-        updatedProject!.ProjectName.Should().Be("Updated Project Name");
-        updatedProject.ProjectDescription.Should().Be("Updated description");
+        // If not found after searching all pages, fail with helpful message
+        var allNames = string.Join(", ", allProjectsList.Select(p => $"'{p.ProjectName}'"));
+        throw new InvalidOperationException(
+            $"Project '{uniqueName}' not found after creation. " +
+            $"Searched {pageNumber - 1} page(s), found {allProjectsList.Count} projects. " +
+            $"Project names: {(string.IsNullOrEmpty(allNames) ? "(none)" : allNames)}");
     }
 
     [Fact]
@@ -221,7 +273,8 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
     public async Task DeleteProject_AsOwner_ReturnsNoContent()
     {
         // First, create a project
-        var uniqueName = $"Project to Delete {Guid.NewGuid()}";
+        // Note: ProjectName has max length of 50, so use shorter prefix
+        var uniqueName = $"Delete {Guid.NewGuid()}";
         var createPayload = new
         {
             ProjectName = uniqueName,
@@ -229,13 +282,46 @@ public class ProjectsControllerIntegrationTests : IClassFixture<CustomWebApplica
         };
 
         var createResponse = await _client.PostAsJsonAsync("/api/Projects", createPayload);
+        
+        // Get error message if creation failed
+        if (createResponse.StatusCode != HttpStatusCode.Created)
+        {
+            var errorContent = await createResponse.Content.ReadAsStringAsync();
+            throw new InvalidOperationException(
+                $"Project creation failed with status {createResponse.StatusCode}. " +
+                $"Response: {errorContent}");
+        }
+        
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
         // Get all projects to find the one we just created
-        var getAllResponse = await _client.GetAsync("/api/Projects?pageNumber=1&pageSize=100");
-        var allProjects = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
-        var createdProject = allProjects!.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
-        createdProject.Should().NotBeNull();
+        // Search through all pages since MaxPageSize=10
+        var allProjectsList = new List<ProjectItem>();
+        int pageNumber = 1;
+        const int pageSize = 10; // Max allowed by PaginationParams
+        int totalPages = int.MaxValue;
+        ProjectItem? createdProject = null;
+
+        while (pageNumber <= totalPages && createdProject == null)
+        {
+            var getAllResponse = await _client.GetAsync($"/api/Projects?pageNumber={pageNumber}&pageSize={pageSize}");
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var pageResponse = await getAllResponse.Content.ReadFromJsonAsync<PagedProjectsResponse>();
+            pageResponse.Should().NotBeNull();
+            
+            if (totalPages == int.MaxValue)
+            {
+                totalPages = pageResponse!.TotalPages;
+            }
+            
+            allProjectsList.AddRange(pageResponse!.Items);
+            createdProject = pageResponse.Items.FirstOrDefault(p => p.ProjectName == uniqueName);
+            pageNumber++;
+        }
+
+        createdProject.Should().NotBeNull(
+            $"Project '{uniqueName}' not found after creation. " +
+            $"Searched {pageNumber - 1} page(s), found {allProjectsList.Count} projects.");
 
         // Delete the project
         var response = await _client.DeleteAsync($"/api/Projects/{createdProject!.Id}");
