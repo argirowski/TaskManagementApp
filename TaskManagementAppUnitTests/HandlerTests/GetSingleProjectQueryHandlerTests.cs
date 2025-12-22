@@ -24,8 +24,9 @@ namespace TaskManagementAppUnitTests.HandlerTests
         {
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Project?)null);
             var query = new GetSingleProjectQuery(Guid.NewGuid());
-            var result = await _handler.Handle(query, CancellationToken.None);
-            result.Should().BeNull();
+            await FluentActions.Invoking(() => _handler.Handle(query, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.NotFoundException>()
+                .WithMessage("Project with ID * not found.");
         }
 
         [Fact]

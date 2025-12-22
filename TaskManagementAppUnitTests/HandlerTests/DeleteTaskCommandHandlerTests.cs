@@ -34,7 +34,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_DeleteFails_ReturnsFalse()
+        public async Task Handle_DeleteFails_ThrowsBadRequestException()
         {
             var projectId = Guid.NewGuid();
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = projectId, ProjectName = "Test Project" });
@@ -42,8 +42,10 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(new ProjectTask { Id = Guid.NewGuid(), ProjectTaskTitle = "Task" });
             _taskRepoMock.Setup(x => x.DeleteTaskAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(false);
             var command = new DeleteTaskCommand(projectId, Guid.NewGuid(), Guid.NewGuid());
-            var result = await _handler.Handle(command, CancellationToken.None);
-            result.Should().BeFalse();
+
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Failed to delete the task. Please try again.");
         }
 
         [Fact]

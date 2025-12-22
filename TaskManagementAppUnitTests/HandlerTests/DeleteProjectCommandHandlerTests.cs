@@ -50,6 +50,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
         {
             // Arrange
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = Guid.NewGuid(), ProjectName = "Test" });
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _projectRepoMock.Setup(x => x.DeleteProjectAsync(It.IsAny<Guid>())).ReturnsAsync(false);
             var command = new DeleteProjectCommand(Guid.NewGuid(), Guid.NewGuid());
 
@@ -65,6 +66,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
         {
             // Arrange
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new Project { Id = Guid.NewGuid(), ProjectName = "Test" });
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _projectRepoMock.Setup(x => x.DeleteProjectAsync(It.IsAny<Guid>())).ReturnsAsync(true);
             var command = new DeleteProjectCommand(Guid.NewGuid(), Guid.NewGuid());
 

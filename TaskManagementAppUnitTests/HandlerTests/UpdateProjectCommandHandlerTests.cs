@@ -35,11 +35,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_UpdateFails_ReturnsFalse()
+        public async Task Handle_UpdateFails_ThrowsBadRequestException()
         {
             // Arrange
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(false);
             var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
@@ -56,6 +57,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
             // Arrange
             var project = new Project { Id = Guid.NewGuid(), ProjectName = "Test" };
             _projectRepoMock.Setup(x => x.GetProjectByIdAsync(It.IsAny<Guid>())).ReturnsAsync(project);
+            _authServiceMock.Setup(x => x.IsUserOwnerAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
             _mapperMock.Setup(x => x.Map(It.IsAny<CreateProjectDTO>(), project));
             _projectRepoMock.Setup(x => x.UpdateProjectAsync(project)).ReturnsAsync(true);
             var command = new UpdateProjectCommand(project.Id, new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());

@@ -46,8 +46,11 @@ namespace Application.Features.Commands.Tasks.DeleteTask
             }
             // Delete the task
             var deleted = await _taskRepository.DeleteTaskAsync(request.ProjectId, request.TaskId);
-
-            return deleted;
+            if (!deleted)
+            {
+                throw new BadRequestException("Failed to delete the task. Please try again.");
+            }
+            return true;
         }
     }
 }

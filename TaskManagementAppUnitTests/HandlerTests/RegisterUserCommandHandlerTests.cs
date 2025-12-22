@@ -20,7 +20,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_UserAlreadyExists_ReturnsNull()
+        public async Task Handle_UserAlreadyExists_ThrowsBadRequestException()
         {
             // Arrange
             var existingUser = new User { UserName = "existing", UserEmail = "test@test.com" };
@@ -30,11 +30,10 @@ namespace TaskManagementAppUnitTests.HandlerTests
                 User = new UserDTO { UserName = "new", UserEmail = "test@test.com", Password = "pass" }
             };
 
-            // Act
-            var result = await _handler.Handle(command, default);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, default))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("A user with the email 'test@test.com' already exists.");
         }
 
         [Fact]

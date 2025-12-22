@@ -21,36 +21,34 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_UserDoesNotExist_ReturnsNull()
+        public async Task Handle_UserDoesNotExist_ThrowsUnauthorizedException()
         {
             // Arrange
             _userRepoMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((User?)null);
             var command = new CreateProjectCommand(new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.UnauthorizedException>()
+                .WithMessage("User with the specified ID does not exist.");
         }
 
         [Fact]
-        public async Task Handle_ProjectNameExists_ReturnsNull()
+        public async Task Handle_ProjectNameExists_ThrowsBadRequestException()
         {
             // Arrange
             _userRepoMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new User { Id = Guid.NewGuid(), UserName = "User", UserEmail = "user@mail.com" });
             _projectRepoMock.Setup(x => x.ProjectExistsByNameAsync(It.IsAny<string>())).ReturnsAsync(true);
             var command = new CreateProjectCommand(new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("A project with the name 'Test' already exists.");
         }
 
         [Fact]
-        public async Task Handle_RepositoryReturnsNull_ReturnsNull()
+        public async Task Handle_RepositoryReturnsNull_ThrowsBadRequestException()
         {
             // Arrange
             _userRepoMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(new User { Id = Guid.NewGuid(), UserName = "User", UserEmail = "user@mail.com" });
@@ -59,11 +57,10 @@ namespace TaskManagementAppUnitTests.HandlerTests
             _projectRepoMock.Setup(x => x.CreateProjectAsync(It.IsAny<Project>(), It.IsAny<Guid>())).ReturnsAsync((Project?)null);
             var command = new CreateProjectCommand(new CreateProjectDTO { ProjectName = "Test", ProjectDescription = "Desc" }, Guid.NewGuid());
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            await FluentActions.Invoking(() => _handler.Handle(command, CancellationToken.None))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Failed to create the project. Please try again.");
         }
 
         [Fact]

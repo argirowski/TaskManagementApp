@@ -20,7 +20,7 @@ namespace TaskManagementAppUnitTests.HandlerTests
         }
 
         [Fact]
-        public async Task Handle_UserNotFound_ReturnsNull()
+        public async Task Handle_UserNotFound_ThrowsBadRequestException()
         {
             _userRepoMock.Setup(x => x.GetUserByRefreshTokenAsync(It.IsAny<string>(), It.IsAny<Guid>()))
                 .ReturnsAsync((User?)null);
@@ -30,9 +30,9 @@ namespace TaskManagementAppUnitTests.HandlerTests
                 RefreshToken = new RefreshTokenRequestDTO { RefreshToken = "refresh", UserId = Guid.NewGuid() }
             };
 
-            var result = await _handler.Handle(command, default);
-
-            result.Should().BeNull();
+            await FluentActions.Invoking(() => _handler.Handle(command, default))
+                .Should().ThrowAsync<Application.Exceptions.BadRequestException>()
+                .WithMessage("Invalid refresh token.");
         }
 
         [Fact]
