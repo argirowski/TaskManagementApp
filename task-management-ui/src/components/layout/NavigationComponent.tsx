@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { clearToken } from "../../utils/auth";
+import { clearToken, getUserName } from "../../utils/auth";
 
 const NavigationComponent: React.FC = () => {
   const navigate = useNavigate();
@@ -9,8 +9,8 @@ const NavigationComponent: React.FC = () => {
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    // Try to get the user name from localStorage (adjust key as needed)
-    const storedName = localStorage.getItem("userName");
+    // Get the user name from localStorage using auth utility
+    const storedName = getUserName();
     setUserName(storedName);
   }, []);
 

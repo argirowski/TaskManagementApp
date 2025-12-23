@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import axios from "axios";
-import { setToken, hasToken } from "../../utils/auth";
+import { setToken, hasToken, setTokenData } from "../../utils/auth";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 import { LoginFormData } from "../../types/types";
@@ -57,15 +57,37 @@ const LoginForm: React.FC = () => {
         "https://localhost:7272/api/Auth/login",
         values
       );
-      const token = res?.data?.accessToken;
+
+      // Extract all token data from response (handling both camelCase and PascalCase)
+      const accessToken = res?.data?.accessToken || res?.data?.AccessToken;
+      const refreshToken = res?.data?.refreshToken || res?.data?.RefreshToken;
       const userName =
-        res?.data?.userName || res?.data?.name || res?.data?.username;
-      if (token) {
-        setToken(token);
+        res?.data?.userName ||
+        res?.data?.UserName ||
+        res?.data?.name ||
+        res?.data?.username;
+
+      if (accessToken && refreshToken && userName) {
+        setTokenData({
+          accessToken,
+          refreshToken,
+          userName,
+        });
+      } else {
+        // Fallback: if response structure is different, try to save what we can
+        if (accessToken) {
+          setToken(accessToken);
+        }
+        if (userName) {
+          localStorage.setItem("userName", userName);
+        }
+        console.warn("Token response missing some fields:", {
+          accessToken,
+          refreshToken,
+          userName,
+        });
       }
-      if (userName) {
-        localStorage.setItem("userName", userName);
-      }
+
       // On success, navigate to projects
       navigate("/projects");
     } catch (err: any) {

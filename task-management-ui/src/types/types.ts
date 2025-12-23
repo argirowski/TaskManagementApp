@@ -128,3 +128,8 @@ export interface PaginationControlsProps {
   totalPages: number;
   onPageChange: (page: number) => void;
 }
+
+export interface RefreshTokenRequest {
+  userId: string;
+  refreshToken: string;
+}
