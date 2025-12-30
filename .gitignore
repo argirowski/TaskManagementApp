@@ -1,6 +1,7 @@
 # Backend
 API/bin/
 API/obj/
+API/Logs/
 Application/bin/
 Application/obj/
 Domain/bin/
