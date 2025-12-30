@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace TaskManagementAppUnitTests.HandlerTests
@@ -12,11 +13,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
     {
         private readonly Mock<ITokenService> _tokenServiceMock = new();
         private readonly Mock<IUserRepository> _userRepoMock = new();
+        private readonly Mock<ILogger<RefreshTokenCommandHandler>> _loggerMock = new();
         private readonly RefreshTokenCommandHandler _handler;
 
         public RefreshTokenCommandHandlerTests()
         {
-            _handler = new RefreshTokenCommandHandler(_tokenServiceMock.Object, _userRepoMock.Object);
+            _handler = new RefreshTokenCommandHandler(_tokenServiceMock.Object, _userRepoMock.Object, _loggerMock.Object);
         }
 
         [Fact]

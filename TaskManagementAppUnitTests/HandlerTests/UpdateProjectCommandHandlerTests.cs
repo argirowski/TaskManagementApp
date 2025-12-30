@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace TaskManagementAppUnitTests.HandlerTests
@@ -14,11 +15,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
         private readonly Mock<IProjectRepository> _projectRepoMock = new();
         private readonly Mock<IProjectAuthorizationService> _authServiceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<ILogger<UpdateProjectCommandHandler>> _loggerMock = new();
         private readonly UpdateProjectCommandHandler _handler;
 
         public UpdateProjectCommandHandlerTests()
         {
-            _handler = new UpdateProjectCommandHandler(_projectRepoMock.Object, _authServiceMock.Object, _mapperMock.Object);
+            _handler = new UpdateProjectCommandHandler(_projectRepoMock.Object, _authServiceMock.Object, _mapperMock.Object, _loggerMock.Object);
         }
 
         [Fact]

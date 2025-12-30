@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace TaskManagementAppUnitTests.HandlerTests
@@ -11,11 +12,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
     {
         private readonly Mock<IProjectRepository> _projectRepoMock = new();
         private readonly Mock<IProjectAuthorizationService> _authServiceMock = new();
+        private readonly Mock<ILogger<DeleteProjectCommandHandler>> _loggerMock = new();
         private readonly DeleteProjectCommandHandler _handler;
 
         public DeleteProjectCommandHandlerTests()
         {
-            _handler = new DeleteProjectCommandHandler(_projectRepoMock.Object, _authServiceMock.Object);
+            _handler = new DeleteProjectCommandHandler(_projectRepoMock.Object, _authServiceMock.Object, _loggerMock.Object);
         }
 
 

@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace TaskManagementAppUnitTests.HandlerTests
@@ -13,11 +14,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
     {
         private readonly Mock<IUserRepository> _userRepoMock = new();
         private readonly Mock<ITokenService> _tokenServiceMock = new();
+        private readonly Mock<ILogger<LoginUserCommandHandler>> _loggerMock = new();
         private readonly LoginUserCommandHandler _handler;
 
         public LoginUserCommandHandlerTests()
         {
-            _handler = new LoginUserCommandHandler(_userRepoMock.Object, _tokenServiceMock.Object);
+            _handler = new LoginUserCommandHandler(_userRepoMock.Object, _tokenServiceMock.Object, _loggerMock.Object);
         }
 
         [Fact]

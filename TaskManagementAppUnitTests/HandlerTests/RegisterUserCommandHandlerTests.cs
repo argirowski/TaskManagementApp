@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace TaskManagementAppUnitTests.HandlerTests
@@ -12,11 +13,12 @@ namespace TaskManagementAppUnitTests.HandlerTests
     {
         private readonly Mock<IUserRepository> _userRepoMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<ILogger<RegisterUserCommandHandler>> _loggerMock = new();
         private readonly RegisterUserCommandHandler _handler;
 
         public RegisterUserCommandHandlerTests()
         {
-            _handler = new RegisterUserCommandHandler(_userRepoMock.Object, _mapperMock.Object);
+            _handler = new RegisterUserCommandHandler(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
         }
 
         [Fact]
