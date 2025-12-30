@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Button,
-  Card,
-  Pagination,
-} from "react-bootstrap";
+import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { PaginatedProjects, Project } from "../../types/types";
 import { fetchProjects, deleteProject } from "../../services/projectService";

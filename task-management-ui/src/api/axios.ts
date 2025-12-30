@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getToken, isTokenExpired } from "../utils/auth";
+import { getToken } from "../utils/auth";
 import { refreshAccessToken } from "../services/authService";
 import { API_CONFIG } from "../config/api";
 

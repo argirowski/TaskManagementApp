@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import LoaderComponent from "../components/common/LoaderComponent";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { hasToken } from "../utils/auth";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Redirect authenticated users to projects page
   useEffect(() => {
