@@ -22,7 +22,6 @@ export const fetchTask = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching task:", error);
     throw handleAuthError(error);
   }
 };
@@ -39,7 +38,6 @@ export const createTask = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error creating task:", error);
     throw handleAuthError(error);
   }
 };
@@ -57,7 +55,6 @@ export const updateTask = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error updating task:", error);
     throw handleAuthError(error);
   }
 };
@@ -70,7 +67,6 @@ export const deleteTask = async (
   try {
     await api.delete(`${BASE_URL}/project/${projectId}/task/${taskId}`);
   } catch (error) {
-    console.error("Error deleting task:", error);
     throw handleAuthError(error);
   }
 };

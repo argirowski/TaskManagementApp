@@ -1,9 +1,10 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getToken, isTokenExpired } from "../utils/auth";
 import { refreshAccessToken } from "../services/authService";
+import { API_CONFIG } from "../config/api";
 
 const api = axios.create({
-  baseURL: "https://localhost:7272/api",
+  baseURL: API_CONFIG.BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -52,7 +53,11 @@ api.interceptors.response.use(
     };
 
     // If error is 401 and we haven't retried yet
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
       // If we're already refreshing, queue this request
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -60,7 +65,9 @@ api.interceptors.response.use(
         })
           .then((token) => {
             if (originalRequest.headers) {
-              (originalRequest.headers as any)["Authorization"] = `Bearer ${token}`;
+              (originalRequest.headers as any)[
+                "Authorization"
+              ] = `Bearer ${token}`;
             }
             return api(originalRequest);
           })
@@ -78,7 +85,9 @@ api.interceptors.response.use(
         if (newTokenData && newTokenData.accessToken) {
           // Update the original request with new token
           if (originalRequest.headers) {
-            (originalRequest.headers as any)["Authorization"] = `Bearer ${newTokenData.accessToken}`;
+            (originalRequest.headers as any)[
+              "Authorization"
+            ] = `Bearer ${newTokenData.accessToken}`;
           }
 
           // Process queued requests
@@ -89,23 +98,29 @@ api.interceptors.response.use(
         } else {
           // Refresh failed - clear tokens and redirect to login
           processQueue(new Error("Token refresh failed"), null);
-          
+
           // Only redirect if we're in the browser and not already on login page
-          if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+          if (
+            typeof window !== "undefined" &&
+            !window.location.pathname.includes("/login")
+          ) {
             window.location.href = "/login";
           }
-          
+
           return Promise.reject(error);
         }
       } catch (refreshError) {
         // Refresh failed - clear tokens and redirect to login
         processQueue(refreshError, null);
-        
+
         // Only redirect if we're in the browser and not already on login page
-        if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+        if (
+          typeof window !== "undefined" &&
+          !window.location.pathname.includes("/login")
+        ) {
           window.location.href = "/login";
         }
-        
+
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

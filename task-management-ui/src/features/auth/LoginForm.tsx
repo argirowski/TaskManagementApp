@@ -10,8 +10,9 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import axios from "axios";
+import api from "../../api/axios";
 import { setToken, hasToken, setTokenData } from "../../utils/auth";
+import { API_CONFIG } from "../../config/api";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 import { LoginFormData } from "../../types/types";
@@ -53,10 +54,7 @@ const LoginForm: React.FC = () => {
       setError(null);
 
       // Perform login request directly (stateless). Save token to localStorage.
-      const res = await axios.post(
-        "https://localhost:7272/api/Auth/login",
-        values
-      );
+      const res = await api.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, values);
 
       // Extract all token data from response (handling both camelCase and PascalCase)
       const accessToken = res?.data?.accessToken || res?.data?.AccessToken;
@@ -81,11 +79,6 @@ const LoginForm: React.FC = () => {
         if (userName) {
           localStorage.setItem("userName", userName);
         }
-        console.warn("Token response missing some fields:", {
-          accessToken,
-          refreshToken,
-          userName,
-        });
       }
 
       // On success, navigate to projects
@@ -97,7 +90,6 @@ const LoginForm: React.FC = () => {
         err?.message ||
         "Login failed";
       setError(typeof message === "string" ? message : JSON.stringify(message));
-      console.error("Login submission error:", err);
     } finally {
       setSubmitting(false);
     }

@@ -10,8 +10,9 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import axios from "axios";
+import api from "../../api/axios";
 import { hasToken } from "../../utils/auth";
+import { API_CONFIG } from "../../config/api";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 import { RegisterFormData } from "../../types/types";
@@ -50,31 +51,18 @@ const RegisterForm: React.FC = () => {
       // Remove confirmPassword from the data sent to API
       const { confirmPassword, ...registrationData } = values;
 
-      // Debug: Log what we're sending to the backend
-      console.log("Sending to backend:", registrationData);
-
       // API endpoint for registration
-      const response = await axios.post(
-        "https://localhost:7272/api/Auth/register",
-        registrationData
-      );
-
-      console.log("Registration successful:", response.data);
+      await api.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, registrationData);
 
       // Redirect to login immediately
       navigate("/login");
     } catch (error: any) {
-      console.error("Registration error:", error);
-      console.error("Error response data:", error.response?.data);
-      console.error("Error status:", error.response?.status);
-
       if (error.response?.data?.error) {
         setAlertMessage(error.response.data.error);
       } else if (error.response?.data?.message) {
         setAlertMessage(error.response.data.message);
       } else if (error.response?.data?.errors) {
         // Handle validation errors from backend
-        console.error("Backend validation errors:", error.response.data.errors);
         Object.keys(error.response.data.errors).forEach((field) => {
           setFieldError(field, error.response.data.errors[field][0]);
         });

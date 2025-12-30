@@ -31,7 +31,7 @@ export const decodeToken = (token: string): any => {
     );
     return JSON.parse(jsonPayload);
   } catch (e) {
-    console.error("Error decoding token:", e);
+    // Silently fail - token decoding errors are expected for invalid tokens
     return null;
   }
 };
@@ -51,7 +51,7 @@ export const getUserIdFromToken = (token: string | null): string | null => {
       null
     );
   } catch (e) {
-    console.error("Error extracting userId from token:", e);
+    // Silently fail - userId extraction errors are expected for invalid tokens
     return null;
   }
 };

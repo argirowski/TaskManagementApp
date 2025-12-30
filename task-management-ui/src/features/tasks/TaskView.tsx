@@ -29,7 +29,6 @@ const TaskView: React.FC = () => {
       setTask(taskData);
     } catch (error: any) {
       // Error handling - task will remain null and trigger "not found" state
-      console.error("Failed to load task:", error);
     } finally {
       setLoading(false);
     }

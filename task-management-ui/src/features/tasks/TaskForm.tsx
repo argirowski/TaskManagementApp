@@ -58,7 +58,6 @@ const TaskForm: React.FC = () => {
         projectTaskDescription: task.projectTaskDescription || "",
       });
     } catch (error: any) {
-      console.error("Failed to load task:", error);
       setAlertMessage("Failed to load task. Please try again.");
       setAlertVariant("danger");
       setShowAlert(true);
@@ -75,19 +74,15 @@ const TaskForm: React.FC = () => {
       if (isEditing && projectId && taskId) {
         // Update existing task
         const updatedTask = await updateTask(projectId, taskId, values);
-        console.log("Task updated:", updatedTask);
         setAlertMessage("Task updated successfully!");
       } else if (projectId) {
         // Create new task
         const newTask = await createTask(projectId, values);
-        console.log("Task created:", newTask);
       }
 
       // Redirect back to project immediately
       navigate(`/projects/${projectId}`);
     } catch (error: any) {
-      console.error("Task submission error:", error);
-
       if (error.response?.data?.error) {
         setAlertMessage(error.response.data.error);
       } else if (error.response?.data?.message) {

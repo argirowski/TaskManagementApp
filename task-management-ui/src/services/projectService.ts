@@ -27,7 +27,6 @@ export const fetchProjects = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching projects:", error);
     throw handleAuthError(error);
   }
 };
@@ -38,7 +37,6 @@ export const fetchProject = async (projectId: string): Promise<Project> => {
     const response = await api.get(`${BASE_URL}/${projectId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching project:", error);
     throw handleAuthError(error);
   }
 };
@@ -51,7 +49,6 @@ export const fetchProjectDetails = async (
     const response = await api.get(`${BASE_URL}/${projectId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching project details:", error);
     throw handleAuthError(error);
   }
 };
@@ -64,7 +61,6 @@ export const createProject = async (
     const response = await api.post(BASE_URL, projectData);
     return response.data;
   } catch (error) {
-    console.error("Error creating project:", error);
     throw handleAuthError(error);
   }
 };
@@ -78,7 +74,6 @@ export const updateProject = async (
     const response = await api.put(`${BASE_URL}/${projectId}`, projectData);
     return response.data;
   } catch (error) {
-    console.error("Error updating project:", error);
     throw handleAuthError(error);
   }
 };
@@ -88,7 +83,6 @@ export const deleteProject = async (projectId: string): Promise<void> => {
   try {
     await api.delete(`${BASE_URL}/${projectId}`);
   } catch (error) {
-    console.error("Error deleting project:", error);
     throw handleAuthError(error);
   }
 };

@@ -7,8 +7,7 @@ import {
   clearToken,
 } from "../utils/auth";
 import { RefreshTokenRequest } from "../types/types";
-
-const API_BASE_URL = "https://localhost:7272/api";
+import { getApiUrl, API_CONFIG } from "../config/api";
 
 /**
  * Refresh the access token using the refresh token
@@ -20,7 +19,6 @@ export const refreshAccessToken = async (): Promise<TokenData | null> => {
     const userId = getUserId();
 
     if (!refreshToken || !userId) {
-      console.error("Refresh token or userId not found");
       return null;
     }
 
@@ -36,7 +34,7 @@ export const refreshAccessToken = async (): Promise<TokenData | null> => {
       accessToken?: string;
       refreshToken?: string;
       userName?: string;
-    }>(`${API_BASE_URL}/Auth/refresh-token`, request);
+    }>(getApiUrl(API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN), request);
 
     // Extract token data (handling both camelCase and PascalCase)
     const accessToken =
@@ -59,7 +57,6 @@ export const refreshAccessToken = async (): Promise<TokenData | null> => {
 
     return null;
   } catch (error: any) {
-    console.error("Token refresh failed:", error);
     // If refresh fails, clear tokens and redirect to login
     clearToken();
     return null;

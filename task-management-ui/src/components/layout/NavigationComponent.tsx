@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { clearToken, getUserName } from "../../utils/auth";
+import LoaderComponent from "../common/LoaderComponent";
 
 const NavigationComponent: React.FC = () => {
   const navigate = useNavigate();
 
   const [userName, setUserName] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     // Get the user name from localStorage using auth utility
@@ -15,9 +17,18 @@ const NavigationComponent: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
+    setIsLoggingOut(true);
     clearToken();
-    navigate("/");
+    // Small delay to show loader before navigation
+    setTimeout(() => {
+      navigate("/");
+    }, 700);
   };
+
+  // Show loader during logout
+  if (isLoggingOut) {
+    return <LoaderComponent message="Logging out..." />;
+  }
 
   return (
     <Navbar
