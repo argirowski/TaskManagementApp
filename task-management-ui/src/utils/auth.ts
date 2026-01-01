@@ -1,3 +1,5 @@
+import { TokenData } from "../types/types";
+
 const TOKEN_KEY = "authToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const USER_NAME_KEY = "userName";
@@ -8,13 +10,6 @@ const ClaimTypes = {
   NameIdentifier:
     "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
 };
-
-export interface TokenData {
-  accessToken: string;
-  refreshToken: string;
-  userName: string;
-  userId?: string;
-}
 
 /**
  * Decode JWT token to extract payload

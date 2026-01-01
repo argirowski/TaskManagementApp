@@ -6,7 +6,7 @@ import { hasToken } from "../utils/auth";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start with loading as true
 
   // Redirect authenticated users to projects page
   useEffect(() => {
@@ -14,6 +14,15 @@ const HomePage: React.FC = () => {
       navigate("/projects", { replace: true });
     }
   }, [navigate]);
+
+  // Show loader for 700ms when the page first loads
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 700);
+
+    return () => clearTimeout(timer); // Cleanup timer on unmount
+  }, []);
 
   const handleNavigate = (path: string) => {
     setLoading(true);
@@ -23,11 +32,7 @@ const HomePage: React.FC = () => {
   };
 
   // Don't show home page if user is authenticated (redirect will happen)
-  if (hasToken()) {
-    return <LoaderComponent message="Loading..." />;
-  }
-
-  if (loading) {
+  if (hasToken() || loading) {
     return <LoaderComponent message="Loading..." />;
   }
 

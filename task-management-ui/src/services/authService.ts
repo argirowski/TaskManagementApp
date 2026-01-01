@@ -1,12 +1,11 @@
 import axios from "axios";
 import {
-  TokenData,
   getRefreshToken,
   getUserId,
   setTokenData,
   clearToken,
 } from "../utils/auth";
-import { RefreshTokenRequest } from "../types/types";
+import { RefreshTokenRequest, TokenData } from "../types/types";
 import { getApiUrl, API_CONFIG } from "../config/api";
 
 /**

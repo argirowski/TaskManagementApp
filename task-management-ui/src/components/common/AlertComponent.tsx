@@ -9,7 +9,9 @@ const AlertComponent: React.FC<AlertComponentProps> = ({
   dismissible = true,
   onClose,
 }) => {
-  if (!show) return null;
+  if (!show) {
+    return null;
+  }
 
   return (
     <Alert variant={variant} dismissible={dismissible} onClose={onClose}>

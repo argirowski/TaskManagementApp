@@ -133,3 +133,10 @@ export interface RefreshTokenRequest {
   userId: string;
   refreshToken: string;
 }
+
+export interface TokenData {
+  accessToken: string;
+  refreshToken: string;
+  userName: string;
+  userId?: string;
+}
