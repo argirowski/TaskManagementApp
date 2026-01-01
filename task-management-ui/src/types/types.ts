@@ -67,7 +67,6 @@ export interface EmptyStateComponentProps {
   message?: string;
   actionText?: string;
   onAction?: () => void;
-  icon?: React.ReactNode;
 }
 
 export interface ConfirmDialogComponentProps {

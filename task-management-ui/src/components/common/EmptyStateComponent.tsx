@@ -7,18 +7,25 @@ const EmptyStateComponent: React.FC<EmptyStateComponentProps> = ({
   message,
   actionText,
   onAction,
-  icon,
 }) => {
   return (
-    <div className="text-center py-5">
-      {icon && <div className="mb-3">{icon}</div>}
-      <h5>{title}</h5>
-      {message && <p className="text-muted">{message}</p>}
-      {actionText && onAction && (
-        <Button variant="primary" onClick={onAction}>
-          {actionText}
-        </Button>
-      )}
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{ minHeight: "100vh" }}
+    >
+      <div className="text-center py-5">
+        <h1>{title}</h1>
+        {message && (
+          <p className="text-muted" style={{ fontSize: "1.25rem" }}>
+            {message}
+          </p>
+        )}
+        {actionText && onAction && (
+          <Button onClick={onAction} size="lg" className="btn-back-home">
+            {actionText}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
