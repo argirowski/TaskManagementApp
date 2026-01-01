@@ -17,8 +17,6 @@ import AlertComponent from "../../components/common/AlertComponent";
 import { tasksValidationSchema } from "../../utils/validation";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
 
-// Validation schema using Yup
-
 const TaskForm: React.FC = () => {
   const navigate = useNavigate();
   const { projectId, taskId } = useParams<{
@@ -73,11 +71,12 @@ const TaskForm: React.FC = () => {
     try {
       if (isEditing && projectId && taskId) {
         // Update existing task
-        const updatedTask = await updateTask(projectId, taskId, values);
+        await updateTask(projectId, taskId, values);
         setAlertMessage("Task updated successfully!");
       } else if (projectId) {
         // Create new task
-        const newTask = await createTask(projectId, values);
+        await createTask(projectId, values);
+        setAlertMessage("Task created successfully!");
       }
 
       // Redirect back to project immediately
