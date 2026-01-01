@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Table, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { PaginatedProjects, Project } from "../../types/types";
+import { AxiosError } from "axios";
+import {
+  PaginatedProjects,
+  Project,
+  ApiErrorResponse,
+} from "../../types/types";
 import { fetchProjects, deleteProject } from "../../services/projectService";
 import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
 import LoaderComponent from "../../components/common/LoaderComponent";
@@ -25,24 +30,38 @@ const ProjectList: React.FC = () => {
   const [pageSize] = useState<number>(5);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  useEffect(() => {
-    loadProjects();
-  }, [page, pageSize]);
-
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true);
       const data = await fetchProjects(page, pageSize);
       setPaginatedProjects(data);
       setTotalPages(data.totalPages);
-    } catch (error: any) {
-      setAlertMessage("Failed to load projects. Please try again.");
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+        const errorMessage =
+          errorData?.error ||
+          errorData?.message ||
+          "Failed to load projects. Please try again.";
+        setAlertMessage(errorMessage);
+      } else {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to load projects. Please try again.";
+        setAlertMessage(errorMessage);
+      }
       setAlertVariant("danger");
       setShowAlert(true);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize]);
+
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
   const handleView = (project: Project) => {
     navigate(`/projects/${project.id}`);
@@ -69,11 +88,21 @@ const ProjectList: React.FC = () => {
       setAlertMessage("Project deleted successfully!");
       setAlertVariant("success");
       setShowAlert(true);
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        setAlertMessage(error.response.data.error);
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+        const errorMessage =
+          errorData?.error ||
+          errorData?.message ||
+          "Failed to delete project. Please try again.";
+        setAlertMessage(errorMessage);
       } else {
-        setAlertMessage("Failed to delete project. Please try again.");
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to delete project. Please try again.";
+        setAlertMessage(errorMessage);
       }
       setAlertVariant("danger");
       setShowAlert(true);

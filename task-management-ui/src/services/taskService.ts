@@ -6,7 +6,7 @@ const BASE_URL = "/Tasks";
 // No auth persistence in services: perform plain data fetching.
 // If auth headers are needed later, pass token from callers or implement
 // a storage strategy here.
-const handleAuthError = (error: any) => {
+const handleAuthError = (error: unknown): never => {
   // Simple: rethrow and let callers handle navigation/cleanup.
   throw error;
 };

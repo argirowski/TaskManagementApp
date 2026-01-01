@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Row,
@@ -9,8 +9,9 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { Formik } from "formik";
-import { TaskFormData } from "../../types/types";
+import { Formik, FormikHelpers } from "formik";
+import { AxiosError } from "axios";
+import { TaskFormData, ApiErrorResponse } from "../../types/types";
 import { fetchTask, createTask, updateTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
 import AlertComponent from "../../components/common/AlertComponent";
@@ -41,32 +42,57 @@ const TaskForm: React.FC = () => {
 
   const [formValues, setFormValues] = useState<TaskFormData>(initialValues);
 
+  const loadTask = useCallback(
+    async (projectId: string, taskId: string) => {
+      try {
+        setInitialLoading(true);
+        const task = await fetchTask(projectId, taskId);
+        setFormValues({
+          projectTaskTitle: task.projectTaskTitle,
+          projectTaskDescription: task.projectTaskDescription || "",
+        });
+      } catch (error) {
+        // Type-safe error handling
+        if (error instanceof AxiosError) {
+          const errorData = error.response?.data as
+            | ApiErrorResponse
+            | undefined;
+          const errorMessage =
+            errorData?.error ||
+            errorData?.message ||
+            "Failed to load task. Please try again.";
+          setAlertMessage(errorMessage);
+        } else {
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to load task. Please try again.";
+          setAlertMessage(errorMessage);
+        }
+        setAlertVariant("danger");
+        setShowAlert(true);
+      } finally {
+        setInitialLoading(false);
+      }
+    },
+    [
+      setInitialLoading,
+      setFormValues,
+      setAlertMessage,
+      setAlertVariant,
+      setShowAlert,
+    ]
+  );
+
   useEffect(() => {
     if (isEditing && projectId && taskId) {
       loadTask(projectId, taskId);
     }
-  }, [isEditing, projectId, taskId]);
-
-  const loadTask = async (projectId: string, taskId: string) => {
-    try {
-      setInitialLoading(true);
-      const task = await fetchTask(projectId, taskId);
-      setFormValues({
-        projectTaskTitle: task.projectTaskTitle,
-        projectTaskDescription: task.projectTaskDescription || "",
-      });
-    } catch (error: any) {
-      setAlertMessage("Failed to load task. Please try again.");
-      setAlertVariant("danger");
-      setShowAlert(true);
-    } finally {
-      setInitialLoading(false);
-    }
-  };
+  }, [isEditing, projectId, taskId, loadTask]);
 
   const handleSubmit = async (
     values: TaskFormData,
-    { setSubmitting, setFieldError }: any
+    { setSubmitting, setFieldError }: FormikHelpers<TaskFormData>
   ) => {
     try {
       if (isEditing && projectId && taskId) {
@@ -81,26 +107,40 @@ const TaskForm: React.FC = () => {
 
       // Redirect back to project immediately
       navigate(`/projects/${projectId}`);
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        setAlertMessage(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        setAlertMessage(error.response.data.message);
-      } else if (error.response?.data?.errors) {
-        // Handle validation errors from backend
-        Object.keys(error.response.data.errors).forEach((field) => {
-          setFieldError(
-            field.toLowerCase(),
-            error.response.data.errors[field][0]
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+
+        if (errorData?.error) {
+          setAlertMessage(errorData.error);
+        } else if (errorData?.message) {
+          setAlertMessage(errorData.message);
+        } else if (errorData?.errors) {
+          // Handle validation errors from backend
+          Object.keys(errorData.errors).forEach((field) => {
+            const fieldErrors = errorData.errors![field];
+            if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+              setFieldError(field.toLowerCase(), fieldErrors[0]);
+            }
+          });
+          setAlertMessage("Please fix the errors below");
+        } else {
+          setAlertMessage(
+            isEditing
+              ? "Failed to update task. Please try again."
+              : "Failed to create task. Please try again."
           );
-        });
-        setAlertMessage("Please fix the errors below");
+        }
       } else {
-        setAlertMessage(
-          isEditing
+        // Handle non-Axios errors
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : isEditing
             ? "Failed to update task. Please try again."
-            : "Failed to create task. Please try again."
-        );
+            : "Failed to create task. Please try again.";
+        setAlertMessage(errorMessage);
       }
 
       setAlertVariant("danger");

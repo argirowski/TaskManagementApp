@@ -9,13 +9,14 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
+import { AxiosError } from "axios";
 import api from "../../api/axios";
 import { hasToken } from "../../utils/auth";
 import { API_CONFIG } from "../../config/api";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
-import { RegisterFormData } from "../../types/types";
+import { RegisterFormData, ApiErrorResponse } from "../../types/types";
 import { registerUserValidationSchema } from "../../utils/validation";
 import LoaderComponent from "../../components/common/LoaderComponent";
 
@@ -45,7 +46,7 @@ const RegisterForm: React.FC = () => {
 
   const handleSubmit = async (
     values: RegisterFormData,
-    { setSubmitting, setFieldError }: any
+    { setSubmitting, setFieldError }: FormikHelpers<RegisterFormData>
   ) => {
     try {
       // Remove confirmPassword from the data sent to API
@@ -56,19 +57,34 @@ const RegisterForm: React.FC = () => {
 
       // Redirect to login immediately
       navigate("/login");
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        setAlertMessage(error.response.data.error);
-      } else if (error.response?.data?.message) {
-        setAlertMessage(error.response.data.message);
-      } else if (error.response?.data?.errors) {
-        // Handle validation errors from backend
-        Object.keys(error.response.data.errors).forEach((field) => {
-          setFieldError(field, error.response.data.errors[field][0]);
-        });
-        setAlertMessage("Please fix the errors below");
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+
+        if (errorData?.error) {
+          setAlertMessage(errorData.error);
+        } else if (errorData?.message) {
+          setAlertMessage(errorData.message);
+        } else if (errorData?.errors) {
+          // Handle validation errors from backend
+          Object.keys(errorData.errors).forEach((field) => {
+            const fieldErrors = errorData.errors![field];
+            if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+              setFieldError(field, fieldErrors[0]);
+            }
+          });
+          setAlertMessage("Please fix the errors below");
+        } else {
+          setAlertMessage("Registration failed. Please try again.");
+        }
       } else {
-        setAlertMessage("Registration failed. Please try again.");
+        // Handle non-Axios errors
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Registration failed. Please try again.";
+        setAlertMessage(errorMessage);
       }
 
       setAlertVariant("danger");

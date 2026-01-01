@@ -9,7 +9,12 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProjectDetailsDTO, TaskDetailsDTO } from "../../types/types";
+import { AxiosError } from "axios";
+import {
+  ProjectDetailsDTO,
+  TaskDetailsDTO,
+  ApiErrorResponse,
+} from "../../types/types";
 import { fetchProjectDetails } from "../../services/projectService";
 import { deleteTask } from "../../services/taskService";
 import ConfirmDialog from "../../components/common/ConfirmDialogComponent";
@@ -42,8 +47,22 @@ const ProjectCard: React.FC = () => {
       setLoading(true);
       const projectData = await fetchProjectDetails(projectId);
       setProject(projectData);
-    } catch (error: any) {
-      setAlertMessage("Failed to load project details. Please try again.");
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+        const errorMessage =
+          errorData?.error ||
+          errorData?.message ||
+          "Failed to load project details. Please try again.";
+        setAlertMessage(errorMessage);
+      } else {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to load project details. Please try again.";
+        setAlertMessage(errorMessage);
+      }
       setAlertVariant("danger");
       setShowAlert(true);
     } finally {
@@ -76,11 +95,22 @@ const ProjectCard: React.FC = () => {
 
       // Refresh the project data
       loadProject(id);
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.error ||
-        "Failed to delete task. Please try again.";
-      setAlertMessage(errorMessage);
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as ApiErrorResponse | undefined;
+        const errorMessage =
+          errorData?.error ||
+          errorData?.message ||
+          "Failed to delete task. Please try again.";
+        setAlertMessage(errorMessage);
+      } else {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to delete task. Please try again.";
+        setAlertMessage(errorMessage);
+      }
       setAlertVariant("danger");
       setShowAlert(true);
     } finally {

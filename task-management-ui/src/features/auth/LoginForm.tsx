@@ -9,13 +9,18 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
+import { AxiosError } from "axios";
 import api from "../../api/axios";
 import { setToken, hasToken, setTokenData } from "../../utils/auth";
 import { API_CONFIG } from "../../config/api";
 import AlertComponent from "../../components/common/AlertComponent";
 import ConfirmDialogComponent from "../../components/common/ConfirmDialogComponent";
-import { LoginFormData } from "../../types/types";
+import {
+  LoginFormData,
+  ApiErrorResponse,
+  LoginResponse,
+} from "../../types/types";
 import { loginUserValidationSchema } from "../../utils/validation";
 import LoaderComponent from "../../components/common/LoaderComponent";
 
@@ -48,22 +53,28 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginFormData,
-    { setSubmitting }: any
+    { setSubmitting }: FormikHelpers<LoginFormData>
   ) => {
     try {
       setError(null);
 
       // Perform login request directly (stateless). Save token to localStorage.
-      const res = await api.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, values);
+      const res = await api.post<LoginResponse>(
+        API_CONFIG.ENDPOINTS.AUTH.LOGIN,
+        values
+      );
 
       // Extract all token data from response (handling both camelCase and PascalCase)
-      const accessToken = res?.data?.accessToken || res?.data?.AccessToken;
-      const refreshToken = res?.data?.refreshToken || res?.data?.RefreshToken;
+      const responseData = res.data;
+      const accessToken =
+        responseData?.accessToken || responseData?.AccessToken;
+      const refreshToken =
+        responseData?.refreshToken || responseData?.RefreshToken;
       const userName =
-        res?.data?.userName ||
-        res?.data?.UserName ||
-        res?.data?.name ||
-        res?.data?.username;
+        responseData?.userName ||
+        responseData?.UserName ||
+        responseData?.name ||
+        responseData?.username;
 
       if (accessToken && refreshToken && userName) {
         setTokenData({
@@ -83,13 +94,33 @@ const LoginForm: React.FC = () => {
 
       // On success, navigate to projects
       navigate("/projects");
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.error ||
-        err?.response?.data ||
-        err?.message ||
-        "Login failed";
-      setError(typeof message === "string" ? message : JSON.stringify(message));
+    } catch (error) {
+      // Type-safe error handling
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data as
+          | ApiErrorResponse
+          | string
+          | undefined;
+
+        if (typeof errorData === "string") {
+          setError(errorData);
+        } else if (errorData && typeof errorData === "object") {
+          const message =
+            errorData.error ||
+            errorData.message ||
+            "Login failed. Please try again.";
+          setError(message);
+        } else {
+          setError("Login failed. Please try again.");
+        }
+      } else {
+        // Handle non-Axios errors
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Login failed. Please try again.";
+        setError(errorMessage);
+      }
     } finally {
       setSubmitting(false);
     }

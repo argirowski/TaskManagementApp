@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { AxiosError } from "axios";
 import { SingleTaskDTO } from "../../types/types";
 import { fetchTask } from "../../services/taskService";
 import LoaderComponent from "../../components/common/LoaderComponent";
@@ -27,8 +28,14 @@ const TaskView: React.FC = () => {
       setLoading(true);
       const taskData = await fetchTask(projectId, taskId);
       setTask(taskData);
-    } catch (error: any) {
+    } catch (error) {
       // Error handling - task will remain null and trigger "not found" state
+      // Type-safe error handling (error is intentionally ignored to show "not found" state)
+      if (error instanceof AxiosError) {
+        // Error is handled by showing "not found" state
+        // Could log error here if needed: console.error('Failed to load task:', error);
+      }
+      // For non-Axios errors, also handled by showing "not found" state
     } finally {
       setLoading(false);
     }

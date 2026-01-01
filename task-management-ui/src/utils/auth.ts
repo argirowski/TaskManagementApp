@@ -1,4 +1,4 @@
-import { TokenData } from "../types/types";
+import { TokenData, JWTPayload } from "../types/types";
 
 const TOKEN_KEY = "authToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
@@ -13,8 +13,10 @@ const ClaimTypes = {
 
 /**
  * Decode JWT token to extract payload
+ * @param token - JWT token string
+ * @returns Decoded JWT payload or null if decoding fails
  */
-export const decodeToken = (token: string): any => {
+export const decodeToken = (token: string): JWTPayload | null => {
   try {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -24,7 +26,8 @@ export const decodeToken = (token: string): any => {
         .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
         .join("")
     );
-    return JSON.parse(jsonPayload);
+    const decoded = JSON.parse(jsonPayload) as JWTPayload;
+    return decoded;
   } catch (e) {
     // Silently fail - token decoding errors are expected for invalid tokens
     return null;
@@ -38,13 +41,23 @@ export const getUserIdFromToken = (token: string | null): string | null => {
   if (!token) return null;
   try {
     const decoded = decodeToken(token);
+    if (!decoded) return null;
+
     // JWT contains userId as NameIdentifier claim
-    return (
-      decoded[ClaimTypes.NameIdentifier] ||
-      decoded.nameid ||
-      decoded.sub ||
-      null
-    );
+    const nameIdentifier = decoded[ClaimTypes.NameIdentifier];
+    if (typeof nameIdentifier === "string") {
+      return nameIdentifier;
+    }
+
+    if (typeof decoded.nameid === "string") {
+      return decoded.nameid;
+    }
+
+    if (typeof decoded.sub === "string") {
+      return decoded.sub;
+    }
+
+    return null;
   } catch (e) {
     // Silently fail - userId extraction errors are expected for invalid tokens
     return null;

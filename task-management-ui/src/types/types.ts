@@ -139,3 +139,38 @@ export interface TokenData {
   userName: string;
   userId?: string;
 }
+
+/**
+ * API Error Response structure from backend
+ */
+export interface ApiErrorResponse {
+  error?: string;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
+/**
+ * Login API Response structure (handles both camelCase and PascalCase)
+ */
+export interface LoginResponse {
+  accessToken?: string;
+  AccessToken?: string;
+  refreshToken?: string;
+  RefreshToken?: string;
+  userName?: string;
+  UserName?: string;
+  name?: string;
+  username?: string;
+}
+
+/**
+ * JWT Token Payload structure
+ */
+export interface JWTPayload {
+  exp?: number; // Expiration time (Unix timestamp)
+  iat?: number; // Issued at time (Unix timestamp)
+  nbf?: number; // Not before time (Unix timestamp)
+  sub?: string; // Subject (user ID)
+  nameid?: string; // Name identifier (user ID)
+  [key: string]: unknown; // Allow additional claims
+}

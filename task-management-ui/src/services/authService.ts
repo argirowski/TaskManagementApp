@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
   getRefreshToken,
   getUserId,
@@ -55,8 +55,13 @@ export const refreshAccessToken = async (): Promise<TokenData | null> => {
     }
 
     return null;
-  } catch (error: any) {
+  } catch (error) {
     // If refresh fails, clear tokens and redirect to login
+    // Error is intentionally ignored - token refresh failure is handled by clearing tokens
+    if (error instanceof AxiosError) {
+      // Could log error here if needed for debugging
+      // console.error('Token refresh failed:', error.response?.status, error.message);
+    }
     clearToken();
     return null;
   }

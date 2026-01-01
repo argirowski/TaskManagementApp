@@ -11,7 +11,7 @@ const BASE_URL = "/Projects";
 // No auth persistence in services: this file performs plain data fetching.
 // If you later want auth headers, pass the token in from callers or read
 // from a chosen storage strategy here.
-const handleAuthError = (error: any) => {
+const handleAuthError = (error: unknown): never => {
   // Keep behaviour simple: rethrow and let callers handle navigation/cleanup.
   throw error;
 };
