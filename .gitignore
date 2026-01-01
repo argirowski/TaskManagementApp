@@ -17,6 +17,7 @@ Persistence/obj/
 task-management-ui/node_modules/
 task-management-ui/build/
 task-management-ui/.env
+task-management-ui/coverage/
 
 # Test results and Coverage reports
 TaskManagementAppRepositoryTests/TestResults/
