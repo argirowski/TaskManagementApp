@@ -50,5 +50,10 @@
   "devDependencies": {
     "@types/axios": "^0.14.4",
     "@types/react-router-dom": "^5.3.3"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)"
+    ]
   }
 }

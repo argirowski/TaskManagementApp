@@ -3,7 +3,7 @@ import {
   tasksValidationSchema,
   registerUserValidationSchema,
   loginUserValidationSchema,
-} from "../utils/validation";
+} from "../../utils/validation";
 
 describe("Validation Schemas", () => {
   describe("projectValidationSchema", () => {
