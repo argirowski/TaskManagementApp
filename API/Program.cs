@@ -32,6 +32,9 @@ builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectCommandValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add health checks
+builder.Services.AddHealthChecks();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(a =>
 {
@@ -136,9 +139,17 @@ app.UseCors("CorsPolicy"); // enable CORS => This should come before UseHttpsRed
 // Add middleware to handle exceptions and return proper JSON responses
 app.UseMiddleware<ValidationExceptionMiddleware>();
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in Development (when HTTPS is configured)
+// In Production/Docker, we're using HTTP only
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
+
+// Map health check endpoint
+app.MapHealthChecks("/health");
 
 app.MapControllers();
 
